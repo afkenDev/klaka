@@ -13,3 +13,25 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Allgemeine Button-Stile */
+button {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Schatten beim Hover verstärken */
+button:hover {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Spezifischer Schatten für den Login-Button */
+.home-login-button,
+.login-button {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.home-login-button:hover,
+.login-button:hover {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+}

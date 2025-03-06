@@ -1,0 +1,27 @@
+"use client";
+
+import Image from "next/image";
+import "../styles/layout.css";
+
+export default function Footer() {
+    return (
+        <footer className="footer">
+            {/* Logo links */}
+            <div className="footer-logo">
+                <Image src="/pic/logo-small.png" alt="Logo" width={50} height={50} />
+            </div>
+
+            {/* Footer-Links & Infos */}
+            <div className="footer-links">
+                <a href="/impressum">Impressum</a>
+                <a href="/datenschutz">Datenschutz</a>
+                <a href="/kontakt">Kontakt</a>
+            </div>
+
+            {/* Copyright */}
+            <div className="footer-copy">
+                © {new Date().getFullYear()} Klassenkasse. Alle Rechte vorbehalten.
+            </div>
+        </footer>
+    );
+}
