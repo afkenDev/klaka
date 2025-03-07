@@ -36,17 +36,15 @@ git push -u origin feature/beschreibung
 ```
  Der -u-Parameter stellt eine Verknüpfung mit dem Remote-Branch her.
  
-## 6️⃣ Merge-Vorbereitung
-Falls sich main geändert hat, bevor du mergen willst:
+## 6️⃣ Mergen
+Falls sich dev geändert hat, bevor du mergen willst und dann mergen:
 ```bash
 git checkout dev  /main
 git pull origin dev /main
-git checkout feature/beschreibung
-git merge dev /main  # oder `git rebase main`
+git merge feature/beschreibung   # oder `git rebase main`
+git push origin dev
 ```
-## 7️⃣ Merge in main (nach Absprache!)
-PR auf GitHub erstellen und reviewen lassen.
-Falls alles passt: Merge in main.
+## 7️⃣ Löschen der Feature Branch 
 Danach den Feature-Branch löschen:
 ```bash
 git branch -d feature/beschreibung
