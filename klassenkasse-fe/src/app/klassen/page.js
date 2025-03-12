@@ -6,7 +6,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/navigation';
 
-
 const exampleClasses = [
     { id: 1, className: '3I', teacher: 'M. Veselcic', volume: 4700, lastActivity: 'vor 2 Tagen', students: 15, color: 'blue' },
     { id: 2, className: '3I', teacher: 'M. Veselcic', volume: 4700, lastActivity: 'vor 2 Tagen', students: 15, color: 'teal' },
@@ -16,6 +15,7 @@ const exampleClasses = [
 
 export default function ClassOverview() {
     const [classes, setClasses] = useState(exampleClasses);
+    const [searchQuery, setSearchQuery] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newClass, setNewClass] = useState({
         className: '',
@@ -23,18 +23,19 @@ export default function ClassOverview() {
         color: 'blue'
     });
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
+    const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setNewClass({ className: '', teacher: '', color: 'blue' }); // Formular zurücksetzen
+        setNewClass({ className: '', teacher: '', color: 'blue' });
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewClass((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value.toLowerCase());
     };
 
     const handleAddClass = () => {
@@ -54,16 +55,32 @@ export default function ClassOverview() {
     const router = useRouter();
 
     const handleCardClick = (id) => {
-        router.push(`/klassen/${id}`); // Navigiert zur Klassenseite
+        router.push(`/klassen/${id}`);
     };
+
+    // Filtere Klassen nach Suchbegriff
+    const filteredClasses = classes.filter(classData =>
+        classData.className.toLowerCase().includes(searchQuery) ||
+        classData.teacher.toLowerCase().includes(searchQuery)
+    );
 
     return (
         <>
             <Navbar />
             <div className="container">
                 <h1 className="title">Klassenübersicht</h1>
+
+                {/* Suchfeld */}
+                <input
+                    type="text"
+                    placeholder="Klasse oder Lehrer suchen..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="search-bar"
+                />
+
                 <div className="grid">
-                    {classes.map((classData) => (
+                    {filteredClasses.map((classData) => (
                         <div
                             key={classData.id}
                             className={`card ${classData.color}`}
@@ -90,7 +107,7 @@ export default function ClassOverview() {
             {/* Plus Button */}
             <button className="add-button" onClick={handleOpenModal}>+</button>
 
-            {/* Modal (Pop-up) */}
+            {/* Modal */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal">
