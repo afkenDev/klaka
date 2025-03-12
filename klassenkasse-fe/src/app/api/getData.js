@@ -1,9 +1,9 @@
-// pages/api/getData.js
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
 
 export default async function handler(req, res) {
   const { data, error } = await supabase
-    .from('klasse') // Ersetze '' mit deinem Tabellen-Namen
+    .from('klasse')
     .select('*');
 
   if (error) {

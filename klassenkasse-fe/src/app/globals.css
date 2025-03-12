@@ -1,12 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffffff;  /* Weiß als Hintergrundfarbe */
+  --foreground: #171717;  /* Dunkles Grau/Schwarz für den Text */
+  --button-bg: #3b82f6;   /* Blau für die Buttons */
+  --button-hover-bg: #1d5f9b; /* Dunkleres Blau für Hover-Effekt */
+  --button-shadow: rgba(0, 0, 0, 0.2); /* Leichter Schatten für Buttons */
+  --button-shadow-hover: rgba(0, 0, 0, 0.3); /* Intensiverer Schatten beim Hover */
 }
-
 
 body {
   color: var(--foreground);
@@ -14,24 +13,41 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Allgemeine Button-Stile */
 button {
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.2s ease-in-out;
+  box-shadow: 2px 2px 5px var(--button-shadow);
+  transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  background-color: var(--button-bg);  /* Standardfarbe für Buttons */
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-/* Schatten beim Hover verstärken */
+/* Schatten und Farbe verstärken beim Hover */
 button:hover {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 4px 4px 8px var(--button-shadow-hover);
+  background-color: var(--button-hover-bg);
 }
 
-/* Spezifischer Schatten für den Login-Button */
+/* Spezifischer Button für den Login-Button */
 .home-login-button,
 .login-button {
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 5px var(--button-shadow);
 }
 
 .home-login-button:hover,
 .login-button:hover {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 8px var(--button-shadow-hover);
+  background-color: var(--button-hover-bg);
+}
+
+/* Responsive Anpassungen für kleinere Bildschirme */
+@media (max-width: 768px) {
+  button {
+    padding: 0.5rem 1rem;  /* Button-Größe auf kleineren Bildschirmen anpassen */
+    font-size: 0.9rem;  /* Schriftgröße verkleinern */
+  }
 }

@@ -1,144 +1,147 @@
-'use client';
+'use client'; // Enable client-side execution
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/classview.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/navigation';
+import { useKlassen } from '../hooks/useKlassen';
 
-const exampleClasses = [
-    { id: 1, className: '3I', teacher: 'M. Veselcic', volume: 4700, lastActivity: 'vor 2 Tagen', students: 15, color: 'blue' },
-    { id: 2, className: '3I', teacher: 'M. Veselcic', volume: 4700, lastActivity: 'vor 2 Tagen', students: 15, color: 'teal' },
-    { id: 3, className: '2I', teacher: 'S. Nemet', volume: 8700, lastActivity: 'vor 4 Wochen', students: 9, color: 'teal-dark' },
-    { id: 4, className: '3eW', teacher: 'M. KA', volume: 4700, lastActivity: 'vor 2 Tagen', students: 20, color: 'orange' },
-];
+export default function KlassenPage() {
+  const router = useRouter();
+  const { klassen: fetchedKlassen, lehrer, loading, error } = useKlassen();
+  const [localKlassen, setLocalKlassen] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newClass, setNewClass] = useState({
+    id: '',
+    lehrer: '',
+    color: 'blue'
+  });
 
-export default function ClassOverview() {
-    const [classes, setClasses] = useState(exampleClasses);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newClass, setNewClass] = useState({
-        className: '',
-        teacher: '',
-        color: 'blue'
-    });
+  const allKlassen = [...fetchedKlassen, ...localKlassen];
 
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setNewClass({ className: '', teacher: '', color: 'blue' });
-    };
+  if (loading) return <div className="container">Lade Daten...</div>;
+  if (error) return <div className="container">Fehler: {error}</div>;
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewClass((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value.toLowerCase());
+  };
 
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value.toLowerCase());
-    };
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setNewClass({ id: '', lehrer: '', color: 'blue' });
+  };
 
-    const handleAddClass = () => {
-        if (!newClass.className || !newClass.teacher) return;
-        setClasses([...classes, {
-            id: classes.length + 1,
-            className: newClass.className,
-            teacher: newClass.teacher,
-            color: newClass.color,
-            volume: 0,
-            lastActivity: 'Neu',
-            students: 0
-        }]);
-        handleCloseModal();
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewClass((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const router = useRouter();
+  const handleAddClass = () => {
+    if (!newClass.id || !newClass.lehrer) return;
+    setLocalKlassen([...localKlassen, {
+      ...newClass,
+      lastActivity: 'Neu',
+      volume: 0,
+      students: 0
+    }]);
+    handleCloseModal();
+  };
 
-    const handleCardClick = (id) => {
-        router.push(`/klassen/${id}`);
-    };
+  // Filtere Klassen basierend auf der Suchanfrage (id oder lehrer)
+  const filteredClasses = allKlassen.filter(klasse =>
+    String(klasse.id).toLowerCase().includes(searchQuery) ||
+    klasse.lehrer.toLowerCase().includes(searchQuery)
+  );
 
-    // Filtere Klassen nach Suchbegriff
-    const filteredClasses = classes.filter(classData =>
-        classData.className.toLowerCase().includes(searchQuery) ||
-        classData.teacher.toLowerCase().includes(searchQuery)
-    );
+  return (
+    <>
+      <Navbar />
+      <div className="container">
+        <h1 className="title">Klassenübersicht</h1>
 
-    return (
-        <>
-            <Navbar />
-            <div className="container">
-                <h1 className="title">Klassenübersicht</h1>
+        <div className="controls">
+          <input
+            type="text"
+            placeholder="Klasse oder Lehrer suchen..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="search-bar"
+          />
+        </div>
 
-                {/* Suchfeld */}
-                <input
-                    type="text"
-                    placeholder="Klasse oder Lehrer suchen..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="search-bar"
-                />
-
-                <div className="grid">
-                    {filteredClasses.map((classData) => (
-                        <div
-                            key={classData.id}
-                            className={`card ${classData.color}`}
-                            onClick={() => handleCardClick(classData.id)}
-                        >
-                            <div className="header">
-                                <span className="bold">{classData.className}</span>
-                                <span>{classData.teacher}</span>
-                            </div>
-                            <div className="info">
-                                <div className="students">
-                                    <span className="icon">👥</span>
-                                    <span>{classData.students}</span>
-                                </div>
-                                <div className="volume">Volumen: {new Intl.NumberFormat('de-CH').format(classData.volume)} CHF</div>
-                            </div>
-                            <p className="activity">Letzte Aktivität: {classData.lastActivity}</p>
-                        </div>
-                    ))}
+        <div className="grid">
+          {filteredClasses.map((klasse) => (
+            <div
+              key={klasse.id}
+              className="card"
+              style={{ backgroundColor: klasse.color }} // Dynamische Hintergrundfarbe basierend auf dem `color`-Feld
+              onClick={() => router.push(`/klassen/${klasse.id}`)}
+            >
+              <div className="header">
+                <span className="bold">{klasse.klassenname}</span>
+                <span>{klasse.vorname + " " + klasse.nachname}</span>
+              </div>
+              <div className="info">
+                <div className="students">
+                  <span className="icon">👥</span>
+                  <span>{klasse.students || 0}</span>
                 </div>
+                <div className="volume">
+                  Volumen: {new Intl.NumberFormat('de-CH').format(klasse.volume || 0)} CHF
+                </div>
+              </div>
+              <p className="activity">
+  <strong>Letzte Aktivität: </strong> 
+  {klasse.lastActivity ? new Date(klasse.lastActivity).toLocaleString('de-CH', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  }) : 'Keine Aktivität verfügbar'}
+</p>            </div>
+          ))}
+        </div>
+
+      </div>
+      <Footer />
+
+      <button className="add-button" onClick={handleOpenModal}>+</button>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Neue Klasse hinzufügen</h2>
+            <input
+              type="text"
+              name="id"
+              placeholder="Klassenname"
+              value={newClass.id}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="lehrer"
+              placeholder="Klassenlehrer"
+              value={newClass.lehrer}
+              onChange={handleInputChange}
+            />
+            <select name="color" value={newClass.color} onChange={handleInputChange}>
+              <option value="blue">Blau</option>
+              <option value="teal">Türkis</option>
+              <option value="teal-dark">Dunkel-Türkis</option>
+              <option value="orange">Orange</option>
+            </select>
+            <div className="modal-buttons">
+              <button onClick={handleAddClass}>Hinzufügen</button>
+              <button onClick={handleCloseModal}>Abbrechen</button>
             </div>
-            <Footer />
-
-            {/* Plus Button */}
-            <button className="add-button" onClick={handleOpenModal}>+</button>
-
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>Neue Klasse hinzufügen</h2>
-                        <input
-                            type="text"
-                            name="className"
-                            placeholder="Klassenname"
-                            value={newClass.className}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="teacher"
-                            placeholder="Klassenlehrer"
-                            value={newClass.teacher}
-                            onChange={handleInputChange}
-                        />
-                        <select name="color" value={newClass.color} onChange={handleInputChange}>
-                            <option value="blue">Blau</option>
-                            <option value="teal">Türkis</option>
-                            <option value="teal-dark">Dunkel-Türkis</option>
-                            <option value="orange">Orange</option>
-                        </select>
-                        <div className="modal-buttons">
-                            <button onClick={handleAddClass}>Hinzufügen</button>
-                            <button onClick={handleCloseModal}>Abbrechen</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
