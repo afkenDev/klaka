@@ -13,7 +13,7 @@ Falls vorher gepusht wurde, zuerst den aktuellen Stand holen:
 ```bash
 git checkout dev /main
 git pull origin dev /main
-git npm i
+npm i
 ```
 ## 2️⃣ Neuen Feature-Branch erstellen
 Für jede neue Änderung einen eigenen Branch erstellen:
