@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabaseClient.js';
 export function useKlassen() {
   const [data, setData] = useState({
     klassen: [],
-    lehrer: [],
     loading: true,
     error: null
   });
