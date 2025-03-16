@@ -1,6 +1,6 @@
 'use client'; // Enable client-side execution
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/classview.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,6 +13,7 @@ export default function KlassenPage() {
   const { klassen: fetchedKlassen, loading, error } = useKlassen();
   const { schueler: fetchedSchueler, loading: loadingSchueler, error: errorSchueler } = useSchuelerMitBalance();
   const [localKlassen, setLocalKlassen] = useState([]);
+  const [klassenUpdated, setKlassenUpdated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newClass, setNewClass] = useState({
@@ -22,7 +23,6 @@ export default function KlassenPage() {
     nachname: '',
     color: 'blue'
   });
-
   const [selectedClassId, setSelectedClassId] = useState(null); // Neuer Zustand für die ausgewählte Klasse
 
   const allKlassen = [...fetchedKlassen, ...localKlassen];
@@ -51,7 +51,6 @@ export default function KlassenPage() {
     if (!newClass.klassenname) return;
 
     try {
-      // Sende POST-Request an die API-Route
       const response = await fetch('/api/klassen', {
         method: 'POST',
         headers: {
@@ -60,20 +59,28 @@ export default function KlassenPage() {
         body: JSON.stringify(newClass),
       });
 
-      console.log('Response:', response);
+      const data = await response.json();
+      console.log(data); // Protokolliere die Antwort
 
       if (!response.ok) {
         throw new Error('Fehler beim Hinzufügen der Klasse');
       }
 
-      const data = await response.json();
-      setLocalKlassen([...localKlassen, data[0]]);
-      handleCloseModal();
-
+      // Überprüfen, ob die Daten nicht null oder leer sind, bevor wir sie verwenden
+      if (data && data.data && data.data.length > 0) {
+        setLocalKlassen((prevLocalKlassen) => [...prevLocalKlassen, data.data[0]]);
+        handleCloseModal();
+      } else {
+        console.error("Fehler: Keine gültigen Daten erhalten");
+        alert('Es gab ein Problem beim Hinzufügen der Klasse. Versuchen Sie es später erneut.');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Fehler beim Hinzufügen der Klasse:', error);
+      alert('Es gab einen Fehler beim Hinzufügen der Klasse: ' + error.message);
     }
   };
+
+
 
 
   // Filtere Klassen basierend auf der Suchanfrage (id oder lehrer)
@@ -93,7 +100,6 @@ export default function KlassenPage() {
     const anzahlSchueler = fetchedSchueler.filter(student => student.class === klasseId).length;
     return anzahlSchueler;
   };
-
 
   const getClassVolume = (klasseId) => {
     const studentsInClass = fetchedSchueler.filter(student => String(student.class) === String(klasseId));
