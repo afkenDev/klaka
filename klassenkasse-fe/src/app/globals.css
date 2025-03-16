@@ -1,11 +1,26 @@
 :root {
-  --background: #ffffff;  /* Weiß als Hintergrundfarbe */
-  --foreground: #171717;  /* Dunkles Grau/Schwarz für den Text */
-  --button-bg: #3b82f6;   /* Blau für die Buttons */
-  --button-hover-bg: #1d5f9b; /* Dunkleres Blau für Hover-Effekt */
-  --button-shadow: rgba(0, 0, 0, 0.2); /* Leichter Schatten für Buttons */
-  --button-shadow-hover: rgba(0, 0, 0, 0.3); /* Intensiverer Schatten beim Hover */
+  --background: #ffffff;
+  /* Weiß als Hintergrundfarbe */
+  --foreground: #171717;
+  /* Dunkles Grau/Schwarz für den Text */
+  --button-bg: #3b82f6;
+  /* Blau für die Buttons */
+  --button-hover-bg: #1d5f9b;
+  /* Dunkleres Blau für Hover-Effekt */
+  --button-shadow: rgba(0, 0, 0, 0.2);
+  /* Leichter Schatten für Buttons */
+  --button-shadow-hover: rgba(0, 0, 0, 0.3);
+  /* Intensiverer Schatten beim Hover */
 }
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 
 body {
   color: var(--foreground);
@@ -16,7 +31,8 @@ body {
 button {
   box-shadow: 2px 2px 5px var(--button-shadow);
   transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  background-color: var(--button-bg);  /* Standardfarbe für Buttons */
+  background-color: var(--button-bg);
+  /* Standardfarbe für Buttons */
   color: white;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -47,17 +63,9 @@ button:hover {
 /* Responsive Anpassungen für kleinere Bildschirme */
 @media (max-width: 768px) {
   button {
-    padding: 0.5rem 1rem;  /* Button-Größe auf kleineren Bildschirmen anpassen */
-    font-size: 0.9rem;  /* Schriftgröße verkleinern */
+    padding: 0.5rem 1rem;
+    /* Button-Größe auf kleineren Bildschirmen anpassen */
+    font-size: 0.9rem;
+    /* Schriftgröße verkleinern */
   }
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-.main-container {
-  width: 100vw;
-  height: 100vh;
 }
