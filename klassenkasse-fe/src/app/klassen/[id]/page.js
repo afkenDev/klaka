@@ -3,178 +3,145 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import '../../styles/student.css';
-import { useSchueler } from '../../hooks/useSchueler';
-import { useBalance } from '../../hooks/useBalance';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import { useSchuelerMitBalance } from '../../hooks/useSchuelerMitBalance';
-import * as XLSX from 'xlsx'; // Import für Excel-Verarbeitung
+import BookingModal from '../../components/BookingModal';
+import ImportModal from '../../components/ImportModal';
+import StudentCard from '../../components/StudentCard';
+import * as XLSX from 'xlsx';
 
 export default function ClassDetail() {
     const { id } = useParams();
     const router = useRouter();
-    const { schueler: fetchedSchueler, loading: loadingSchueler, error: errorSchueler } = useSchuelerMitBalance();
-    const [localSchueler, setLocalSchueler] = useState([]);
-    const [openStudent, setOpenStudent] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newStudent, setNewStudent] = useState({
-        name: '',
-        surname: '',
-        mobile: '',
+    const { schueler: fetchedSchueler, loading, error } = useSchuelerMitBalance();
+
+    const [state, setState] = useState({
+        localSchueler: [],
+        searchQuery: '',
+        openStudent: null,
+        isModalOpen: false,
+        newStudent: { name: '', surname: '', mobile: '' },
+        isBookingModalOpen: false,
+        selectedStudents: [],
+        bookingData: { title: '', amount: '', date: new Date().toISOString().split('T')[0], operator: '-' },
+        importFile: null,
+        isImportModalOpen: false
     });
 
-    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-    const [selectedStudents, setSelectedStudents] = useState([]);
-    const [bookingData, setBookingData] = useState({
-        title: '',
-        amount: '',
-        date: new Date().toISOString().split('T')[0], // Heutiges Datum als Default
-        operator: '-',
-    });
+    if (loading) return <div className="container">Lade Daten...</div>;
+    if (error) return <div className="container">Fehler: {error}</div>;
 
-    const [importFile, setImportFile] = useState(null);
-    const [isImportModalOpen, setIsImportModalOpen] = useState(false); // Zustand für das Öffnen des Modals
-
-    if (loadingSchueler) return <div className="container">Lade Daten...</div>;
-    if (errorSchueler) return <div className="container">Fehler: {errorSchueler}</div>;
-
-    const allSchueler = [...fetchedSchueler, ...localSchueler];
+    const allSchueler = [...fetchedSchueler, ...state.localSchueler];
 
     const toggleDropdown = (studentId) => {
-        setOpenStudent(openStudent === studentId ? null : studentId);
+        setState(prevState => ({
+            ...prevState,
+            openStudent: prevState.openStudent === studentId ? null : studentId
+        }));
     };
 
-    // Filtern der Schüler nach der Klassen-ID
-    const filteredSchueler = allSchueler.filter(schueler => String(schueler.class) === String(id));
-
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setNewStudent({ name: '', surname: '', mobile: '' });
+    const handleModalState = (modalName, isOpen) => {
+        setState(prevState => ({
+            ...prevState,
+            [modalName]: isOpen
+        }));
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewStudent((prev) => ({ ...prev, [name]: value }));
+        setState(prevState => ({
+            ...prevState,
+            newStudent: { ...prevState.newStudent, [name]: value }
+        }));
     };
 
     const handleAddStudent = async () => {
-        const { name, surname, mobile } = newStudent;
+        const { name, surname, mobile } = state.newStudent;
 
         if (!name || !surname) return;
 
-        console.log('Klasse ID:', id);
-
         const email = `${name.toLowerCase()}.${surname.toLowerCase()}@stud.kbw.ch`;
         const studentData = { name, surname, email, mobile, class: String(id) };
-        console.log("Data: ", studentData);
+
         try {
             const response = await fetch('/api/schueler', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(studentData),
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Fehler beim Hinzufügen des Schülers');
 
-            setLocalSchueler((prev) => [...prev, data.data[0]]);
-            handleCloseModal();
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: [...prevState.localSchueler, data.data[0]],
+                newStudent: { name: '', surname: '', mobile: '' }
+            }));
+            handleModalState('isModalOpen', false);
         } catch (error) {
             console.error('Fehler beim Hinzufügen des Schülers:', error);
-            alert('Es gab einen Fehler beim Hinzufügen des Schülers: ' + error.message);
+            alert('Es gab einen Fehler: ' + error.message);
         }
     };
 
-
-
-    // Funktion zum Öffnen des Modals
-    const handleImportOpenModal = () => setIsImportModalOpen(true);
-
-    // Funktion zum Schließen des Modals
-    const handleImportCloseModal = () => setIsImportModalOpen(false);
-
-    // Funktion zum Handhaben der Datei-Import
     const handleImportCSV = async () => {
-        if (!importFile) return;
+        if (!state.importFile) return;
 
         const formData = new FormData();
-        formData.append('file', importFile);
+        formData.append('file', state.importFile);
 
         try {
-            const response = await fetch('/api/schueler', {
-                method: 'POST',
-                body: formData,
-            });
-
+            const response = await fetch('/api/schueler', { method: 'POST', body: formData });
             const data = await response.json();
-            console.log("Data: ", data)
-            console.log("data.data: ", data.data)
-            if (!response.ok) {
-                throw new Error(data.message || 'Fehler beim Importieren der Datei');
-            }
+            if (!response.ok) throw new Error(data.message || 'Fehler beim Importieren der Datei');
 
             if (Array.isArray(data.data)) {
-                setLocalSchueler((prev) => [...prev, ...data.data]); // Nur falls es ein Array ist
+                setState(prevState => ({
+                    ...prevState,
+                    localSchueler: [...prevState.localSchueler, ...data.data]
+                }));
             } else {
                 console.warn('Erwartetes Array nicht erhalten:', data.data);
             }
 
-            handleImportCloseModal();
-
+            handleModalState('isImportModalOpen', false);
         } catch (error) {
             console.error('Fehler beim Import:', error);
             alert(error.message || 'Es gab einen Fehler beim Import der Datei.');
         }
     };
 
-
-    //Buchung
-    // 🔹 Öffnet das Buchungs-Pop-up
-    const handleOpenBookingModal = () => setIsBookingModalOpen(true);
-
-    // 🔹 Schließt das Buchungs-Pop-up
-    const handleCloseBookingModal = () => {
-        setIsBookingModalOpen(false);
-        setBookingData({ title: '', amount: '', date: new Date().toISOString().split('T')[0] });
-        setSelectedStudents([]);
-    };
-
-    // 🔹 Handhabt Eingaben für Titel, Betrag, Datum
     const handleBookingInputChange = (e) => {
         const { name, value } = e.target;
-        setBookingData((prev) => ({ ...prev, [name]: value }));
+        setState(prevState => ({
+            ...prevState,
+            bookingData: { ...prevState.bookingData, [name]: value }
+        }));
     };
 
-    // 🔹 Schüler auswählen (einzeln)
     const handleSelectStudent = (schuelerId) => {
-        setSelectedStudents(prev =>
-            prev.includes(schuelerId) ? prev.filter(id => id !== schuelerId) : [...prev, schuelerId]
-        );
+        setState(prevState => ({
+            ...prevState,
+            selectedStudents: prevState.selectedStudents.includes(schuelerId)
+                ? prevState.selectedStudents.filter(id => id !== schuelerId)
+                : [...prevState.selectedStudents, schuelerId]
+        }));
     };
 
-    // 🔹 Alle Schüler auswählen
-    const handleSelectAll = () => {
-        if (selectedStudents.length === filteredSchueler.length) {
-            setSelectedStudents([]); // Falls alle ausgewählt sind, abwählen
-        } else {
-            setSelectedStudents(filteredSchueler.map(s => s.id)); // Alle hinzufügen
-        }
-    };
-
-    // 🔹 Buchung speichern
     const handleSaveBooking = async () => {
-        if (!bookingData.title || !bookingData.amount || selectedStudents.length === 0) {
+        if (!state.bookingData.title || !state.bookingData.amount || state.selectedStudents.length === 0) {
             alert('Bitte alle Felder ausfüllen und mindestens einen Schüler auswählen.');
             return;
         }
 
         const bookingPayload = {
-            name: bookingData.title,
-            amount: parseFloat(bookingData.amount),
-            date: bookingData.date,
-            operator: bookingData.operator,
-            students: selectedStudents,
+            name: state.bookingData.title,
+            amount: parseFloat(state.bookingData.amount),
+            date: state.bookingData.date,
+            operator: state.bookingData.operator,
+            students: state.selectedStudents,
         };
 
         try {
@@ -189,217 +156,131 @@ export default function ClassDetail() {
 
             alert('Buchung erfolgreich gespeichert!');
 
-            // Neuen Balance-Datensatz zu den Schülern in `localSchueler` hinzufügen
-            const updatedSchueler = [...localSchueler];
-
-            // Aktualisierung der Schüler-Daten mit der neuen Buchung
-            selectedStudents.forEach((studentId) => {
+            const updatedSchueler = [...state.localSchueler];
+            state.selectedStudents.forEach(studentId => {
                 const student = updatedSchueler.find(s => s.id === studentId);
                 if (student) {
                     const newBalance = {
-                        name: bookingData.title,
-                        amount: bookingData.amount,
-                        date: bookingData.date,
-                        operator: bookingData.operator,
+                        name: state.bookingData.title,
+                        amount: state.bookingData.amount,
+                        date: state.bookingData.date,
+                        operator: state.bookingData.operator,
                     };
 
-                    if (!student.balance) {
-                        student.balance = [];
-                    }
-
+                    if (!student.balance) student.balance = [];
                     student.balance.push(newBalance);
                 }
             });
-            console.log("updated: ", updatedSchueler)
-            // Update `localSchueler` mit den neuen Balance-Werten
-            setLocalSchueler(updatedSchueler);
-            console.log("local: ", localSchueler);
-            handleCloseBookingModal();
+
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: updatedSchueler
+            }));
+            handleModalState('isBookingModalOpen', false);
         } catch (error) {
             console.error('Fehler beim Speichern der Buchung:', error);
-            alert('Es gab einen Fehler beim Speichern der Buchung: ' + error.message);
+            alert('Es gab einen Fehler: ' + error.message);
         }
     };
 
-
-
+    const filteredSchueler = allSchueler
+        .filter(schueler => String(schueler.class) === String(id))
+        .filter(schueler =>
+            `${schueler.name} ${schueler.surname}`.toLowerCase().includes(state.searchQuery.toLowerCase())
+        )
+        .sort((a, b) => a.surname.toLowerCase().localeCompare(b.surname.toLowerCase()));
 
     return (
-        <div className="container">
-            <button onClick={() => router.push('/klassen')}>← Klasse {id}</button>
-            <div className="student-list">
-                {filteredSchueler.length > 0 ? (
-                    filteredSchueler.map(student => {
-                        const studentBalance = student.balance || [];
+        <>
+            <Navbar />
+            <div className="container">
+                <h1 className='title'>Klasse {id}</h1>
+                <div className="controls">
+                    <button onClick={() => router.push('/klassen')}>← Zurück</button>
+                    <input
+                        type="text"
+                        placeholder="Schüler suchen..."
+                        value={state.searchQuery}
+                        onChange={(e) => setState(prevState => ({ ...prevState, searchQuery: e.target.value }))}
+                        className="search-bar"
+                    />
+                </div>
+                <div className="student-list">
+                    {filteredSchueler.length > 0 ? (
+                        filteredSchueler.map(student => (
+                            <StudentCard
+                                key={student.id}
+                                student={student}
+                                onToggleDropdown={toggleDropdown}
+                                isOpen={state.openStudent === student.id}
+                            />
+                        ))
+                    ) : (
+                        <p>Keine Schüler in dieser Klasse.</p>
+                    )}
+                </div>
 
-                        return (
-                            <div 
-                            key={student.id} 
-                            className={`student-card ${studentBalance.reduce((sum, b) =>
-                                b.operator === '-' ? sum - b.amount : sum + b.amount, 0) < 0 ? 'negative-balance' : ''}`} 
-                            onClick={() => toggleDropdown(student.id)}
-                        >
-                            <div className="student-header">
-                                <span className="student-name">{student.name + " " + student.surname}</span>
-                                <span className="student-balance">
-                                    {studentBalance.reduce((sum, b) =>
-                                        b.operator === '-' ? sum - b.amount : sum + b.amount, 0
-                                    ).toFixed(2) || "0.00"} Fr.-
-                                </span>
-                                <button className='btn-abbuchung'>Abbuchen ✈</button>
+                <div className="actions">
+                    <button className="btn-orange" onClick={() => handleModalState('isBookingModalOpen', true)}>Buchung hinzufügen</button>
+                    <button className="btn-black" onClick={() => handleModalState('isModalOpen', true)}>Schüler:in hinzufügen</button>
+                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Liste importieren</button>
+                </div>
+
+                {state.isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Neuen Schüler hinzufügen</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Vorname"
+                                value={state.newStudent.name}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="surname"
+                                placeholder="Nachname"
+                                value={state.newStudent.surname}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="mobile"
+                                placeholder="Mobile (optional)"
+                                value={state.newStudent.mobile}
+                                onChange={handleInputChange}
+                            />
+                            <div className="modal-buttons">
+                                <button onClick={handleAddStudent}>Hinzufügen</button>
+                                <button onClick={() => handleModalState('isModalOpen', false)}>Abbrechen</button>
                             </div>
-                                {openStudent === student.id && (
-                                    <div className="transaction-list">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Betrag</th>
-                                                    <th>Datum</th>
-                                                    <th>Bearbeitung</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {studentBalance.length > 0 ? (
-                                                    studentBalance.map((b, index) => (
-                                                        <tr key={index}>
-                                                            <td>{b.name}</td>
-                                                            <td>{b.operator === '-' ? '-' : '+'}{b.amount.toFixed(2)} Fr.</td>
-                                                            <td>{b.date}</td>
-                                                            <td>
-                                                                <button className="btn-delete">Löschen</button>
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                ) : (
-                                                    <tr>
-                                                        <td colSpan="4">Keine Buchungen vorhanden</td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })
-                ) : (
-                    <p>Keine Schüler in dieser Klasse.</p>
+                        </div>
+                    </div>
+                )}
+
+                {state.isImportModalOpen && (
+                    <ImportModal
+                        isOpen={state.isImportModalOpen}
+                        onClose={() => handleModalState('isImportModalOpen', false)}
+                        onImportCSV={handleImportCSV}
+                        onFileChange={(e) => setState(prevState => ({ ...prevState, importFile: e.target.files[0] }))}
+                    />
+                )}
+                {state.isBookingModalOpen && (
+                    <BookingModal
+                        isOpen={state.isBookingModalOpen}
+                        onClose={() => handleModalState('isBookingModalOpen', false)}
+                        onSave={handleSaveBooking}
+                        bookingData={state.bookingData}
+                        onInputChange={handleBookingInputChange}
+                        students={filteredSchueler}
+                        selectedStudents={state.selectedStudents}
+                        onSelectStudent={handleSelectStudent}
+                    />
                 )}
             </div>
-
-            <div className="actions">
-                <button className="btn-orange" onClick={handleOpenBookingModal}>Buchung hinzufügen</button>
-                <button className="btn-black" onClick={handleOpenModal}>Schüler:in hinzufügen</button>
-                <button className="btn-black" onClick={handleImportOpenModal}>Liste importieren</button>
-            </div>
-
-            {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>Neuen Schüler hinzufügen</h2>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Vorname"
-                            value={newStudent.name}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="surname"
-                            placeholder="Nachname"
-                            value={newStudent.surname}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="mobile"
-                            placeholder="Mobile (optional)"
-                            value={newStudent.mobile}
-                            onChange={handleInputChange}
-                        />
-                        <div className="modal-buttons">
-                            <button onClick={handleAddStudent}>Hinzufügen</button>
-                            <button onClick={handleCloseModal}>Abbrechen</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {isImportModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>Datei importieren</h2>
-                        <input
-                            type="file"
-                            accept=".csv, .xlsx"
-                            onChange={(e) => setImportFile(e.target.files[0])}
-                        />
-                        <div className="modal-buttons">
-                            <button onClick={handleImportCSV}>Importieren</button>
-                            <button onClick={handleImportCloseModal}>Abbrechen</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/* 🔹 Buchungs-Pop-up */}
-            {isBookingModalOpen && (
-                <div className="modal-overlay">
-                    <div className="booking-modal">
-                        <h2>Buchung hinzufügen</h2>
-
-                        <input type="text" name="title" placeholder="Titel" value={bookingData.title} onChange={handleBookingInputChange} />
-                        <input type="number" name="amount" placeholder="Betrag" value={bookingData.amount} onChange={handleBookingInputChange} />
-                        <input type="date" name="date" value={bookingData.date} onChange={handleBookingInputChange} />
-
-                        {/* 🔹 Auswahl für Operator */}
-                        <div>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="operator"
-                                    value="+"
-                                    checked={bookingData.operator === "+"}
-                                    onChange={handleBookingInputChange}
-                                /> Plus (+)
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="operator"
-                                    value="-"
-                                    checked={bookingData.operator === "-"}
-                                    onChange={handleBookingInputChange}
-                                /> Minus (-)
-                            </label>
-                        </div>
-
-                        <h3>Schüler auswählen</h3>
-                        <button className="btn-select-all" onClick={handleSelectAll}>
-                            {selectedStudents.length === filteredSchueler.length ? 'Alle abwählen' : 'Alle auswählen'}
-                        </button>
-
-                        <div className="booking-student-list">
-                            {filteredSchueler.map(student => (
-                                <label key={student.id} className="booking-student-checkbox">
-                                    {student.name} {student.surname}
-                                    <input type="checkbox"
-                                        checked={selectedStudents.includes(student.id)}
-                                        onChange={() => handleSelectStudent(student.id)}
-                                    />
-                                </label>
-                            ))}
-                        </div>
-
-                        <div className="booking-modal-buttons">
-                            <button className="btn-save" onClick={handleSaveBooking}>Speichern</button>
-                            <button className="btn-cancel" onClick={handleCloseBookingModal}>Abbrechen</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-        </div>
+            <Footer />
+        </>
     );
 }
