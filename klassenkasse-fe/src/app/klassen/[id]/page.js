@@ -233,19 +233,21 @@ export default function ClassDetail() {
                         const studentBalance = student.balance || [];
 
                         return (
-                            <div key={student.id} className="student-card" onClick={() => toggleDropdown(student.id)}>
-                                <div className="student-header">
-                                    <span>{student.name + " " + student.surname}</span>
-                                    <span style={{
-                                        color: studentBalance.reduce((sum, b) =>
-                                            b.operator === '-' ? sum - b.amount : sum + b.amount, 0) < 0 ? 'red' : 'green'
-                                    }}>
-                                        {studentBalance.reduce((sum, b) =>
-                                            b.operator === '-' ? sum - b.amount : sum + b.amount, 0
-                                        ).toFixed(2) || "0.00"} Fr.-
-                                    </span>
-                                    <button className='btn-abbuchung'>Abbuchen ✈</button>
-                                </div>
+                            <div 
+                            key={student.id} 
+                            className={`student-card ${studentBalance.reduce((sum, b) =>
+                                b.operator === '-' ? sum - b.amount : sum + b.amount, 0) < 0 ? 'negative-balance' : ''}`} 
+                            onClick={() => toggleDropdown(student.id)}
+                        >
+                            <div className="student-header">
+                                <span className="student-name">{student.name + " " + student.surname}</span>
+                                <span className="student-balance">
+                                    {studentBalance.reduce((sum, b) =>
+                                        b.operator === '-' ? sum - b.amount : sum + b.amount, 0
+                                    ).toFixed(2) || "0.00"} Fr.-
+                                </span>
+                                <button className='btn-abbuchung'>Abbuchen ✈</button>
+                            </div>
                                 {openStudent === student.id && (
                                     <div className="transaction-list">
                                         <table>
