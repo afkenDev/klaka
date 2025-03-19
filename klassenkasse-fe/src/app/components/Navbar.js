@@ -9,7 +9,10 @@ export default function Navbar() {
         <nav className="navbar">
             {/* Logo links */}
             <div className="navbar-logo">
-                <Image src="/pic/logo-small.png" alt="Logo" width={100} height={100} />
+                <a href="/">
+                <Image src="/pic/logo-small.png" alt="Logo" width={130} height={100} />
+
+                </a>
             </div>
 
             {/* Login + Semester + Klassenübersicht rechts */}
