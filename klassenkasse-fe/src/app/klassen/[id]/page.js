@@ -15,6 +15,9 @@ export default function ClassDetail() {
     const { id } = useParams();
     const router = useRouter();
     const { schueler: fetchedSchueler, loading, error } = useSchuelerMitBalance();
+    //Settings
+    const [selectedStudentSettings, setSelectedStudentSettings] = useState(null);
+    const [editData, setEditData] = useState({ name: '', surname: '', mobile: '' });
 
     const [state, setState] = useState({
         localSchueler: [],
@@ -29,10 +32,22 @@ export default function ClassDetail() {
         isImportModalOpen: false
     });
 
+    useEffect(() => {
+        if (state.localSchueler.length === 0) {
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: fetchedSchueler // Setze den neuen Array direkt
+            }));
+        }
+    }, [fetchedSchueler, state.localSchueler.length]);
+
     if (loading) return <div className="container">Lade Daten...</div>;
     if (error) return <div className="container">Fehler: {error}</div>;
 
-    const allSchueler = [...fetchedSchueler, ...state.localSchueler];
+    const allSchueler = [...state.localSchueler];
+
+    console.log("Alle ", allSchueler)
+    console.log("Fetch: ", fetchedSchueler)
 
     const toggleDropdown = (studentId) => {
         setState(prevState => ({
@@ -182,6 +197,81 @@ export default function ClassDetail() {
         }
     };
 
+    //Settings
+    const openSettings = (student) => {
+        setSelectedStudentSettings(student);
+        setEditData({
+            name: student.name,
+            surname: student.surname,
+            mobile: student.mobile || '',
+        });
+    };
+
+    const handleInputSettingsChange = (e) => {
+        const { name, value } = e.target;
+        setEditData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSettingsSave = async () => {
+        if (!selectedStudentSettings) return;
+
+        const updatedStudent = {
+            ...editData,
+            mail: `${editData.name.toLowerCase()}.${editData.surname.toLowerCase()}@stud.kbw.ch`,
+        };
+
+        try {
+            const response = await fetch(`/api/schueler/${selectedStudentSettings.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedStudent),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error('Fehler beim Speichern der Änderungen');
+
+            console.log(data.data); // Überprüfe, ob die Daten korrekt zurückgegeben werden
+
+            // Aktualisiere den Schüler direkt im Zustand mit den neuen Daten
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: prevState.localSchueler.map(student =>
+                    student.id === selectedStudentSettings.id ? { ...student, ...data.data } : student
+                ),
+            }));
+
+            setSelectedStudentSettings(null); // Schließt das Modal
+        } catch (error) {
+            console.error(error);
+            alert('Fehler beim Aktualisieren der Daten.');
+        }
+    };
+
+
+    const handleSettingsDelete = async () => {
+        if (!selectedStudentSettings || !confirm(`Schüler ${selectedStudentSettings.name} ${selectedStudentSettings.surname} wirklich löschen?`)) return;
+
+        try {
+            const response = await fetch(`/api/schueler/${selectedStudentSettings.id}`, { method: 'DELETE' });
+
+            if (!response.ok) throw new Error('Fehler beim Löschen');
+
+            // Entfernt den Schüler aus der lokalen Liste
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: prevState.localSchueler.filter(student => student.id !== selectedStudentSettings.id),
+            }));
+
+            setSelectedStudentSettings(null); // Schließt das Modal
+        } catch (error) {
+            console.error(error);
+            alert('Fehler beim Löschen des Schülers.');
+        }
+    };
+
+
+
 
     const filteredSchueler = allSchueler
         .filter(schueler => String(schueler.class) === String(id))
@@ -190,6 +280,7 @@ export default function ClassDetail() {
         )
         .sort((a, b) => a.surname.toLowerCase().localeCompare(b.surname.toLowerCase()));
 
+    console.log(state.localSchueler)
     return (
         <>
             <Navbar />
@@ -213,6 +304,7 @@ export default function ClassDetail() {
                                 student={student}
                                 onToggleDropdown={toggleDropdown}
                                 isOpen={state.openStudent === student.id}
+                                onOpenSettings={openSettings}
                             />
                         ))
                     ) : (
@@ -280,6 +372,41 @@ export default function ClassDetail() {
                         onSelectAll={handleSelectAll}
                     />
                 )}
+                {selectedStudentSettings && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Schüler bearbeiten</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Vorname"
+                                value={editData.name}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <input
+                                type="text"
+                                name="surname"
+                                placeholder="Nachname"
+                                value={editData.surname}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <input
+                                type="text"
+                                name="mobile"
+                                placeholder="Mobile (optional)"
+                                value={editData.mobile}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <p><strong>Email:</strong> {`${editData.name.toLowerCase()}.${editData.surname.toLowerCase()}@stud.kbw.ch`}</p>
+                            <div className="modal-buttons">
+                                <button onClick={handleSettingsSave}>Speichern</button>
+                                <button className="btn-delete" onClick={handleSettingsDelete}>Löschen</button>
+                                <button onClick={() => setSelectedStudentSettings(null)}>Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
             <Footer />
         </>

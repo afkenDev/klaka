@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/student.css';
 // components/StudentCard.js
-export default function StudentCard({ student, onToggleDropdown, isOpen }) {
+export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenSettings }) {
     const studentBalance = student.balance || [];
 
     // Berechne den Saldo, sichere den Wert von 'balance'
@@ -16,6 +16,9 @@ export default function StudentCard({ student, onToggleDropdown, isOpen }) {
     // Sicherstellen, dass 'balance' eine Zahl ist und 'toFixed' anwendbar ist
     const formattedBalance = (typeof balance === 'number' && !isNaN(balance)) ? balance.toFixed(2) : '0.00';
 
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+
     return (
         <div
             key={student.id}
@@ -27,7 +30,10 @@ export default function StudentCard({ student, onToggleDropdown, isOpen }) {
                 <span className="student-balance">
                     {formattedBalance} Fr.-
                 </span>
-                <button className='btn-abbuchung'>Abbuchen ✈</button>
+                <button className="btn-abbuchung" onClick={(event) => {
+                    event.stopPropagation();
+                    onOpenSettings(student);
+                }}>Einstellung ✈</button>
             </div>
             {isOpen && (
                 <div className="transaction-list">
@@ -64,6 +70,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen }) {
                     </table>
                 </div>
             )}
+
         </div>
     );
 }
