@@ -44,6 +44,26 @@
   transform: translateY(-2px);
 }
 
+/* Page title */
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  color: #1f2937;
+  position: relative;
+}
+
+.title:after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #3b82f6;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
 /* Student list container */
 .student-list {
   margin-top: 20px;

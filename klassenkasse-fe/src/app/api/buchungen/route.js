@@ -38,7 +38,10 @@ export async function POST(req) {
             return NextResponse.json({ error: 'Fehler beim Speichern der Schüler-Zuordnung.' }, { status: 500 });
         }
 
-        return NextResponse.json({ message: 'Buchung erfolgreich gespeichert!', balanceId }, { status: 201 });
+        return NextResponse.json({
+            message: 'Buchung erfolgreich gespeichert!',
+            data: [balanceEntry]  // Ein Array mit der vollständigen Buchung zurückgeben
+        }, { status: 201 });
 
     } catch (error) {
         console.error('Server-Fehler:', error);

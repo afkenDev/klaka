@@ -130,6 +130,17 @@ export default function ClassDetail() {
         }));
     };
 
+    const handleSelectAll = () => {
+        setState(prevState => {
+            const allSelected = prevState.selectedStudents.length === filteredSchueler.length;
+            return {
+                ...prevState,
+                selectedStudents: allSelected ? [] : filteredSchueler.map(s => s.id),
+            };
+        });
+    };
+
+
     const handleSaveBooking = async () => {
         if (!state.bookingData.title || !state.bookingData.amount || state.selectedStudents.length === 0) {
             alert('Bitte alle Felder ausfüllen und mindestens einen Schüler auswählen.');
@@ -154,34 +165,23 @@ export default function ClassDetail() {
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Fehler beim Speichern der Buchung');
 
-            alert('Buchung erfolgreich gespeichert!');
-
-            const updatedSchueler = [...state.localSchueler];
-            state.selectedStudents.forEach(studentId => {
-                const student = updatedSchueler.find(s => s.id === studentId);
-                if (student) {
-                    const newBalance = {
-                        name: state.bookingData.title,
-                        amount: state.bookingData.amount,
-                        date: state.bookingData.date,
-                        operator: state.bookingData.operator,
-                    };
-
-                    if (!student.balance) student.balance = [];
-                    student.balance.push(newBalance);
-                }
-            });
-
             setState(prevState => ({
                 ...prevState,
-                localSchueler: updatedSchueler
+                localSchueler: prevState.localSchueler.map(s =>
+                    state.selectedStudents.includes(s.id)
+                        ? { ...s, balance: [...(s.balance || []), data.data[0]] }
+                        : s
+                )
             }));
+
+            alert('Buchung erfolgreich gespeichert!');
             handleModalState('isBookingModalOpen', false);
         } catch (error) {
             console.error('Fehler beim Speichern der Buchung:', error);
             alert('Es gab einen Fehler: ' + error.message);
         }
     };
+
 
     const filteredSchueler = allSchueler
         .filter(schueler => String(schueler.class) === String(id))
@@ -277,6 +277,7 @@ export default function ClassDetail() {
                         students={filteredSchueler}
                         selectedStudents={state.selectedStudents}
                         onSelectStudent={handleSelectStudent}
+                        onSelectAll={handleSelectAll}
                     />
                 )}
             </div>

@@ -40,6 +40,7 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                     {selectedStudents.length === students.length ? 'Alle abwählen' : 'Alle auswählen'}
                 </button>
 
+
                 <div className="booking-student-list">
                     {students.map(student => (
                         <label key={student.id} className="booking-student-checkbox">
