@@ -5,6 +5,19 @@ import '../styles/student.css';
 export default function BookingModal({ isOpen, onClose, onSave, bookingData, onInputChange, students, selectedStudents, onSelectStudent, onSelectAll }) {
     if (!isOpen) return null;
 
+    const formatDateForDisplay = (isoDate) => {
+        if (!isoDate) return '';
+        const [year, month, day] = isoDate.split('-'); // ISO-Format in dd.mm.yyyy umwandeln
+        return `${day}.${month}.${year}`;
+    };
+
+    const formatDateForStorage = (displayDate) => {
+        const [day, month, year] = displayDate.split('.');
+        return `${year}-${month}-${day}`; // Zurück in yyyy-MM-dd für das Backend
+    };
+
+
+
     return (
         <div className="modal-overlay">
             <div className="booking-modal">
@@ -12,7 +25,14 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
 
                 <input type="text" name="title" placeholder="Titel" value={bookingData.title} onChange={onInputChange} />
                 <input type="number" name="amount" placeholder="Betrag" value={bookingData.amount} onChange={onInputChange} />
-                <input type="date" name="date" value={bookingData.date} onChange={onInputChange} />
+                <input
+                    type="date"
+                    name="date"
+                    value={formatDateForStorage(bookingData.date)} // Backend benötigt yyyy-MM-dd
+                    onChange={(e) => onInputChange({
+                        target: { name: 'date', value: formatDateForDisplay(e.target.value) } // Anzeige als dd.mm.yyyy
+                    })}
+                />
 
                 <div>
                     <label>

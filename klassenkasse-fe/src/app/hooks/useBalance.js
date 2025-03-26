@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
+import { useParams } from 'next/navigation'; // Damit wir die class_id bekommen
 
 export function useBalance() {
+    const { id } = useParams(); // Holt die aktuelle class_id aus der URL
+
     const [data, setData] = useState({
         balance: [],
         loading: true,
@@ -13,7 +16,8 @@ export function useBalance() {
             try {
                 const { data, error } = await supabase
                     .from("balance")
-                    .select("id, name, amount, date, updated_at, operator");
+                    .select("id, name, amount, date, updated_at, operator, class_id")
+                    .eq("class_id", id); // Nur Einträge mit der passenden class_id abrufen
 
                 if (error) throw error;
 
@@ -28,8 +32,9 @@ export function useBalance() {
             }
         };
 
-        fetchBalance();
-    }, []);
+        if (id) fetchBalance(); // Nur laden, wenn class_id vorhanden ist
+
+    }, [id]); // Aktualisiert sich, wenn sich die class_id ändert
 
     return data;
 }

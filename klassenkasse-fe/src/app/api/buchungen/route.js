@@ -3,27 +3,27 @@ import { supabase } from '../../lib/supabaseClient.js';
 
 export async function POST(req) {
     try {
-        const { name, amount, date, students, operator } = await req.json();
+        const { name, amount, date, students, operator, class_id } = await req.json();
 
-        if (!name || !amount || !date || !operator || !students || students.length === 0) {
+        if (!name || !amount || !date || !operator || !students || students.length === 0 || !class_id) {
             return NextResponse.json({ error: 'Alle Felder sind erforderlich.' }, { status: 400 });
         }
 
-        // 1️⃣ Buchung mit Operator in balance-Tabelle speichern
+        // 1️⃣ Buchung mit class_id in balance-Tabelle speichern
         const { data: balanceEntry, error: balanceError } = await supabase
             .from('balance')
-            .insert([{ name, amount, date, operator }]) // Operator hinzufügen
+            .insert([{ name, amount, date, operator, class_id }])
             .select()
-            .single(); // Einzelnen Eintrag abrufen
+            .single();
 
         if (balanceError) {
             console.error('Fehler beim Speichern der Buchung:', balanceError);
             return NextResponse.json({ error: 'Fehler beim Speichern der Buchung.' }, { status: 500 });
         }
 
-        const balanceId = balanceEntry.id; // ID der erstellten Buchung
+        const balanceId = balanceEntry.id;
 
-        // 2️⃣ Verknüpfungen in der schueler_balance-Tabelle speichern
+        // 2️⃣ Verknüpfungen in schueler_balance speichern
         const schuelerBalanceEntries = students.map(schuelerId => ({
             schueler_id: schuelerId,
             balance_id: balanceId,
@@ -40,7 +40,7 @@ export async function POST(req) {
 
         return NextResponse.json({
             message: 'Buchung erfolgreich gespeichert!',
-            data: [balanceEntry]  // Ein Array mit der vollständigen Buchung zurückgeben
+            data: [balanceEntry]
         }, { status: 201 });
 
     } catch (error) {
@@ -48,3 +48,4 @@ export async function POST(req) {
         return NextResponse.json({ error: 'Interner Server-Fehler' }, { status: 500 });
     }
 }
+

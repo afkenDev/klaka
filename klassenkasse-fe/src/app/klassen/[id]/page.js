@@ -6,9 +6,11 @@ import '../../styles/student.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useSchuelerMitBalance } from '../../hooks/useSchuelerMitBalance';
+import { useBalance } from '../../hooks/useBalance';
 import BookingModal from '../../components/BookingModal';
 import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
+import BookingListModal from '../../components/BookingListModal';
 import * as XLSX from 'xlsx';
 
 export default function ClassDetail() {
@@ -19,6 +21,20 @@ export default function ClassDetail() {
     const [selectedStudentSettings, setSelectedStudentSettings] = useState(null);
     const [editData, setEditData] = useState({ name: '', surname: '', mobile: '' });
 
+    const [isBookingListModalOpen, setIsBookingListModalOpen] = useState(false);
+    const [bookings, setBookings] = useState([]);
+    const { balance: fetchedBalance, loadingBalance, errorBalance } = useBalance();
+    const [localBalance, setLocalBalance] = useState([]);
+    const allBalance = [...fetchedBalance, ...localBalance];
+
+    const getFormattedToday = () => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0'); // Führende 0 hinzufügen
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Januar = 0, daher +1
+        const year = today.getFullYear();
+        return `${day}.${month}.${year}`;
+    };
+
     const [state, setState] = useState({
         localSchueler: [],
         searchQuery: '',
@@ -27,9 +43,11 @@ export default function ClassDetail() {
         newStudent: { name: '', surname: '', mobile: '' },
         isBookingModalOpen: false,
         selectedStudents: [],
-        bookingData: { title: '', amount: '', date: new Date().toISOString().split('T')[0], operator: '-' },
+        bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
         importFile: null,
-        isImportModalOpen: false
+        isImportModalOpen: false,
+        bookings: [],
+        isBookingListModalOpen: false
     });
 
     useEffect(() => {
@@ -155,6 +173,10 @@ export default function ClassDetail() {
         });
     };
 
+    const formatDateForStorage = (displayDate) => {
+        const [day, month, year] = displayDate.split('.');
+        return `${day}.${month}.${year}`; // Zurück in yyyy-MM-dd für das Backend
+    };
 
     const handleSaveBooking = async () => {
         if (!state.bookingData.title || !state.bookingData.amount || state.selectedStudents.length === 0) {
@@ -162,19 +184,30 @@ export default function ClassDetail() {
             return;
         }
 
+        const class_id = String(id); // Klassen-ID als String speichern
+        console.log("class_id: ", class_id);
+
         const bookingPayload = {
             name: state.bookingData.title,
             amount: parseFloat(state.bookingData.amount),
-            date: state.bookingData.date,
+            date: formatDateForStorage(state.bookingData.date),
             operator: state.bookingData.operator,
+            class_id: class_id,
             students: state.selectedStudents,
         };
+
+        console.log("bookingPayload: ", bookingPayload);
+
+        // newBookingData exakt wie bookingPayload machen
+        const newBookingData = { ...bookingPayload };
+
+        console.log("newBookingData: ", newBookingData);
 
         try {
             const response = await fetch('/api/buchungen', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingPayload),
+                body: JSON.stringify(newBookingData),
             });
 
             const data = await response.json();
@@ -187,7 +220,7 @@ export default function ClassDetail() {
                         ? { ...s, balance: [...(s.balance || []), data.data[0]] }
                         : s
                 ),
-                bookingData: { title: '', amount: '', date: new Date().toISOString().split('T')[0], operator: '-' },
+                bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
                 selectedStudents: []
             }));
 
@@ -198,6 +231,7 @@ export default function ClassDetail() {
             alert('Es gab einen Fehler: ' + error.message);
         }
     };
+
 
     //Settings Schüler
     const openSettings = (student) => {
@@ -312,7 +346,29 @@ export default function ClassDetail() {
         }
     };
 
+    //Alle Einträge
+    const handleOpenBookingList = async () => {
+        setState(prevState => ({
+            ...prevState,
+            bookings: [...fetchedBalance, ...localBalance], // Buchungen aus State setzen
+            isBookingListModalOpen: true, // Modal öffnen
+        }));
+    };
 
+    const handleDeleteBooking = async (bookingId) => {
+        if (!confirm('Möchtest du diese Buchung wirklich löschen?')) return;
+
+        try {
+            const response = await fetch(`/api/buchungen/${bookingId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Fehler beim Löschen');
+
+            setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
+            alert('Buchung erfolgreich gelöscht!');
+        } catch (error) {
+            console.error('Fehler beim Löschen:', error);
+            alert('Fehler beim Löschen: ' + error.message);
+        }
+    };
 
 
     const filteredSchueler = allSchueler
@@ -359,6 +415,7 @@ export default function ClassDetail() {
                     <button className="btn-orange" onClick={() => handleModalState('isBookingModalOpen', true)}>Buchung hinzufügen</button>
                     <button className="btn-black" onClick={() => handleModalState('isModalOpen', true)}>Schüler:in hinzufügen</button>
                     <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Liste importieren</button>
+                    <button className='btn-black' onClick={handleOpenBookingList}>Alle Einträge</button>
                 </div>
 
                 {state.isModalOpen && (
@@ -449,6 +506,15 @@ export default function ClassDetail() {
                         </div>
                     </div>
                 )}
+                <BookingListModal
+                    isOpen={state.isBookingListModalOpen} // Direkt aus state
+                    onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
+                    bookings={state.bookings} // Buchungen aus state holen
+                    onEdit={(booking) => console.log("Edit booking:", booking)}
+                    onDelete={handleDeleteBooking}
+                />
+
+
 
             </div>
             <Footer />
