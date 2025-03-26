@@ -1,22 +1,24 @@
 import { useState } from 'react';
+import { supabase } from '../lib/supabaseClient.js'; // Falls du eine Datei hast, die den Supabase-Client exportiert
 import '../styles/student.css';
-// components/StudentCard.js
-export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenSettings }) {
+
+export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenSettings, onDeleteTransaction }) {
     const studentBalance = student.balance || [];
 
-    // Berechne den Saldo, sichere den Wert von 'balance'
     const balance = studentBalance.reduce((sum, b) => {
-        const amount = parseFloat(b.amount);  // Versuche, die Menge als Zahl zu interpretieren
+        const amount = parseFloat(b.amount);
         if (!isNaN(amount)) {
             return b.operator === '-' ? sum - amount : sum + amount;
         }
-        return sum;  // Falls 'amount' keine Zahl ist, nichts ändern
+        return sum;
     }, 0);
 
-    // Sicherstellen, dass 'balance' eine Zahl ist und 'toFixed' anwendbar ist
     const formattedBalance = (typeof balance === 'number' && !isNaN(balance)) ? balance.toFixed(2) : '0.00';
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    // Entfernen-Funktion für Transaktionen
 
 
     return (
@@ -57,7 +59,17 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                         </td>
                                         <td>{b.date}</td>
                                         <td>
-                                            <button className="btn-delete">Löschen</button>
+                                            <button
+                                                className="btn-delete"
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    console.log("Lösche Buchung mit", { schuelerId: student.id, balanceId: b.id });
+                                                    onDeleteTransaction(student.id, b.id);
+                                                }}
+                                                disabled={loading}
+                                            >
+                                                {loading ? 'Lösche...' : 'Entfernen'}
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -70,7 +82,6 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                     </table>
                 </div>
             )}
-
         </div>
     );
 }

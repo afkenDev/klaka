@@ -186,7 +186,9 @@ export default function ClassDetail() {
                     state.selectedStudents.includes(s.id)
                         ? { ...s, balance: [...(s.balance || []), data.data[0]] }
                         : s
-                )
+                ),
+                bookingData: { title: '', amount: '', date: new Date().toISOString().split('T')[0], operator: '-' },
+                selectedStudents: []
             }));
 
             alert('Buchung erfolgreich gespeichert!');
@@ -197,7 +199,7 @@ export default function ClassDetail() {
         }
     };
 
-    //Settings
+    //Settings Schüler
     const openSettings = (student) => {
         setSelectedStudentSettings(student);
         setEditData({
@@ -270,6 +272,46 @@ export default function ClassDetail() {
         }
     };
 
+    //Einträge
+    const handleDeleteTransaction = async (schuelerId, balanceId) => {
+        console.log("Lösche Buchung:", { schuelerId, balanceId });
+
+        if (!schuelerId || !balanceId) {
+            alert("Fehler: Ungültige IDs!");
+            return;
+        }
+
+        if (!confirm("Buchung wirklich löschen?")) return;
+
+        try {
+            const response = await fetch(`/api/schueler_balance`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ schueler_id: schuelerId, balance_id: balanceId }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Fehler beim Löschen der Buchung");
+            }
+
+            // Entferne die Balance aus der lokalen Liste
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: prevState.localSchueler.map(student =>
+                    student.id === schuelerId
+                        ? { ...student, balance: student.balance.filter(b => b.id !== balanceId) }
+                        : student
+                ),
+            }));
+
+
+        } catch (error) {
+            console.error("Lösch-Fehler:", error);
+            alert(error.message);
+        }
+    };
+
 
 
 
@@ -305,6 +347,7 @@ export default function ClassDetail() {
                                 onToggleDropdown={toggleDropdown}
                                 isOpen={state.openStudent === student.id}
                                 onOpenSettings={openSettings}
+                                onDeleteTransaction={handleDeleteTransaction}
                             />
                         ))
                     ) : (
