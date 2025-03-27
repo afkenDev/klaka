@@ -11,6 +11,7 @@ import BookingModal from '../../components/BookingModal';
 import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
 import BookingListModal from '../../components/BookingListModal';
+import { supabase } from '../../lib/supabaseClient.js';
 import * as XLSX from 'xlsx';
 
 export default function ClassDetail() {
@@ -198,28 +199,26 @@ export default function ClassDetail() {
 
         console.log("bookingPayload: ", bookingPayload);
 
-        // newBookingData exakt wie bookingPayload machen
-        const newBookingData = { ...bookingPayload };
-
-        console.log("newBookingData: ", newBookingData);
-
         try {
             const response = await fetch('/api/buchungen', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newBookingData),
+                body: JSON.stringify(bookingPayload),
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Fehler beim Speichern der Buchung');
 
+            const newBooking = data.data[0]; // Die neue Buchung aus der API
+
             setState(prevState => ({
                 ...prevState,
                 localSchueler: prevState.localSchueler.map(s =>
                     state.selectedStudents.includes(s.id)
-                        ? { ...s, balance: [...(s.balance || []), data.data[0]] }
+                        ? { ...s, balance: [...(s.balance || []), newBooking] }
                         : s
                 ),
+                bookings: [...prevState.bookings, newBooking], // NEU: Direkt in die Buchungsliste einfügen
                 bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
                 selectedStudents: []
             }));
@@ -231,6 +230,7 @@ export default function ClassDetail() {
             alert('Es gab einen Fehler: ' + error.message);
         }
     };
+
 
 
     //Settings Schüler
@@ -350,25 +350,85 @@ export default function ClassDetail() {
     const handleOpenBookingList = async () => {
         setState(prevState => ({
             ...prevState,
-            bookings: [...fetchedBalance, ...localBalance], // Buchungen aus State setzen
-            isBookingListModalOpen: true, // Modal öffnen
+            bookings: prevState.bookings.length > 0
+                ? prevState.bookings  // Falls schon Einträge da sind, nicht überschreiben
+                : [...fetchedBalance, ...localBalance],
+            isBookingListModalOpen: true,
         }));
     };
 
+
     const handleDeleteBooking = async (bookingId) => {
-        if (!confirm('Möchtest du diese Buchung wirklich löschen?')) return;
+        if (!confirm("Möchtest du diese Buchung wirklich löschen?")) return;
 
         try {
-            const response = await fetch(`/api/buchungen/${bookingId}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Fehler beim Löschen');
+            // 1️⃣ Suche alle Schüler, die diese Buchung haben
+            const { data: relatedStudents, error: lookupError } = await supabase
+                .from('schueler_balance')
+                .select('schueler_id')
+                .eq('balance_id', bookingId);
 
-            setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
-            alert('Buchung erfolgreich gelöscht!');
+            if (lookupError || !relatedStudents) throw new Error("Fehler beim Abrufen der Schüler");
+
+            // 2️⃣ Alle Einträge in `schueler_balance` für diese Buchung löschen
+            const { error: deleteBalanceError } = await supabase
+                .from('schueler_balance')
+                .delete()
+                .eq('balance_id', bookingId);
+
+            if (deleteBalanceError) throw new Error("Fehler beim Löschen der Schülerzuordnung");
+
+            // 3️⃣ Die Buchung selbst löschen
+            const { error: deleteBookingError } = await supabase
+                .from('balance')
+                .delete()
+                .eq('id', bookingId);
+
+            if (deleteBookingError) throw new Error("Fehler beim Löschen der Buchung");
+
+            // 4️⃣ State aktualisieren
+            setState(prevState => ({
+                ...prevState,
+                bookings: prevState.bookings.filter(booking => booking.id !== bookingId),
+                localSchueler: prevState.localSchueler.map(student =>
+                    relatedStudents.some(s => s.schueler_id === student.id)
+                        ? { ...student, balance: student.balance.filter(b => b.id !== bookingId) }
+                        : student
+                ),
+            }));
+
+            alert("Buchung erfolgreich gelöscht!");
         } catch (error) {
-            console.error('Fehler beim Löschen:', error);
-            alert('Fehler beim Löschen: ' + error.message);
+            console.error("Fehler beim Löschen:", error);
+            alert(error.message);
         }
     };
+
+    const handleEditBooking = async (updatedBooking) => {
+        try {
+            const response = await fetch(`/api/buchungen/${updatedBooking.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedBooking),
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || "Fehler beim Speichern");
+
+            setState(prevState => ({
+                ...prevState,
+                bookings: prevState.bookings.map(b => b.id === updatedBooking.id ? updatedBooking : b),
+            }));
+
+            alert("Buchung erfolgreich aktualisiert!");
+        } catch (error) {
+            console.error("Fehler beim Bearbeiten:", error);
+            alert(error.message);
+        }
+    };
+
+
+
 
 
     const filteredSchueler = allSchueler
@@ -510,7 +570,7 @@ export default function ClassDetail() {
                     isOpen={state.isBookingListModalOpen} // Direkt aus state
                     onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
                     bookings={state.bookings} // Buchungen aus state holen
-                    onEdit={(booking) => console.log("Edit booking:", booking)}
+                    onEdit={handleEditBooking}
                     onDelete={handleDeleteBooking}
                 />
 

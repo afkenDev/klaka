@@ -7,14 +7,15 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
 
     const formatDateForDisplay = (isoDate) => {
         if (!isoDate) return '';
-        const [year, month, day] = isoDate.split('-'); // ISO-Format in dd.mm.yyyy umwandeln
-        return `${day}.${month}.${year}`;
+        const [year, month, day] = isoDate.split('-'); // ISO-Format (yyyy-MM-dd)
+        return `${day}.${month}.${year}`; // Umwandlung in dd.mm.yyyy
     };
 
     const formatDateForStorage = (displayDate) => {
-        const [day, month, year] = displayDate.split('.');
-        return `${year}-${month}-${day}`; // Zurück in yyyy-MM-dd für das Backend
+        const [day, month, year] = displayDate.split('.'); // dd.mm.yyyy
+        return `${year}-${month}-${day}`; // Umwandlung in yyyy-MM-dd
     };
+
 
 
 
