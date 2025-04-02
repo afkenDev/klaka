@@ -1,40 +1,39 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient.js';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 export function useKlassen() {
-  const [data, setData] = useState({
-    klassen: [],
-    loading: true,
-    error: null
-  });
+  const [klassen, setKlassen] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchKlassen = async () => {
-      try {
-        // Abrufen der Daten aus der Supabase-Tabelle "klasse"
-        const { data, error } = await supabase.from("klasse").select("*");
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-        if (error) throw error;
-
-        // Extrahiere die eindeutigen Lehrer-Namen
-        const uniqueLehrer = [
-          ...new Set(data.map(item => item.vorname + ' ' + item.nachname)) // Lehrername als Vorname + Nachname
-        ];
-
-        setData({
-          klassen: data,
-          lehrer: uniqueLehrer,
-          loading: false,
-          error: null
-        });
-      } catch (err) {
-        console.error("Fehler beim Laden der Klassen:", err);
-        setData(prev => ({ ...prev, error: err.message, loading: false }));
+      if (userError || !user) {
+        setError('Nicht eingeloggt');
+        setLoading(false);
+        return;
       }
+
+      const response = await fetch('/api/getData', {
+        method: 'POST',
+        body: JSON.stringify({ userId: user.id }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || 'Fehler beim Laden der Klassen');
+      } else {
+        setKlassen(result);
+      }
+
+      setLoading(false);
     };
 
     fetchKlassen();
   }, []);
 
-  return data;
+  return { klassen, loading, error };
 }

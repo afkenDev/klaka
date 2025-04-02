@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import { useRouter } from 'next/navigation';
 import { useKlassen } from '../hooks/useKlassen';
 import { useSchuelerMitBalance } from '../hooks/useSchuelerMitBalance'; // Für Schülerdaten mit Balance
+import { supabase } from '../lib/supabaseClient';
 
 export default function KlassenPage() {
   const router = useRouter();
@@ -18,11 +19,12 @@ export default function KlassenPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newClass, setNewClass] = useState({
     klassenname: '',
-    lehrer: '',
     vorname: '',
     nachname: '',
     color: 'blue'
   });
+
+
   const [selectedClassId, setSelectedClassId] = useState(null); // Neuer Zustand für die ausgewählte Klasse
 
   const allKlassen = [...fetchedKlassen, ...localKlassen];
@@ -46,39 +48,41 @@ export default function KlassenPage() {
     setNewClass((prev) => ({ ...prev, [name]: value }));
   };
 
+  
   //Klasse hinzufügen
   const handleAddClass = async () => {
-    if (!newClass.klassenname) return;
-
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+  
+      if (!user) {
+        alert("Nicht eingeloggt!");
+        return;
+      }
+  
       const response = await fetch('/api/klassen', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newClass),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newClass,
+          userId: user.id, // 💡 DAS ist der Trick!
+        }),
       });
-
-      const data = await response.json();
-      console.log(data); // Protokolliere die Antwort
-
+  
+      const result = await response.json();
+  
       if (!response.ok) {
-        throw new Error('Fehler beim Hinzufügen der Klasse');
+        throw new Error(result.message);
       }
-
-      // Überprüfen, ob die Daten nicht null oder leer sind, bevor wir sie verwenden
-      if (data && data.data && data.data.length > 0) {
-        setLocalKlassen((prevLocalKlassen) => [...prevLocalKlassen, data.data[0]]);
-        handleCloseModal();
-      } else {
-        console.error("Fehler: Keine gültigen Daten erhalten");
-        alert('Es gab ein Problem beim Hinzufügen der Klasse. Versuchen Sie es später erneut.');
-      }
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen der Klasse:', error);
-      alert('Es gab einen Fehler beim Hinzufügen der Klasse: ' + error.message);
+  
+      console.log("Erstellt:", result.data);
+      setLocalKlassen(prev => [...prev, result.data]);
+      handleCloseModal();
+    } catch (err) {
+      console.error("Fehler:", err.message);
+      alert("Fehler: " + err.message);
     }
   };
+  
 
 
 

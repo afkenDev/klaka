@@ -1,22 +1,40 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../lib/supabaseClient.js';
+import { supabase } from '../../lib/supabaseClient';
 
 export async function POST(req) {
-    try {
-        const { klassenname, vorname, nachname, color } = await req.json();
+  try {
+    // ✅ Nur EINMAL req.json() aufrufen
+    const payload = await req.json();
+    const { klassenname, vorname, nachname, color, userId } = payload;
 
-        // Einfügen der Klasse
-        const { data: insertData, error } = await supabase
-            .from('klasse')
-            .insert([{ klassenname, vorname, nachname, color }])
-            .select(); // .select() sorgt dafür, dass die eingefügten Daten zurückgegeben werden
+    console.log("Empfangene Daten:", payload);
 
-        if (error) throw error;
+    // 1️⃣ Klasse einfügen
+    const { data: insertedClass, error: insertError } = await supabase
+      .from('klasse')
+      .insert([{ klassenname, vorname, nachname, color }])
+      .select()
+      .single();
 
-        console.log("Eingefügte Daten: ", insertData);
-        return NextResponse.json({ message: 'Klasse hinzugefügt', data: insertData }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ message: error.message }, { status: 400 });
-    }
+    if (insertError) throw insertError;
+
+    const klasseId = insertedClass.id;
+
+    // 2️⃣ Verknüpfen mit user
+    const { error: linkError } = await supabase
+      .from('user_klasse')
+      .insert([{ user_id: userId, klasse_id: klasseId }]);
+
+    if (linkError) throw linkError;
+
+    return NextResponse.json(
+      { message: 'Klasse + Verbindung erfolgreich gespeichert.', data: insertedClass },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Fehler beim Klassen-Erstellen:", error);
+    return NextResponse.json({ message: error.message || "Unbekannter Fehler" }, { status: 400 });
+  }
+
+  
 }
-
