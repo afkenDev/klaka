@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  main {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      margin: 1rem;
+      padding: 1rem;
+    }
+  }
+  
+
+  
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+    color: #555;
+  }
+  
+  strong {
+    font-weight: bold;
+    color: #000;
+  }
+  
+  @media (max-width: 768px) {
+    main {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+  
+
+  .index {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .indexLink {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .indexLink:hover {
+    color: #0066cc;
+    text-decoration: underline;
+  }
+  
+  .mElements {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  
+  .seal {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    text-align: center;
+  }

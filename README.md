@@ -11,8 +11,9 @@
 Falls vorher gepusht wurde, zuerst den aktuellen Stand holen:  
 
 ```bash
-git checkout main
-git pull origin main
+git checkout dev /main
+git pull origin dev /main
+npm i
 ```
 ## 2️⃣ Neuen Feature-Branch erstellen
 Für jede neue Änderung einen eigenen Branch erstellen:
@@ -35,17 +36,15 @@ git push -u origin feature/beschreibung
 ```
  Der -u-Parameter stellt eine Verknüpfung mit dem Remote-Branch her.
  
-## 6️⃣ Merge-Vorbereitung
-Falls sich main geändert hat, bevor du mergen willst:
+## 6️⃣ Mergen
+Falls sich dev geändert hat, bevor du mergen willst und dann mergen:
 ```bash
-git checkout main
-git pull origin main
-git checkout feature/beschreibung
-git merge main  # oder `git rebase main`
+git checkout dev  /main
+git pull origin dev /main
+git merge feature/beschreibung   # oder `git rebase main`
+git push origin dev
 ```
-## 7️⃣ Merge in main (nach Absprache!)
-PR auf GitHub erstellen und reviewen lassen.
-Falls alles passt: Merge in main.
+## 7️⃣ Löschen der Feature Branch 
 Danach den Feature-Branch löschen:
 ```bash
 git branch -d feature/beschreibung

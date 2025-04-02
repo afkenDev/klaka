@@ -1,0 +1,94 @@
+:root {
+    --navbar-color: #F8F9FA;
+    --footer-color: #3EA1A3;
+    --button-color: #222222;
+    --orange-color: #FF9800;
+    --blue-color: #009EE0;
+    --font-color: #000000;
+}
+
+/* Login-Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('/pic/bg-kbw.jpg') center/cover no-repeat;
+    color: white;
+}
+
+/* Login-Formular Box */
+.login-form {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Formular Titel */
+.login-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* Eingabefelder */
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+/* Eingabefelder - Label & Input */
+.input-group label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Login Button */
+.login-submit-button {
+    background-color: var(--button-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Button Hover */
+.login-submit-button:hover {
+    background-color: #444;
+}
+
+/* Stil für den Zurück-Pfeil */
+.back-arrow {
+    font-size: 3rem;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    cursor: pointer;
+    color: var(--blue-color);
+    font-weight: bold;
+}
+
+.back-arrow:hover {
+    color: var(--orange-color);
+}
