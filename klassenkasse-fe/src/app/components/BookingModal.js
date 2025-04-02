@@ -25,7 +25,32 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                 <h2>Buchung hinzufügen</h2>
 
                 <input type="text" name="title" placeholder="Titel" value={bookingData.title} onChange={onInputChange} />
-                <input type="number" name="amount" placeholder="Betrag" value={bookingData.amount} onChange={onInputChange} />
+                <input
+                    type="number"
+                    name="amount"
+                    placeholder="Betrag"
+                    value={bookingData.amount}
+                    min="0"
+                    step="0.01"
+                    onChange={(e) => {
+                        const value = e.target.value;
+
+                        // Falls das Feld geleert wird, erlauben wir ""
+                        if (value === "") {
+                            onInputChange({ target: { name: "amount", value: "" } });
+                            return;
+                        }
+
+                        // Nur positive Werte erlauben
+                        const numericValue = parseFloat(value);
+                        if (!isNaN(numericValue) && numericValue >= 0) {
+                            onInputChange({ target: { name: "amount", value: value } });
+                        }
+                    }}
+                />
+
+
+
                 <input
                     type="date"
                     name="date"
@@ -43,7 +68,7 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                             value="+"
                             checked={bookingData.operator === "+"}
                             onChange={onInputChange}
-                        /> Plus (+)
+                        /> Addieren (+)
                     </label>
                     <label>
                         <input
@@ -52,7 +77,7 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                             value="-"
                             checked={bookingData.operator === "-"}
                             onChange={onInputChange}
-                        /> Minus (-)
+                        /> Subtrahieren (-)
                     </label>
                 </div>
 

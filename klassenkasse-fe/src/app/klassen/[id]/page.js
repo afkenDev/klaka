@@ -10,9 +10,14 @@ import { useBalance } from '../../hooks/useBalance';
 import BookingModal from '../../components/BookingModal';
 import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
+import ExportModal from '../../components/ExportModal';
 import BookingListModal from '../../components/BookingListModal';
 import { supabase } from '../../lib/supabaseClient.js';
 import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from "jspdf-autotable";
+import Image from "next/image";
+
 
 export default function ClassDetail() {
     const { id } = useParams();
@@ -21,6 +26,8 @@ export default function ClassDetail() {
     //Settings
     const [selectedStudentSettings, setSelectedStudentSettings] = useState(null);
     const [editData, setEditData] = useState({ name: '', surname: '', mobile: '' });
+
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
     const [isBookingListModalOpen, setIsBookingListModalOpen] = useState(false);
     const [bookings, setBookings] = useState([]);
@@ -78,9 +85,15 @@ export default function ClassDetail() {
     const handleModalState = (modalName, isOpen) => {
         setState(prevState => ({
             ...prevState,
-            [modalName]: isOpen
+            [modalName]: isOpen,
+            ...(modalName === 'isModalOpen' && !isOpen ? { newStudent: { name: '', surname: '', mobile: '' } } : {}),
+            ...(modalName === 'isBookingModalOpen' && !isOpen
+                ? { bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' }, selectedStudents: [] }
+                : {})
         }));
     };
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -185,19 +198,23 @@ export default function ClassDetail() {
             return;
         }
 
-        const class_id = String(id); // Klassen-ID als String speichern
-        console.log("class_id: ", class_id);
+        // Prüfen, ob der Betrag größer als 0 ist
+        const amount = parseFloat(state.bookingData.amount);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Der Betrag muss größer als 0 sein.');
+            return;
+        }
+
+        const class_id = String(id);
 
         const bookingPayload = {
             name: state.bookingData.title,
-            amount: parseFloat(state.bookingData.amount),
+            amount: amount,
             date: formatDateForStorage(state.bookingData.date),
             operator: state.bookingData.operator,
             class_id: class_id,
             students: state.selectedStudents,
         };
-
-        console.log("bookingPayload: ", bookingPayload);
 
         try {
             const response = await fetch('/api/buchungen', {
@@ -209,7 +226,7 @@ export default function ClassDetail() {
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Fehler beim Speichern der Buchung');
 
-            const newBooking = data.data[0]; // Die neue Buchung aus der API
+            const newBooking = data.data[0];
 
             setState(prevState => ({
                 ...prevState,
@@ -218,7 +235,7 @@ export default function ClassDetail() {
                         ? { ...s, balance: [...(s.balance || []), newBooking] }
                         : s
                 ),
-                bookings: [...prevState.bookings, newBooking], // NEU: Direkt in die Buchungsliste einfügen
+                bookings: [...prevState.bookings, newBooking],
                 bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
                 selectedStudents: []
             }));
@@ -315,7 +332,7 @@ export default function ClassDetail() {
             return;
         }
 
-        if (!confirm("Buchung wirklich löschen?")) return;
+        if (!confirm("Buchung wirklich entfernen?")) return;
 
         try {
             const response = await fetch(`/api/schueler_balance`, {
@@ -427,6 +444,107 @@ export default function ClassDetail() {
         }
     };
 
+    //Export
+    const generatePDF = (students) => {
+        if (!state.selectedStudents || state.selectedStudents.length === 0) {
+            alert('Bitte mindestens einen Schüler auswählen.');
+            return;
+        }
+
+        if (!Array.isArray(students) || students.length === 0) {
+            console.error('Ungültige oder leere Schülerdaten');
+            return;
+        }
+
+        state.selectedStudents.forEach(studentId => {
+            const student = students.find(s => s.id === studentId);
+
+            if (!student || !student.balance || !Array.isArray(student.balance) || student.balance.length === 0) {
+                console.warn(`Keine Buchungen für ${student?.name} ${student?.surname}`);
+                return;
+            }
+
+            const doc = new jsPDF();
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+
+            // Logo einfügen
+            const logoPath = "/pic/kbw-logo.png";
+            doc.addImage(logoPath, "PNG", 5, 5, 75, 25);
+
+            // Studentendaten
+            doc.text(`${student.name} ${student.surname}`, 10, 45);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            doc.text(`${student.mail}`, 10, 52);
+            doc.text(`Datum: ${new Date().toLocaleDateString()}`, 10, 60);
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            const title = 'Kontoübersicht';
+            const pageWidth = doc.internal.pageSize.width;
+            doc.text(title, pageWidth - doc.getTextWidth(title) - 10, 70);
+
+            // Berechnungen
+            const totalCredit = student.balance.filter(entry => entry.operator === '+')
+                .reduce((sum, entry) => sum + entry.amount, 0);
+            const totalDebit = student.balance.filter(entry => entry.operator === '-')
+                .reduce((sum, entry) => sum + entry.amount, 0);
+            const finalBalance = totalCredit - totalDebit;
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            const totalTextStartY = 78;
+            doc.text(`Total Gutschrift: ${totalCredit.toFixed(2)} Fr.`, pageWidth - doc.getTextWidth(`Total Gutschrift: ${totalCredit.toFixed(2)} Fr.`) - 10, totalTextStartY);
+            doc.text(`Total Belastung: ${totalDebit.toFixed(2)} Fr.`, pageWidth - doc.getTextWidth(`Total Belastung: ${totalDebit.toFixed(2)} Fr.`) - 10, totalTextStartY + 6);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Schlusssaldo: ${finalBalance.toFixed(2)} Fr.`, pageWidth - doc.getTextWidth(`Schlusssaldo: ${finalBalance.toFixed(2)} Fr.`) - 10, totalTextStartY + 15);
+
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("Detail-Postenauszug:", 10, totalTextStartY + 30);
+
+            // Tabelle mit begrenzter Spaltenbreite und Zeilenumbruch
+            const tableStartY = totalTextStartY + 40;
+            autoTable(doc, {
+                startY: tableStartY,
+                head: [['Datum', 'Text', 'Belastung', 'Gutschrift']],
+                headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+                body: student.balance.map(entry => [
+                    entry.date,
+                    entry.name,
+                    entry.operator === '-' ? `${entry.amount.toFixed(2)} Fr.` : '',
+                    entry.operator === '+' ? `${entry.amount.toFixed(2)} Fr.` : ''
+                ]),
+                columnStyles: {
+                    1: { cellWidth: 50 } // Begrenzung der Spaltenbreite für Zeilenumbruch
+                },
+                styles: { fontSize: 10, cellPadding: 3 },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+            });
+
+            // Position nach der Tabelle ermitteln
+            let finalY = doc.lastAutoTable.finalY || tableStartY + 10;
+
+            // Fette Abschlusszeile hinzufügen
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("Umsatztotal / Schlusssaldo", 15, finalY + 10);
+            doc.text(`${totalDebit.toFixed(2)} Fr.`, pageWidth - 110, finalY + 10);
+            doc.text(`${totalCredit.toFixed(2)} Fr.`, pageWidth - 70, finalY + 10);
+            doc.text(`${finalBalance.toFixed(2)} Fr. Saldo`, pageWidth - 27 - doc.getTextWidth(`${finalBalance.toFixed(2)} Fr.`), finalY + 10);
+
+            // PDF speichern
+            doc.save(`Buchungen_${student.name}_${student.surname}.pdf`);
+        });
+
+        state.selectedStudents = [];
+    };
+
+
+
+
+
 
 
 
@@ -476,6 +594,7 @@ export default function ClassDetail() {
                     <button className="btn-black" onClick={() => handleModalState('isModalOpen', true)}>Schüler:in hinzufügen</button>
                     <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Liste importieren</button>
                     <button className='btn-black' onClick={handleOpenBookingList}>Alle Einträge</button>
+                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Exportieren</button>
                 </div>
 
                 {state.isModalOpen && (
@@ -573,7 +692,17 @@ export default function ClassDetail() {
                     onEdit={handleEditBooking}
                     onDelete={handleDeleteBooking}
                 />
-
+                {isExportModalOpen && (
+                    <ExportModal
+                        isOpen={isExportModalOpen}
+                        onClose={() => setIsExportModalOpen(false)}
+                        students={filteredSchueler}
+                        selectedStudents={state.selectedStudents}
+                        onSelectStudent={handleSelectStudent}
+                        onSelectAll={handleSelectAll}
+                        onGeneratePDF={generatePDF}
+                    />
+                )}
 
 
             </div>
