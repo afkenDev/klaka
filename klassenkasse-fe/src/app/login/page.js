@@ -1,19 +1,34 @@
 "use client";
 import Link from 'next/link';
 import { useState } from "react";
-import "../styles/login.css"; // Importiere die globale CSS-Datei
+import "../styles/login.css";
+import { supabase } from "../lib/supabaseClient.js";
+import { useRouter } from 'next/navigation';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-
-export default function Login() {
+export default function LoginPage() {
+    const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Hier kannst du deine Login-Logik einfügen
-        console.log("Benutzername:", username, "Passwort:", password);
+        const email = `${username}@kbw.ch`;
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            setError("Login fehlgeschlagen. Bitte prüfe deine Eingaben.");
+            setSuccess("");
+        } else {
+            setError("");
+            setSuccess("Login erfolgreich!");
+            setTimeout(() => router.push('/klassen'), 1000);
+        }
     };
 
     return (
@@ -48,9 +63,9 @@ export default function Login() {
                         />
                     </div>
 
-                    <button type="submit" className="login-submit-button">
-                        Login
-                    </button>
+                    <button type="submit" className="login-submit-button">Login</button>
+                    {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>}
                 </form>
             </div>
         </div>
