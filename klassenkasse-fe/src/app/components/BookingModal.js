@@ -5,6 +5,9 @@ import '../styles/student.css';
 export default function BookingModal({ isOpen, onClose, onSave, bookingData, onInputChange, students, selectedStudents, onSelectStudent, onSelectAll }) {
     if (!isOpen) return null;
 
+    const subjects = ['Deutsch', 'Englisch', 'Französisch', 'Mathematik', 'Wirtschaft'];
+    const [filteredSubjects, setFilteredSubjects] = useState(subjects);
+
     const formatDateForDisplay = (isoDate) => {
         if (!isoDate) return '';
         const [year, month, day] = isoDate.split('-'); // ISO-Format (yyyy-MM-dd)
@@ -16,6 +19,19 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
         return `${year}-${month}-${day}`; // Umwandlung in yyyy-MM-dd
     };
 
+
+
+    const handleSubjectChange = (e) => {
+        const inputValue = e.target.value;
+        onInputChange({ target: { name: 'subject', value: inputValue } });
+
+        // Filter die Fächer basierend auf der Eingabe
+        if (inputValue) {
+            setFilteredSubjects(subjects.filter(subject => subject.toLowerCase().includes(inputValue.toLowerCase())));
+        } else {
+            setFilteredSubjects(subjects);
+        }
+    };
 
 
 
@@ -80,6 +96,21 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                         /> Subtrahieren (-)
                     </label>
                 </div>
+
+                <h3>Fach auswählen</h3>
+                <input
+                    type="text"
+                    name="subject"
+                    placeholder="Fach eingeben"
+                    value={bookingData.subject}
+                    onChange={handleSubjectChange}
+                    list="subjects-list"
+                />
+                <datalist id="subjects-list">
+                    {filteredSubjects.map(subject => (
+                        <option key={subject} value={subject} />
+                    ))}
+                </datalist>
 
                 <h3>Schüler auswählen</h3>
                 <button className="btn-select-all" onClick={onSelectAll}>

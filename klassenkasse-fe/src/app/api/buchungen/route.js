@@ -3,16 +3,16 @@ import { supabase } from '../../lib/supabaseClient.js';
 
 export async function POST(req) {
     try {
-        const { name, amount, date, students, operator, class_id } = await req.json();
+        const { name, amount, date, students, operator, class_id, fach } = await req.json();
 
-        if (!name || !amount || !date || !operator || !students || students.length === 0 || !class_id) {
+        if (!name || !amount || !date || !operator || !students || students.length === 0 || !class_id || !fach) {
             return NextResponse.json({ error: 'Alle Felder sind erforderlich.' }, { status: 400 });
         }
 
         // 1️⃣ Buchung mit class_id in balance-Tabelle speichern
         const { data: balanceEntry, error: balanceError } = await supabase
             .from('balance')
-            .insert([{ name, amount, date, operator, class_id }])
+            .insert([{ name, amount, date, operator, class_id, fach }])
             .select()
             .single();
 

@@ -51,11 +51,11 @@ export default function ClassDetail() {
         newStudent: { name: '', surname: '', mobile: '' },
         isBookingModalOpen: false,
         selectedStudents: [],
-        bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
+        bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-', subject: '' },
         importFile: null,
         isImportModalOpen: false,
         bookings: [],
-        isBookingListModalOpen: false
+        isBookingListModalOpen: false,
     });
 
     useEffect(() => {
@@ -193,12 +193,11 @@ export default function ClassDetail() {
     };
 
     const handleSaveBooking = async () => {
-        if (!state.bookingData.title || !state.bookingData.amount || state.selectedStudents.length === 0) {
+        if (!state.bookingData.title || !state.bookingData.amount || !state.bookingData.subject || state.selectedStudents.length === 0) {
             alert('Bitte alle Felder ausfüllen und mindestens einen Schüler auswählen.');
             return;
         }
 
-        // Prüfen, ob der Betrag größer als 0 ist
         const amount = parseFloat(state.bookingData.amount);
         if (isNaN(amount) || amount <= 0) {
             alert('Der Betrag muss größer als 0 sein.');
@@ -214,6 +213,7 @@ export default function ClassDetail() {
             operator: state.bookingData.operator,
             class_id: class_id,
             students: state.selectedStudents,
+            fach: state.bookingData.subject,  // Das Fach wird mitgeschickt
         };
 
         try {
@@ -236,7 +236,7 @@ export default function ClassDetail() {
                         : s
                 ),
                 bookings: [...prevState.bookings, newBooking],
-                bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-' },
+                bookingData: { title: '', amount: '', date: getFormattedToday(), operator: '-', subject: '' },
                 selectedStudents: []
             }));
 
@@ -247,6 +247,7 @@ export default function ClassDetail() {
             alert('Es gab einen Fehler: ' + error.message);
         }
     };
+
 
 
 
@@ -435,7 +436,14 @@ export default function ClassDetail() {
             setState(prevState => ({
                 ...prevState,
                 bookings: prevState.bookings.map(b => b.id === updatedBooking.id ? updatedBooking : b),
+                localSchueler: prevState.localSchueler.map(student => ({
+                    ...student,
+                    balance: student.balance.map(b =>
+                        b.id === updatedBooking.id ? { ...b, ...updatedBooking } : b
+                    ),
+                })),
             }));
+
 
             alert("Buchung erfolgreich aktualisiert!");
         } catch (error) {
@@ -445,6 +453,16 @@ export default function ClassDetail() {
     };
 
     //Export
+    const handleExportModalState = (isOpen) => {
+        setState(prevState => ({
+            ...prevState,
+            isExportModalOpen: isOpen,
+            ...(isOpen === false ? { selectedStudents: [] } : {}), // Setze die ausgewählten Schüler zurück, wenn das Modal geschlossen wird
+        }));
+        setIsExportModalOpen(false);
+    };
+
+
     const generatePDF = (students) => {
         if (!state.selectedStudents || state.selectedStudents.length === 0) {
             alert('Bitte mindestens einen Schüler auswählen.');
@@ -695,7 +713,7 @@ export default function ClassDetail() {
                 {isExportModalOpen && (
                     <ExportModal
                         isOpen={isExportModalOpen}
-                        onClose={() => setIsExportModalOpen(false)}
+                        onClose={() => handleExportModalState(false)} // Beim Schließen zurücksetzen
                         students={filteredSchueler}
                         selectedStudents={state.selectedStudents}
                         onSelectStudent={handleSelectStudent}
@@ -703,6 +721,7 @@ export default function ClassDetail() {
                         onGeneratePDF={generatePDF}
                     />
                 )}
+
 
 
             </div>
