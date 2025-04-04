@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient.js';
-import { useParams } from 'next/navigation'; // Damit wir die class_id bekommen
+import { useParams } from 'next/navigation';
 
 export function useBalance() {
-    const { id } = useParams(); // Holt die aktuelle class_id aus der URL
+    const { id: classId } = useParams();
 
     const [data, setData] = useState({
         balance: [],
@@ -12,17 +11,24 @@ export function useBalance() {
     });
 
     useEffect(() => {
+        if (!classId) return; // Warten, bis classId verfügbar ist
+
         const fetchBalance = async () => {
             try {
-                const { data, error } = await supabase
-                    .from("balance")
-                    .select("id, name, amount, date, updated_at, operator, class_id")
-                    .eq("class_id", id); // Nur Einträge mit der passenden class_id abrufen
+                const response = await fetch('/api/getBalance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ classId })
+                });
 
-                if (error) throw error;
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Fehler beim Abrufen der Balance-Daten');
+                }
 
                 setData({
-                    balance: data,
+                    balance: result,
                     loading: false,
                     error: null
                 });
@@ -32,9 +38,8 @@ export function useBalance() {
             }
         };
 
-        if (id) fetchBalance(); // Nur laden, wenn class_id vorhanden ist
-
-    }, [id]); // Aktualisiert sich, wenn sich die class_id ändert
+        fetchBalance();
+    }, [classId]);
 
     return data;
 }

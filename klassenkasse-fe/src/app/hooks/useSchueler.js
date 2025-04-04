@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient.js';
+'use client'
+import { useEffect, useState } from 'react';
 
-export function useSchueler() {
+export function useSchuelerMitBalance() {
     const [data, setData] = useState({
         schueler: [],
         loading: true,
@@ -10,20 +10,15 @@ export function useSchueler() {
 
     useEffect(() => {
         const fetchSchueler = async () => {
-            try {
-                // Abrufen der Daten aus der Supabase-Tabelle "schueler"
-                const { data, error } = await supabase.from("schueler").select("id, name, surname, mail, mobile, class");
+            const response = await fetch('/api/getSchueler', {
+                method: 'POST',
+            });
 
-                if (error) throw error;
-
-                setData({
-                    schueler: data,
-                    loading: false,
-                    error: null
-                });
-            } catch (err) {
-                console.error("Fehler beim Laden der Schüler:", err);
-                setData(prev => ({ ...prev, error: err.message, loading: false }));
+            const result = await response.json();
+            if (!response.ok) {
+                setData(prev => ({ ...prev, error: result.error, loading: false }));
+            } else {
+                setData({ schueler: result, loading: false, error: null });
             }
         };
 

@@ -48,17 +48,17 @@ export default function KlassenPage() {
     setNewClass((prev) => ({ ...prev, [name]: value }));
   };
 
-  
+
   //Klasse hinzufügen
   const handleAddClass = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-  
+
       if (!user) {
         alert("Nicht eingeloggt!");
         return;
       }
-  
+
       const response = await fetch('/api/klassen', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,13 +67,13 @@ export default function KlassenPage() {
           userId: user.id, // 💡 DAS ist der Trick!
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.message);
       }
-  
+
       console.log("Erstellt:", result.data);
       setLocalKlassen(prev => [...prev, result.data]);
       handleCloseModal();
@@ -82,7 +82,7 @@ export default function KlassenPage() {
       alert("Fehler: " + err.message);
     }
   };
-  
+
 
 
 
@@ -182,21 +182,21 @@ export default function KlassenPage() {
               type="text"
               name="klassenname"
               placeholder="Klassenname"
-              value={newClass.klassenname}
+              value={newClass.klassenname || ''}
               onChange={handleInputChange}
             />
             <input
               type="text"
               name="nachname"
               placeholder="Nachname Klassenlehrer"
-              value={newClass.nachname}
+              value={newClass.nachname || ''}
               onChange={handleInputChange}
             />
             <input
               type="text"
               name="vorname"
               placeholder="Vorname Klassenlehrer"
-              value={newClass.vorname}
+              value={newClass.vorname || ''}
               onChange={handleInputChange}
             />
             <select name="color" value={newClass.color} onChange={handleInputChange}>

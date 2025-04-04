@@ -1,5 +1,5 @@
+'use client'
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient.js';
 
 export function useSchuelerMitBalance() {
   const [data, setData] = useState({
@@ -11,38 +11,18 @@ export function useSchuelerMitBalance() {
   useEffect(() => {
     const fetchSchuelerMitBalance = async () => {
       try {
-        // Abrufen der Schüler
-        const { data: schueler, error: schuelerError } = await supabase
-          .from("schueler")
-          .select("id, name, surname, mail, mobile, class");
+        const response = await fetch('/api/getSchuelerMitBalance', {
+          method: 'POST',
+        });
 
-        if (schuelerError) throw schuelerError;
+        const result = await response.json();
 
-        // Abrufen der Zuordnungen in der Zwischentabelle schueler_balance
-        const { data: schuelerBalance, error: balanceError } = await supabase
-          .from("schueler_balance")
-          .select("schueler_id, balance_id");
-
-        if (balanceError) throw balanceError;
-
-        // Abrufen der Balance-Einträge
-        const { data: balances, error: balancesError } = await supabase
-          .from("balance")
-          .select("id, name, amount, date, updated_at, operator");
-
-        if (balancesError) throw balancesError;
-
-        // Verknüpfen der Schüler mit ihren Balance-Einträgen
-        const schuelerMitBalance = schueler.map(s => ({
-          ...s,
-          balance: schuelerBalance
-            .filter(sb => sb.schueler_id === s.id)
-            .map(sb => balances.find(b => b.id === sb.balance_id))
-            .filter(b => b !== undefined) // Entfernt nicht gefundene Balances
-        }));
+        if (!response.ok) {
+          throw new Error(result.error || "Fehler beim Laden der Daten");
+        }
 
         setData({
-          schueler: schuelerMitBalance,
+          schueler: result,
           loading: false,
           error: null
         });
@@ -54,6 +34,6 @@ export function useSchuelerMitBalance() {
 
     fetchSchuelerMitBalance();
   }, []);
-
+  console.log("legidata, ", data)
   return data;
 }
