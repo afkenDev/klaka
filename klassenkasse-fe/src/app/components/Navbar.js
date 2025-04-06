@@ -60,7 +60,7 @@ export default function Navbar() {
   // 🚪 Logout
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push('/');
+    window.location.reload(); 
   };
 
   return (

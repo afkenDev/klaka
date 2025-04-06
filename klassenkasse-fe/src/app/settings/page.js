@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function EinstellungenPage() {
   const [email, setEmail] = useState('');
@@ -51,6 +53,8 @@ export default function EinstellungenPage() {
   };
 
   return (
+    <>
+      <Navbar />
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
       <h1>Einstellungen</h1>
 
@@ -92,5 +96,7 @@ export default function EinstellungenPage() {
 
       {message && <p style={{ marginTop: '1rem' }}>{message}</p>}
     </div>
+      <Footer />
+    </>
   );
 }

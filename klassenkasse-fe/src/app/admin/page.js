@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabaseClient';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function Admin() {
   const router = useRouter();
@@ -48,10 +50,13 @@ export default function Admin() {
   if (!accessGranted) return null; // Nicht anzeigen, wenn kein Zugriff
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>🛠 Adminbereich</h1>
-      <p>Willkommen im Adminbereich! Du kannst hier sensible Daten verwalten.</p>
-
-    </div>
+    <>
+      <Navbar />
+      <div style={{ padding: '2rem' }}>
+        <h1>🛠 Adminbereich</h1>
+        <p>Willkommen im Adminbereich! Du kannst hier sensible Daten verwalten.</p>
+      </div>
+      <Footer />
+    </>
   );
-}
+}  

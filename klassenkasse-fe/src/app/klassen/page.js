@@ -1,5 +1,4 @@
-'use client'; // Enable client-side execution
-
+'use client'; 
 import { useState, useEffect } from 'react';
 import '../styles/classview.css';
 import Navbar from '../components/Navbar';
@@ -10,6 +9,17 @@ import { useSchuelerMitBalance } from '../hooks/useSchuelerMitBalance'; // Für 
 import { supabase } from '../lib/supabaseClient';
 
 export default function KlassenPage() {
+  const checkUser = async () => {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        router.push('/login'); // Nicht eingeloggt → zurück zum Login
+        return;
+      }
+    }
+    checkUser();
+
+
   const router = useRouter();
   const { klassen: fetchedKlassen, loading, error } = useKlassen();
   const { schueler: fetchedSchueler, loading: loadingSchueler, error: errorSchueler } = useSchuelerMitBalance();
@@ -52,12 +62,7 @@ export default function KlassenPage() {
   //Klasse hinzufügen
   const handleAddClass = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        alert("Nicht eingeloggt!");
-        return;
-      }
+      
 
       const response = await fetch('/api/klassen', {
         method: 'POST',

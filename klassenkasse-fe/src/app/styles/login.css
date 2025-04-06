@@ -92,3 +92,8 @@
 .back-arrow:hover {
     color: var(--orange-color);
 }
+html, body {
+    height: 100%;
+    position: relative;
+  }
+  
