@@ -12,7 +12,21 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    const checkUser = async () => {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+            
+            if (userError || !user) {
+              return;
+            }
+            else {
+                router.push('/klassen');
+                return;
+            }
+          }
+    checkUser();
+
     const handleLogin = async (e) => {
+        
         e.preventDefault();
         const email = `${username}@kbw.ch`;
 

@@ -1,0 +1,78 @@
+/* ===== Admin Card Layout ===== */
+.admin-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .admin-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .admin-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* ===== Input Fields ===== */
+  .admin-card input,
+  .admin-card textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.2s ease;
+  }
+  
+  .admin-card input:focus,
+  .admin-card textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* ===== Buttons ===== */
+  .admin-card button {
+    padding: 0.7rem 1.5rem;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .admin-card button:hover {
+    background-color: #2563eb;
+  }
+  
+  .admin-card button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  /* ===== Output Box ===== */
+  .sql-output {
+    background-color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+  }
+  
