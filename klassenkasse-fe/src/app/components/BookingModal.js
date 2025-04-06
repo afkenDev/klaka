@@ -2,10 +2,20 @@ import { useState, useEffect } from 'react';
 import '../styles/student.css';
 
 // components/BookingModal.js
-export default function BookingModal({ isOpen, onClose, onSave, bookingData, onInputChange, students, selectedStudents, onSelectStudent, onSelectAll }) {
+export default function BookingModal({
+    isOpen,
+    onClose,
+    onSave,
+    bookingData,
+    onInputChange,
+    students,
+    selectedStudents,
+    onSelectStudent,
+    onSelectAll
+}) {
     if (!isOpen) return null;
 
-    const subjects = ['Deutsch', 'Englisch', 'Französisch', 'Mathematik', 'Wirtschaft'];
+    const subjects = ['Deutsch', 'Englisch', 'Französisch', 'Mathematik', 'Wirtschaft&Recht', 'Rechnungswesen', 'Chemie', 'Biologie', 'Physik', 'Naturwissenschaften', 'Sport', 'Informatik', 'Geschichte', 'Geographie', 'Bildnerisches Gestalten', 'Musik', 'Sonstiges'];
     const [filteredSubjects, setFilteredSubjects] = useState(subjects);
 
     const formatDateForDisplay = (isoDate) => {
@@ -19,8 +29,6 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
         return `${year}-${month}-${day}`; // Umwandlung in yyyy-MM-dd
     };
 
-
-
     const handleSubjectChange = (e) => {
         const inputValue = e.target.value;
         onInputChange({ target: { name: 'subject', value: inputValue } });
@@ -29,43 +37,42 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
         if (inputValue) {
             setFilteredSubjects(subjects.filter(subject => subject.toLowerCase().includes(inputValue.toLowerCase())));
         } else {
-            setFilteredSubjects(subjects);
+            setFilteredSubjects(subjects); // Wenn das Eingabefeld leer ist, zeige alle an
         }
     };
-
-
 
     return (
         <div className="modal-overlay">
             <div className="booking-modal">
                 <h2>Buchung hinzufügen</h2>
 
-                <input type="text" name="title" placeholder="Titel" value={bookingData.title} onChange={onInputChange} />
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Titel"
+                    value={bookingData.title || ''}
+                    onChange={onInputChange}
+                />
                 <input
                     type="number"
                     name="amount"
                     placeholder="Betrag"
-                    value={bookingData.amount}
+                    value={bookingData.amount || ''}
                     min="0"
                     step="0.01"
                     onChange={(e) => {
                         const value = e.target.value;
-
-                        // Falls das Feld geleert wird, erlauben wir ""
                         if (value === "") {
                             onInputChange({ target: { name: "amount", value: "" } });
                             return;
                         }
 
-                        // Nur positive Werte erlauben
                         const numericValue = parseFloat(value);
                         if (!isNaN(numericValue) && numericValue >= 0) {
                             onInputChange({ target: { name: "amount", value: value } });
                         }
                     }}
                 />
-
-
 
                 <input
                     type="date"
@@ -101,8 +108,8 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                 <input
                     type="text"
                     name="subject"
-                    placeholder="Fach eingeben"
-                    value={bookingData.subject}
+                    placeholder="Fach eingeben und sonst 'Sonstiges"
+                    value={bookingData.subject || ''}
                     onChange={handleSubjectChange}
                     list="subjects-list"
                 />
@@ -116,7 +123,6 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                 <button className="btn-select-all" onClick={onSelectAll}>
                     {selectedStudents.length === students.length ? 'Alle abwählen' : 'Alle auswählen'}
                 </button>
-
 
                 <div className="booking-student-list">
                     {students.map(student => (
@@ -132,7 +138,18 @@ export default function BookingModal({ isOpen, onClose, onSave, bookingData, onI
                 </div>
 
                 <div className="booking-modal-buttons">
-                    <button className="btn-save" onClick={onSave}>Speichern</button>
+                    <button
+                        className="btn-save"
+                        onClick={() => {
+                            if (!subjects.includes(bookingData.subject)) {
+                                alert(`"${bookingData.subject}" ist kein gültiges Fach.`);
+                                return;
+                            }
+                            onSave(); // Speichern der Buchung
+                        }}
+                    >
+                        Speichern
+                    </button>
                     <button className="btn-cancel" onClick={onClose}>Abbrechen</button>
                 </div>
             </div>

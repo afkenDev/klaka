@@ -622,6 +622,7 @@ export default function ClassDetail() {
                     <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Liste importieren</button>
                     <button className='btn-black' onClick={handleOpenBookingList}>Alle Einträge</button>
                     <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Exportieren</button>
+                    <button className='btn-orange' onClick={() => router.push(`/klassen/${id}/statistik`)}>Statistik</button>
                 </div>
 
                 {state.isModalOpen && (
