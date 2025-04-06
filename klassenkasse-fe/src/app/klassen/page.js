@@ -106,7 +106,7 @@ export default function KlassenPage() {
 
   // Berechnung der Anzahl an Schülern und Gesamtvolumen
   const getClassStudentCount = (klasseId) => {
-    const anzahlSchueler = fetchedSchueler.filter(student => student.class === klasseId).length;
+    const anzahlSchueler = fetchedSchueler.filter(student => String(student.class) === String(klasseId)).length;
     return anzahlSchueler;
   };
 
@@ -154,10 +154,10 @@ export default function KlassenPage() {
               <div className="info">
                 <div className="students">
                   <span className="icon">👥</span>
-                  <span>{getClassStudentCount(klasse.klassenname)}</span> {/* Anzeige der Schüleranzahl */}
+                  <span>{getClassStudentCount(klasse.id)}</span> {/* Anzeige der Schüleranzahl */}
                 </div>
                 <div className="volume">
-                  Volumen: {new Intl.NumberFormat('de-CH').format(getClassVolume(klasse.klassenname))} CHF {/* Gesamtvolumen */}
+                  Volumen: {new Intl.NumberFormat('de-CH').format(getClassVolume(klasse.id))} CHF {/* Gesamtvolumen */}
                 </div>
               </div>
               <p className="activity">

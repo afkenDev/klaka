@@ -35,13 +35,31 @@ export async function POST(req) {
             const data = XLSX.utils.sheet_to_json(sheet);
 
             // Spaltennamen umbenennen, um mit der Tabelle übereinzustimmen
-            const renamedData = data.map((item) => ({
-                name: item.Vorname, // 'Vorname' zu 'name'
-                surname: item.Nachname, // 'Nachname' zu 'surname'
-                mobile: item.Mobile, // 'Mobile' zu 'mobile'
-                mail: item.EMail, // 'EMail' zu 'mail'
-                class: item.Klasse // 'Klasse' zu 'class'
-            }));
+            const renamedData = [];
+
+            for (const item of data) {
+                // Schritt 1: Hole die Klassen-ID für item.Klasse
+                const { data: klasseData, error: klasseError } = await supabase
+                    .from('klasse')
+                    .select('id')
+                    .eq('klassenname', item.Klasse)
+                    .single();
+
+                if (klasseError || !klasseData) {
+                    console.warn(`Klasse '${item.Klasse}' nicht gefunden. Überspringe Eintrag.`, klasseError?.message);
+                    continue; // Überspringe diesen Schüler, wenn Klasse nicht gefunden wird
+                }
+
+                // Schritt 2: Schülerobjekt mit Klassen-ID erstellen
+                renamedData.push({
+                    name: item.Vorname,
+                    surname: item.Nachname,
+                    mobile: item.Mobile,
+                    mail: item.EMail,
+                    class: klasseData.id // 💡 ID statt Name speichern!
+                });
+            }
+
 
             // Jetzt die umbenannten Daten in die Datenbank einfügen
             const { data: insertedData, error } = await supabase

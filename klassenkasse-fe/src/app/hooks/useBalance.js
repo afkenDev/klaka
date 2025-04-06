@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
-export function useBalance() {
-    const { id: classId } = useParams();
+export function useBalance(classId) {
 
     const [data, setData] = useState({
         balance: [],
