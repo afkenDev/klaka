@@ -7,9 +7,13 @@ export function useKlassenId(klassenname) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!klassenname) return;
-
         const fetchKlassenId = async () => {
+            if (!klassenname) {
+                setLoading(false);
+                setId(null);
+                return;
+            }
+
             const { data: { user }, error: userError } = await supabase.auth.getUser();
 
             if (userError || !user) {
@@ -18,17 +22,21 @@ export function useKlassenId(klassenname) {
                 return;
             }
 
-            const response = await fetch('/api/getKlassenId', {
-                method: 'POST',
-                body: JSON.stringify({ klassenname }),
-            });
+            try {
+                const response = await fetch('/api/getKlassenId', {
+                    method: 'POST',
+                    body: JSON.stringify({ klassenname }),
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (!response.ok) {
-                setError(result.error || 'Fehler beim Laden der Klassen-ID');
-            } else {
-                setId(result.id);
+                if (!response.ok) {
+                    setError(result.error || 'Fehler beim Laden der Klassen-ID');
+                } else {
+                    setId(result.id);
+                }
+            } catch (err) {
+                setError('Netzwerkfehler beim Laden der Klassen-ID');
             }
 
             setLoading(false);
