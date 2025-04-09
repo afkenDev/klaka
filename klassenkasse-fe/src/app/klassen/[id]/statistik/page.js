@@ -82,10 +82,13 @@ export default function StatistikPage() {
                 total += entryTotal;  // Gesamtbetrag wird kumuliert
             });
 
-            const pieData = Object.entries(grouped).map(([subject, total]) => ({
-                name: subject,
-                value: total
-            }));
+            const pieData = Object.entries(grouped)
+                .map(([subject, total]) => ({
+                    name: subject,
+                    value: total
+                }))
+                .filter(entry => entry.value > 0); // 👈 Filter für > 0
+
 
             setData(pieData);
             setTotalAmount(total);  // Gesamtbetrag setzen
