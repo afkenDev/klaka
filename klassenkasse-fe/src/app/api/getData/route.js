@@ -9,6 +9,9 @@ export async function POST(req) {
     .select('klasse(*)') // Lade die verknüpfte Klasse!
     .eq('user_id', userId);
 
+  console.log('userId from request:', userId);
+  console.log('user_klasse data:', data);
+
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
