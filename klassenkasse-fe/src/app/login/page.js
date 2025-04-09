@@ -1,6 +1,7 @@
 "use client";
+
 import Link from 'next/link';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/login.css";
 import { supabase } from "../lib/supabaseClient.js";
 import { useRouter } from 'next/navigation';
@@ -12,21 +13,17 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    const checkUser = async () => {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-            
-            if (userError || !user) {
-              return;
-            }
-            else {
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            if (user && !userError) {
                 router.push('/klassen');
-                return;
             }
-          }
-    checkUser();
+        };
+        checkUser();
+    }, [router]);
 
     const handleLogin = async (e) => {
-        
         e.preventDefault();
         const email = `${username}@kbw.ch`;
 
@@ -36,7 +33,16 @@ export default function LoginPage() {
         });
 
         if (error) {
-            setError("Login fehlgeschlagen. Bitte prüfe deine Eingaben.");
+            // 👉 Zusatz: Prüfen, ob der Fehler auf fehlendes Passwort hindeutet
+            const { data: userData, error: getUserErr } = await supabase.auth.getUserByEmail(email);
+
+            if (!getUserErr && userData?.user?.app_metadata?.provider === 'email') {
+                setError("⚠️ Du hast noch kein Passwort gesetzt.");
+                setTimeout(() => router.push('/login/set-password'), 1500);
+            } else {
+                setError("Login fehlgeschlagen. Bitte prüfe deine Eingaben.");
+            }
+
             setSuccess("");
         } else {
             setError("");

@@ -12,9 +12,8 @@ export default function Admin() {
   const [accessGranted, setAccessGranted] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [newUserPassword, setNewUserPassword] = useState('');
-  const [signupStatus, setSignupStatus] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteStatus, setInviteStatus] = useState('');
 
   const [sqlInput, setSqlInput] = useState('');
   const [sqlOutput, setSqlOutput] = useState(null);
@@ -42,19 +41,16 @@ export default function Admin() {
     checkAdmin();
   }, [router]);
 
-  const handleSignup = async () => {
-    if (!newUserEmail || newUserPassword.length < 6) {
-      setSignupStatus('❌ Mindestens 6 Zeichen fürs Passwort erforderlich.');
+  const handleInvite = async () => {
+    if (!inviteEmail) {
+      setInviteStatus('❌ Bitte E-Mail eingeben.');
       return;
     }
-    const { error } = await supabase.auth.signUp({
-      email: newUserEmail,
-      password: newUserPassword
-    });
+    const { data, error } = await supabase.auth.admin.inviteUserByEmail(inviteEmail);
     if (error) {
-      setSignupStatus(`❌ Fehler: ${error.message}`);
+      setInviteStatus(`❌ Fehler: ${error.message}`);
     } else {
-      setSignupStatus('✅ Benutzer erfolgreich registriert!');
+      setInviteStatus('✅ Einladung erfolgreich gesendet!');
     }
   };
 
@@ -79,29 +75,23 @@ export default function Admin() {
     <div className="admin-wrapper">
       <Navbar />
       <div className="admin-container">
-        <h1>🛠 Adminbereich</h1>
+        <h1>Adminbereich</h1>
         <p>Willkommen im Adminbereich! Du kannst hier sensible Daten verwalten.</p>
 
         <div className="admin-card">
-          <h2>➕ Benutzer hinzufügen</h2>
+          <h2>Benutzer einladen</h2>
           <input
             type="email"
             placeholder="E-Mail"
-            value={newUserEmail}
-            onChange={(e) => setNewUserEmail(e.target.value)}
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Passwort (min. 6 Zeichen)"
-            value={newUserPassword}
-            onChange={(e) => setNewUserPassword(e.target.value)}
-          />
-          <button onClick={handleSignup}>Benutzer registrieren</button>
-          {signupStatus && <p>{signupStatus}</p>}
+          <button onClick={handleInvite}>Einladung senden</button>
+          {inviteStatus && <p>{inviteStatus}</p>}
         </div>
 
         <div className="admin-card">
-          <h2>🧠 SQL-Abfrage</h2>
+          <h2>SQL-Abfrage</h2>
           <textarea
             rows={4}
             placeholder="Schreibe hier deine SQL..."
