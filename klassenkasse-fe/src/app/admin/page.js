@@ -46,14 +46,28 @@ export default function Admin() {
       setInviteStatus('❌ Bitte E-Mail eingeben.');
       return;
     }
-    const { data, error } = await supabase.auth.admin.inviteUserByEmail(inviteEmail);
-    if (error) {
-      setInviteStatus(`❌ Fehler: ${error.message}`);
-    } else {
-      setInviteStatus('✅ Einladung erfolgreich gesendet!');
+  
+    try {
+      const res = await fetch('/api/invite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: inviteEmail })
+      });
+  
+      const result = await res.json();
+  
+      if (result.error) {
+        setInviteStatus(`❌ Fehler: ${result.error}`);
+      } else {
+        setInviteStatus('✅ Einladung gesendet und Markierung gesetzt!');
+      }
+    } catch (err) {
+      setInviteStatus('❌ Fehler beim Senden der Einladung.');
     }
   };
-
+  
   const handleSqlQuery = async () => {
     try {
       const res = await fetch('/api/sql', {

@@ -1,47 +1,58 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '../../lib/supabaseClient';
-import '../../styles/login.css';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabaseClient";
+import "../../styles/login.css";
 
 export default function SetPasswordPage() {
   const router = useRouter();
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkSession = async () => {
+    const checkUser = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
+      console.log("Aktueller User in /set-password:", user);
+    
       if (!user || error) {
-        router.push('/login');
-      } else {
-        setLoading(false);
+        console.log("Nicht eingeloggt – redirect zu /login");
+        router.push("/login");
+        return;
       }
+    
+      setLoading(false);
     };
-    checkSession();
+    
+
+    checkUser();
   }, [router]);
 
   const handleSetPassword = async (e) => {
     e.preventDefault();
+
     if (password.length < 6) {
-      setError('⚠️ Passwort muss mindestens 6 Zeichen lang sein.');
+      setError("Passwort muss mindestens 6 Zeichen lang sein.");
       return;
     }
 
-    const { error } = await supabase.auth.updateUser({
-      password: password
+    // Passwort + Metadata setzen
+    const { error: pwError } = await supabase.auth.updateUser({
+      password,
+      data: {
+        mustSetPassword: false
+      }
     });
 
-    if (error) {
-      setError(`❌ Fehler: ${error.message}`);
-      setSuccess('');
+    if (pwError) {
+      setError(`Fehler: ${pwError.message}`);
+      setSuccess("");
     } else {
-      setSuccess('✅ Passwort erfolgreich gesetzt!');
-      setError('');
-      setTimeout(() => router.push('/klassen'), 1500);
+      setError("");
+      setSuccess("Passwort erfolgreich gesetzt.");
+      setTimeout(() => router.push("/klassen"), 1500);
     }
   };
 
@@ -50,8 +61,8 @@ export default function SetPasswordPage() {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h1 className="login-title">🔐 Passwort setzen</h1>
-        <p>Bitte wähle ein neues Passwort.</p>
+        <h1 className="login-title">Passwort setzen</h1>
+        <p>Bitte wähle ein Passwort für zukünftige Logins.</p>
         <form onSubmit={handleSetPassword} className="login-form-fields">
           <div className="input-group">
             <label htmlFor="password">Neues Passwort</label>
@@ -63,7 +74,9 @@ export default function SetPasswordPage() {
               required
             />
           </div>
-          <button type="submit" className="login-submit-button">Passwort speichern</button>
+          <button type="submit" className="login-submit-button">
+            Passwort speichern
+          </button>
           {error && <p className="error-message">{error}</p>}
           {success && <p className="success-message">{success}</p>}
         </form>
