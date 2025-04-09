@@ -13,6 +13,7 @@ import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
 import ExportModal from '../../components/ExportModal';
 import BookingListModal from '../../components/BookingListModal';
+import LoeschModal from '../../components/LoeschModal';
 import { supabase } from '../../lib/supabaseClient.js';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
@@ -33,6 +34,7 @@ export default function ClassDetail() {
     const [editData, setEditData] = useState({ name: '', surname: '', mobile: '' });
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [isBookingListModalOpen, setIsBookingListModalOpen] = useState(false);
     const [bookings, setBookings] = useState([]);
@@ -504,7 +506,8 @@ export default function ClassDetail() {
             doc.setFont("helvetica", "normal");
             doc.setFontSize(12);
             doc.text(`${student.mail}`, 10, 52);
-            doc.text(`Datum: ${new Date().toLocaleDateString()}`, 10, 60);
+            doc.text(`${id}`, 10, 59);
+            doc.text(`Datum: ${new Date().toLocaleDateString()}`, 10, 70);
 
             doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
@@ -568,7 +571,87 @@ export default function ClassDetail() {
         state.selectedStudents = [];
     };
 
+    //Löschen
+    const handleDeleteAllSchueler = async () => {
+        if (!confirm("Wirklich alle Schüler und Buchungen löschen?")) return;
 
+        try {
+            const response = await fetch('/api/deleteAllSchueler', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ classId }),
+            });
+
+            if (!response.ok) {
+                const { error } = await response.json();
+                throw new Error(error || 'Fehler beim Löschen');
+            }
+
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: [], // Alle Schüler und ihre Buchungen entfernen
+            }));
+
+            alert("Alle Schüler und Buchungen wurden gelöscht.");
+            setIsDeleteModalOpen(false);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleDeleteAllBookings = async () => {
+        if (!confirm("Wirklich ALLE Buchungen löschen? Die Schüler bleiben erhalten.")) return;
+
+        try {
+            const response = await fetch('/api/deleteAllBookings', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ classId }),
+            });
+
+            if (!response.ok) {
+                const { error } = await response.json();
+                throw new Error(error || 'Fehler beim Löschen der Buchungen');
+            }
+
+            alert("Alle Buchungen wurden gelöscht.");
+
+            // Aktualisiere State: alle balances der Schüler auf []
+            setState(prevState => ({
+                ...prevState,
+                localSchueler: prevState.localSchueler.map(s => ({ ...s, balance: [] }))
+            }));
+
+            setIsDeleteModalOpen(false);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleDeleteAll = async () => {
+        if (!confirm("⚠️ Möchtest du wirklich ALLES löschen – Schüler, Buchungen und Klasse selbst?")) return;
+
+        try {
+            const response = await fetch('/api/deleteAll', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ classId }),
+            });
+
+            if (!response.ok) {
+                const { error } = await response.json();
+                throw new Error(error || 'Fehler beim vollständigen Löschen');
+            }
+
+            alert("Alles gelöscht – einschließlich der Klasse!");
+
+            // Optional: Weiterleitung zur Übersichtsseite
+            window.location.href = "/klassen"; // oder wohin du willst
+
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
 
 
@@ -622,6 +705,7 @@ export default function ClassDetail() {
                     <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Liste importieren</button>
                     <button className='btn-black' onClick={handleOpenBookingList}>Alle Einträge</button>
                     <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Exportieren</button>
+                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Delete funktionen</button>
                     <button className='btn-orange' onClick={() => router.push(`/klassen/${id}/statistik`)}>Statistik</button>
                 </div>
 
@@ -731,7 +815,13 @@ export default function ClassDetail() {
                         onGeneratePDF={generatePDF}
                     />
                 )}
-
+                <LoeschModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onDeleteAllSchueler={handleDeleteAllSchueler}
+                    onDeleteAllBookings={handleDeleteAllBookings}
+                    onDeleteAll={handleDeleteAll}
+                />
 
 
             </div>
