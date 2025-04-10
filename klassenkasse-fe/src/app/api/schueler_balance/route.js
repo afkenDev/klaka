@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../lib/supabaseClient.js';
+import { createSupabaseServerClient } from '../../lib/supabaseClient';
 
 // API-Route für das Löschen eines Eintrags in schueler_balance
 export async function DELETE(req) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     try {
         const body = await req.json();
         const { schueler_id, balance_id } = body;

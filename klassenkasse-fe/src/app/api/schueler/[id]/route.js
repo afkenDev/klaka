@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabaseClient.js';
+import { createSupabaseServerClient } from '../../../lib/supabaseClient';
 
 export async function GET(req, { params }) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     const { id } = params;
     const { data, error } = await supabase
         .from('schueler')
@@ -15,6 +24,15 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     const { id } = await params;
     const updatedStudent = await req.json();
 
@@ -49,6 +67,15 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     const { id } = await params;
 
     // Zuerst alle Einträge aus der schueler_balance-Tabelle löschen

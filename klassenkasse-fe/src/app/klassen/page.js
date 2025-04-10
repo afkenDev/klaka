@@ -71,14 +71,24 @@ export default function KlassenPage() {
       return;
     }
 
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      alert("Session nicht gefunden. Bitte erneut einloggen.");
+      return;
+    }
+
     try {
       const response = await fetch('/api/klassen', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newClass,
-          userId: user.id,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(newClass),
       });
 
       const result = await response.json();
@@ -88,13 +98,14 @@ export default function KlassenPage() {
       }
 
       console.log("Erstellt:", result.data);
-      setLocalKlassen(prev => [...prev, result.data]);
+      setLocalKlassen((prev) => [...prev, result.data]);
       handleCloseModal();
     } catch (err) {
       console.error("Fehler:", err.message);
       alert("Fehler: " + err.message);
     }
   };
+
 
   const filteredClasses = allKlassen.filter(klasse =>
     String(klasse.klassenname).toLowerCase().includes(searchQuery) ||

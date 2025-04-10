@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabaseClient.js';
+import { createSupabaseServerClient } from '../../../lib/supabaseClient';
 
 export async function DELETE(req, { params }) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     const { id } = params; // balance_id
 
     // Zuerst alle Einträge aus der schueler_balance-Tabelle löschen
@@ -28,6 +37,15 @@ export async function DELETE(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     const { id } = await params;
     const { name, amount, date, operator } = await req.json();
 

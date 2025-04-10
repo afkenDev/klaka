@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../lib/supabaseClient.js';
+import { createSupabaseServerClient } from '../../lib/supabaseClient';
 
 export async function POST(req) {
     try {
+        const token = req.headers.get('Authorization')?.split(' ')[1];
+
+        if (!token) {
+            return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+        }
+
+        const supabase = createSupabaseServerClient(token);
+        console.log("token: ", token)
+
         const { name, amount, date, students, operator, class_id, fach } = await req.json();
 
         if (!name || !amount || !date || !operator || !students || students.length === 0 || !class_id || !fach) {

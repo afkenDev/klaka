@@ -24,6 +24,7 @@ import Image from "next/image";
 export default function ClassDetail() {
     const { id } = useParams();
     const router = useRouter();
+    const [user, setUser] = useState(null);
     console.log("test, ", id)
     const { id: classId, loading: IDloading, error: IDerror } = useKlassenId(id);
     console.log("Classid, ", classId);
@@ -64,7 +65,20 @@ export default function ClassDetail() {
         bookings: [],
         isBookingListModalOpen: false,
     });
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
 
+            if (userError || !user) {
+                router.push('/login');
+                return;
+            }
+
+            setUser(user); // ✅ im State speichern
+        };
+
+        checkUser();
+    }, [router]);
 
 
 
@@ -123,10 +137,23 @@ export default function ClassDetail() {
         const email = `${name.toLowerCase()}.${surname.toLowerCase()}@stud.kbw.ch`;
         const studentData = { name, surname, email, mobile, class: classId };
 
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         try {
             const response = await fetch('/api/schueler', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify(studentData),
             });
 
@@ -144,6 +171,7 @@ export default function ClassDetail() {
             alert('Es gab einen Fehler: ' + error.message);
         }
     };
+
 
     const handleImportCSV = async () => {
         if (!state.importFile) return;
@@ -171,6 +199,7 @@ export default function ClassDetail() {
             alert(error.message || 'Es gab einen Fehler beim Import der Datei.');
         }
     };
+
 
     const handleBookingInputChange = (e) => {
         const { name, value } = e.target;
@@ -205,6 +234,21 @@ export default function ClassDetail() {
     };
 
     const handleSaveBooking = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+
         if (!state.bookingData.title || !state.bookingData.amount || !state.bookingData.subject || state.selectedStudents.length === 0) {
             alert('Bitte alle Felder ausfüllen und mindestens einen Schüler auswählen.');
             return;
@@ -230,7 +274,10 @@ export default function ClassDetail() {
         try {
             const response = await fetch('/api/buchungen', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify(bookingPayload),
             });
 
@@ -278,6 +325,21 @@ export default function ClassDetail() {
     };
 
     const handleSettingsSave = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!selectedStudentSettings) return;
 
         const updatedStudent = {
@@ -288,7 +350,10 @@ export default function ClassDetail() {
         try {
             const response = await fetch(`/api/schueler/${selectedStudentSettings.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify(updatedStudent),
             });
 
@@ -315,10 +380,31 @@ export default function ClassDetail() {
 
 
     const handleSettingsDelete = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!selectedStudentSettings || !confirm(`Schüler ${selectedStudentSettings.name} ${selectedStudentSettings.surname} wirklich löschen?`)) return;
 
         try {
-            const response = await fetch(`/api/schueler/${selectedStudentSettings.id}`, { method: 'DELETE' });
+            const response = await fetch(`/api/schueler/${selectedStudentSettings.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+            });
 
             if (!response.ok) throw new Error('Fehler beim Löschen');
 
@@ -337,6 +423,21 @@ export default function ClassDetail() {
 
     //Einträge
     const handleDeleteTransaction = async (schuelerId, balanceId) => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         console.log("Lösche Buchung:", { schuelerId, balanceId });
 
         if (!schuelerId || !balanceId) {
@@ -349,7 +450,10 @@ export default function ClassDetail() {
         try {
             const response = await fetch(`/api/schueler_balance`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify({ schueler_id: schuelerId, balance_id: balanceId }),
             });
 
@@ -377,14 +481,15 @@ export default function ClassDetail() {
 
     //Alle Einträge
     const handleOpenBookingList = async () => {
+        const allBookings = [...fetchedBalance, ...localBalance]; // Hier sollten alle relevanten Buchungen geladen werden
+
         setState(prevState => ({
             ...prevState,
-            bookings: prevState.bookings.length > 0
-                ? prevState.bookings  // Falls schon Einträge da sind, nicht überschreiben
-                : [...fetchedBalance, ...localBalance],
+            bookings: prevState.bookings.length === 0 ? allBookings : prevState.bookings,  // Nur wenn `bookings` leer ist, setze sie
             isBookingListModalOpen: true,
         }));
     };
+
 
 
     const handleDeleteBooking = async (bookingId) => {
@@ -434,10 +539,28 @@ export default function ClassDetail() {
     };
 
     const handleEditBooking = async (updatedBooking) => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         try {
             const response = await fetch(`/api/buchungen/${updatedBooking.id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify(updatedBooking),
             });
 
@@ -573,12 +696,30 @@ export default function ClassDetail() {
 
     //Löschen
     const handleDeleteAllSchueler = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!confirm("Wirklich alle Schüler und Buchungen löschen?")) return;
 
         try {
             const response = await fetch('/api/deleteAllSchueler', {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify({ classId }),
             });
 
@@ -589,7 +730,9 @@ export default function ClassDetail() {
 
             setState(prevState => ({
                 ...prevState,
-                localSchueler: [], // Alle Schüler und ihre Buchungen entfernen
+                localSchueler: [],
+                bookings: [],
+                // Alle Schüler und ihre Buchungen entfernen
             }));
 
             alert("Alle Schüler und Buchungen wurden gelöscht.");
@@ -600,12 +743,30 @@ export default function ClassDetail() {
     };
 
     const handleDeleteAllBookings = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!confirm("Wirklich ALLE Buchungen löschen? Die Schüler bleiben erhalten.")) return;
 
         try {
             const response = await fetch('/api/deleteAllBookings', {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify({ classId }),
             });
 
@@ -619,6 +780,7 @@ export default function ClassDetail() {
             // Aktualisiere State: alle balances der Schüler auf []
             setState(prevState => ({
                 ...prevState,
+                bookings: [],
                 localSchueler: prevState.localSchueler.map(s => ({ ...s, balance: [] }))
             }));
 
@@ -629,12 +791,30 @@ export default function ClassDetail() {
     };
 
     const handleDeleteAll = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!confirm("⚠️ Möchtest du wirklich ALLES löschen – Schüler, Buchungen und Klasse selbst?")) return;
 
         try {
             const response = await fetch('/api/deleteAll', {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: JSON.stringify({ classId }),
             });
 
@@ -643,7 +823,7 @@ export default function ClassDetail() {
                 throw new Error(error || 'Fehler beim vollständigen Löschen');
             }
 
-            alert("Alles gelöscht – einschließlich der Klasse!");
+            alert("Alles gelöscht – einschliesslich der Klasse!");
 
             // Optional: Weiterleitung zur Übersichtsseite
             window.location.href = "/klassen"; // oder wohin du willst
@@ -660,7 +840,7 @@ export default function ClassDetail() {
 
 
     const filteredSchueler = allSchueler
-        .filter(schueler => schueler.class === String(classId))
+        .filter(schueler => schueler.class === classId)
         .filter(schueler =>
             `${schueler.name} ${schueler.surname}`.toLowerCase().includes(state.searchQuery.toLowerCase())
         )

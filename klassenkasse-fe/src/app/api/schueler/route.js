@@ -1,10 +1,19 @@
-import { supabase } from '../../lib/supabaseClient.js';
+import { createSupabaseServerClient } from '../../lib/supabaseClient';
 import * as XLSX from 'xlsx';
 
 export async function POST(req) {
     try {
         // Überprüfe den Inhalt der Anfrage, um zu entscheiden, ob es sich um einen Import oder eine Schülererstellung handelt
         const contentType = req.headers.get('Content-Type') || '';
+
+        const token = req.headers.get('Authorization')?.split(' ')[1];
+
+        if (!token) {
+            return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+        }
+
+        const supabase = createSupabaseServerClient(token);
+        console.log("token: ", token)
 
         if (contentType.includes('application/json')) {
             // Wenn es sich um eine normale JSON-Anfrage handelt (Schüler hinzufügen)
@@ -60,7 +69,6 @@ export async function POST(req) {
                 });
             }
 
-
             // Jetzt die umbenannten Daten in die Datenbank einfügen
             const { data: insertedData, error } = await supabase
                 .from('schueler')
@@ -70,7 +78,6 @@ export async function POST(req) {
             if (error) throw error;
 
             return new Response(JSON.stringify({ message: 'Schüler erfolgreich importiert', data: insertedData }), { status: 200 });
-
         }
 
         throw new Error('Unbekannter Inhaltstyp'); // Wenn der Inhaltstyp nicht bekannt ist

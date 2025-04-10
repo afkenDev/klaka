@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../lib/supabaseClient';
+import { createSupabaseServerClient } from '../../lib/supabaseClient';
 
 export async function DELETE(req) {
+    const token = req.headers.get('Authorization')?.split(' ')[1];
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token fehlt' }, { status: 401 });
+    }
+
+    const supabase = createSupabaseServerClient(token);
+    console.log("token: ", token)
+
     try {
         const { classId } = await req.json();
 

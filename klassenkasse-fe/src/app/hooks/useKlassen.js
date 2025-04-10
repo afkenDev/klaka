@@ -8,9 +8,9 @@ export function useKlassen() {
 
   useEffect(() => {
     const fetchKlassen = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (userError || !user) {
+      if (sessionError || !session) {
         setError('Nicht eingeloggt');
         setLoading(false);
         return;
@@ -18,13 +18,16 @@ export function useKlassen() {
 
       const response = await fetch('/api/getData', {
         method: 'POST',
-        body: JSON.stringify({ userId: user.id }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       const result = await response.json();
-
+      console.log("Result vom Backend:", result);
       if (!response.ok) {
-        setError(result.error || 'Fehler beim Laden der Klassen');
+        setError(result.error || 'Fehler beim Laden');
       } else {
         setKlassen(result);
       }

@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
@@ -14,17 +15,21 @@ export function useKlassenId(klassenname) {
                 return;
             }
 
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-            if (userError || !user) {
-                setError('Nicht eingeloggt');
-                setLoading(false);
-                return;
-            }
-
             try {
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+                if (sessionError || !session) {
+                    setError('Nicht eingeloggt');
+                    setLoading(false);
+                    return;
+                }
+
                 const response = await fetch('/api/getKlassenId', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
                     body: JSON.stringify({ klassenname }),
                 });
 

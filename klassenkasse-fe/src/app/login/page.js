@@ -16,6 +16,7 @@ export default function LoginPage() {
   useEffect(() => {
     const checkSession = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
+      console.log("test", user.data?.user?.id)
       if (user && !error) {
         router.push("/klassen");
       }
@@ -44,39 +45,40 @@ export default function LoginPage() {
     }
     console.log("Benutzer existiert laut API:", userExists);
     console.log("Login-Daten:", { email, password });
-    
+
     // 2. Login mit Passwort versuchen
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-        console.log("Fehler beim Passwort-Login:", error.message);
-      }
-      
-    
-      if (error) {
-        if (error.message.toLowerCase().includes("invalid login credentials")) {
-          // Prüfe via API ob ein Passwort gesetzt wurde
-          const metaRes = await fetch("/api/user-meta", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          });
-      
-          const metaData = await metaRes.json();
-      
-          if (metaData?.mustSetPassword) {
-            setError("Dieses Konto hat noch kein Passwort.");
-            setTimeout(() => router.push("/login/set-password"), 2000);
-          } else {
-            setError("Falsches Passwort. Bitte erneut versuchen.");
-          }
-      
-          return;
+      console.log("Fehler beim Passwort-Login:", error.message);
+    }
+    const session = await supabase.auth.getSession();
+    console.log("session: ", session.data.session?.access_token);
+
+    if (error) {
+      if (error.message.toLowerCase().includes("invalid login credentials")) {
+        // Prüfe via API ob ein Passwort gesetzt wurde
+        const metaRes = await fetch("/api/user-meta", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        const metaData = await metaRes.json();
+
+        if (metaData?.mustSetPassword) {
+          setError("Dieses Konto hat noch kein Passwort.");
+          setTimeout(() => router.push("/login/set-password"), 2000);
+        } else {
+          setError("Falsches Passwort. Bitte erneut versuchen.");
         }
-      
-        setError("Unbekannter Fehler beim Login.");
+
         return;
       }
-      
+
+      setError("Unbekannter Fehler beim Login.");
+      return;
+    }
+
 
     const { data: userData } = await supabase.auth.getUser();
 
@@ -104,7 +106,7 @@ export default function LoginPage() {
             <input
               type="text"
               id="username"
-              value={username}
+              value={username || ''}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
@@ -115,7 +117,7 @@ export default function LoginPage() {
             <input
               type="password"
               id="password"
-              value={password}
+              value={password || ''}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
