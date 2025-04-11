@@ -155,7 +155,7 @@ export default function KlassenPage() {
               style={{ backgroundColor: klasse.color }}
               onClick={() => {
                 setSelectedClassId(klasse.klassenname);
-                router.push(`/klassen/${klasse.klassenname}`);
+                router.push(`/klassen/${klasse.id}`);
               }}
             >
               <div className="header">

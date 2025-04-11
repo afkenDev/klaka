@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useSchuelerMitBalance } from '../../hooks/useSchuelerMitBalance';
 import { useBalance } from '../../hooks/useBalance';
-import { useKlassenId } from '../../hooks/useKlassenId'
+import { useKlassenName } from '../../hooks/useKlassenName'
 import BookingModal from '../../components/BookingModal';
 import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
@@ -24,10 +24,13 @@ import Image from "next/image";
 export default function ClassDetail() {
     const { id } = useParams();
     const router = useRouter();
+    const classId = id;
+    console.log("classid, ", classId)
+
     const [user, setUser] = useState(null);
     console.log("test, ", id)
-    const { id: classId, loading: IDloading, error: IDerror } = useKlassenId(id);
-    console.log("Classid, ", classId);
+    const { klassenname, KlassenLoading, KlassenError } = useKlassenName(id);
+    console.log("Klassenname, ", klassenname);
 
     const { schueler: fetchedSchueler, loading, error } = useSchuelerMitBalance();
     //Settings
@@ -91,8 +94,8 @@ export default function ClassDetail() {
         }
     }, [fetchedSchueler, state.localSchueler.length]);
 
-    if (IDloading) return <div>Lade...</div>;
-    if (IDerror) return <div className="container">Fehler: {error}</div>;
+    if (KlassenLoading) return <div>Lade Klassendaten...</div>;
+    if (KlassenError) return <div>Fehler: {error}</div>;
     if (loading) return <div className="container">Lade Daten...</div>;
     if (error) return <div className="container">Fehler: {error}</div>;
 
@@ -174,13 +177,33 @@ export default function ClassDetail() {
 
 
     const handleImportCSV = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
         if (!state.importFile) return;
 
         const formData = new FormData();
         formData.append('file', state.importFile);
 
         try {
-            const response = await fetch('/api/schueler', { method: 'POST', body: formData });
+            const response = await fetch('/api/schueler', {
+                method: 'POST', body: formData,
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+            });
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Fehler beim Importieren der Datei');
 
@@ -629,7 +652,7 @@ export default function ClassDetail() {
             doc.setFont("helvetica", "normal");
             doc.setFontSize(12);
             doc.text(`${student.mail}`, 10, 52);
-            doc.text(`${id}`, 10, 59);
+            doc.text(`${klassenname}`, 10, 59);
             doc.text(`Datum: ${new Date().toLocaleDateString()}`, 10, 70);
 
             doc.setFont("helvetica", "bold");
@@ -840,7 +863,7 @@ export default function ClassDetail() {
 
 
     const filteredSchueler = allSchueler
-        .filter(schueler => schueler.class === classId)
+        .filter(schueler => String(schueler.class) === String(classId))
         .filter(schueler =>
             `${schueler.name} ${schueler.surname}`.toLowerCase().includes(state.searchQuery.toLowerCase())
         )
@@ -851,7 +874,7 @@ export default function ClassDetail() {
         <>
             <Navbar />
             <div className="container">
-                <h1 className='title'>Klasse {id}</h1>
+                <h1 className='title'>Klasse {klassenname}</h1>
                 <div className="controls">
                     <button onClick={() => router.push('/klassen')}>← Zurück</button>
                     <input
