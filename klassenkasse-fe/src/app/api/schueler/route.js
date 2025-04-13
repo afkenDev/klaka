@@ -34,8 +34,9 @@ export async function POST(req) {
             // Wenn es sich um einen Dateiupload handelt (Import)
             const formData = await req.formData();
             const file = formData.get('file');
+            const classId = formData.get('classId');
 
-            if (!file) throw new Error('Keine Datei hochgeladen');
+            if (!file || !classId) throw new Error('Datei oder Klassen-ID fehlt');
 
             const buffer = await file.arrayBuffer(); // Nutze arrayBuffer statt FileReader
             const wb = XLSX.read(buffer, { type: 'array' });
@@ -48,16 +49,16 @@ export async function POST(req) {
 
             for (const item of data) {
                 // Schritt 1: Hole die Klassen-ID für item.Klasse
-                const { data: klasseData, error: klasseError } = await supabase
-                    .from('klasse')
-                    .select('id')
-                    .eq('klassenname', item.Klasse)
-                    .single();
-
-                if (klasseError || !klasseData) {
-                    console.warn(`Klasse '${item.Klasse}' nicht gefunden. Überspringe Eintrag.`, klasseError?.message);
-                    continue; // Überspringe diesen Schüler, wenn Klasse nicht gefunden wird
-                }
+                /* const { data: klasseData, error: klasseError } = await supabase
+                     .from('klasse')
+                     .select('id')
+                     .eq('klassenname', item.Klasse)
+                     .single();
+ 
+                 if (klasseError || !klasseData) {
+                     console.warn(`Klasse '${item.Klasse}' nicht gefunden. Überspringe Eintrag.`, klasseError?.message);
+                     continue; // Überspringe diesen Schüler, wenn Klasse nicht gefunden wird
+                 }*/
 
                 // Schritt 2: Schülerobjekt mit Klassen-ID erstellen
                 renamedData.push({
@@ -65,7 +66,7 @@ export async function POST(req) {
                     surname: item.Nachname,
                     mobile: item.Mobile,
                     mail: item.EMail,
-                    class: klasseData.id // 💡 ID statt Name speichern!
+                    class: classId // 💡 ID statt Name speichern!
                 });
             }
 

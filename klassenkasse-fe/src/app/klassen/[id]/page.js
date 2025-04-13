@@ -196,6 +196,7 @@ export default function ClassDetail() {
 
         const formData = new FormData();
         formData.append('file', state.importFile);
+        formData.append('classId', classId);
 
         try {
             const response = await fetch('/api/schueler', {
@@ -636,6 +637,7 @@ export default function ClassDetail() {
 
             if (!student || !student.balance || !Array.isArray(student.balance) || student.balance.length === 0) {
                 console.warn(`Keine Buchungen für ${student?.name} ${student?.surname}`);
+                alert(`${student?.name} ${student?.surname} hat keine Buchung`)
                 return;
             }
 
@@ -717,6 +719,41 @@ export default function ClassDetail() {
         state.selectedStudents = [];
     };
 
+    console.log("localschueler: ", state.localSchueler)
+    const refreshSchueler = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const response = await fetch('/api/getSchuelerMitBalance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${session.access_token}`,
+            },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Fehler beim Laden der Schülerdaten');
+        }
+
+        return result;
+    };
+
+
     //Löschen
     const handleDeleteAllSchueler = async () => {
         if (!user) {
@@ -751,11 +788,12 @@ export default function ClassDetail() {
                 throw new Error(error || 'Fehler beim Löschen');
             }
 
+            const refreshedSchueler = await refreshSchueler(session.access_token);
+
             setState(prevState => ({
                 ...prevState,
-                localSchueler: [],
+                localSchueler: refreshedSchueler || [],
                 bookings: [],
-                // Alle Schüler und ihre Buchungen entfernen
             }));
 
             alert("Alle Schüler und Buchungen wurden gelöscht.");
