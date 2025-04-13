@@ -7,7 +7,6 @@ import { supabase } from '../../../lib/supabaseClient';
 import { useKlassenId } from '../../../hooks/useKlassenId';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
-import '../../../styles/statistik.css';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AA66CC', '#FF4444'];
 

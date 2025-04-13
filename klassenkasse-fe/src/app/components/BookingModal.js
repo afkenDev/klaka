@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../styles/student.css';
 
 // components/BookingModal.js
 export default function BookingModal({

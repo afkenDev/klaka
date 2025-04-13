@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../styles/student.css';
 
 export default function BookingListModal({ isOpen, onClose, bookings, onEdit, onDelete }) {
     const [editingBookingId, setEditingBookingId] = useState(null);

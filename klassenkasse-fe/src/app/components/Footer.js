@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import "../styles/layout.css";
 
 export default function Footer() {
     return (

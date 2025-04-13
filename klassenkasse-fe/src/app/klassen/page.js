@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import '../styles/classview.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/navigation';

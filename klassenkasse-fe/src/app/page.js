@@ -2,7 +2,6 @@
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import '../app/styles/global.css';
 import Link from 'next/link';
 
 export default function Home() {

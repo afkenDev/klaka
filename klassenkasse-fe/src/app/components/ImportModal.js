@@ -1,6 +1,5 @@
 // components/ImportModal.js
 import { useState, useEffect } from 'react';
-import '../styles/student.css';
 
 export default function ImportModal({ isOpen, onClose, onImportCSV, onFileChange }) {
     if (!isOpen) return null;

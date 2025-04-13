@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import '../styles/student.css';
 
 export default function ExportModal({ isOpen, onClose, students, selectedStudents, onSelectStudent, onSelectAll, onGeneratePDF }) {
 

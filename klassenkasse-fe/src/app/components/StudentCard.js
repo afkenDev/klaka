@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js'; // Falls du eine Datei hast, die den Supabase-Client exportiert
-import '../styles/student.css';
 
 export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenSettings, onDeleteTransaction }) {
     const studentBalance = student.balance || [];

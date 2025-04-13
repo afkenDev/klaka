@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import '../styles/layout.css';
 
 export default function Navbar() {
   const [currentSemester, setCurrentSemester] = useState('');

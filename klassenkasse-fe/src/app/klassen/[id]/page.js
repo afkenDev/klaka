@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import '../../styles/student.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useSchuelerMitBalance } from '../../hooks/useSchuelerMitBalance';
