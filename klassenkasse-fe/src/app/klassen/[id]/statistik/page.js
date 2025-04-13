@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { supabase } from '../../../lib/supabaseClient';
-import { useKlassenId } from '../../../hooks/useKlassenId';
+import { useKlassenName } from '../../../hooks/useKlassenName';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 
@@ -35,8 +35,8 @@ export default function StatistikPage() {
     const [data, setData] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);  // Neu: Gesamtbetrag
 
-    const klassenname = params?.id || '';
-    const { id: classId, loading: IDloading, error: IDerror } = useKlassenId(klassenname);
+    const classId = params?.id || '';
+    //const { id: classId, loading: IDloading, error: IDerror } = useKlassenId(klassenname);
 
     useEffect(() => {
         if (!classId) return;
@@ -96,8 +96,8 @@ export default function StatistikPage() {
         fetchData();
     }, [classId]);
 
-    if (IDloading) return <div>Lade...</div>;
-    if (IDerror) return <div className="container">Fehler: {IDerror.message}</div>;
+    // if (IDloading) return <div>Lade...</div>;
+    // if (IDerror) return <div className="container">Fehler: {IDerror.message}</div>;
 
     return (
         <>
@@ -107,7 +107,7 @@ export default function StatistikPage() {
 
                 <div className='controls'>
                     <button
-                        onClick={() => router.push(`/klassen/${klassenname}`)}
+                        onClick={() => router.push(`/klassen/${classId}`)}
                     >
                         ← Zurück
                     </button>

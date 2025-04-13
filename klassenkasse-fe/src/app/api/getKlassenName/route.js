@@ -17,26 +17,26 @@ export async function POST(req) {
         }
 
         const supabaseServer = createSupabaseServerClient(token);
-        const { klassenname } = await req.json();
+        const { id } = await req.json();
 
-        if (!klassenname) {
-            return NextResponse.json({ error: 'Kein Klassenname übergeben' }, { status: 400 });
+        if (!id) {
+            return NextResponse.json({ error: 'Keine ID übergeben' }, { status: 400 });
         }
 
         const { data, error } = await supabaseServer
             .from('klasse')
-            .select('id')
-            .eq('klassenname', klassenname)
+            .select('klassenname')
+            .eq('id', id)
             .single();
 
         if (error || !data) {
             return NextResponse.json({ error: 'Klasse nicht gefunden' }, { status: 404 });
         }
 
-        return NextResponse.json({ id: data.id }, { status: 200 });
+        return NextResponse.json({ klassenname: data.klassenname }, { status: 200 });
 
     } catch (err) {
-        console.error("Fehler in /api/getKlassenId:", err);
+        console.error("Fehler in /api/getKlassenName:", err);
         return NextResponse.json({ error: 'Interner Serverfehler' }, { status: 500 });
     }
 }
