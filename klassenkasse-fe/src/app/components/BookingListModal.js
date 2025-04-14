@@ -50,6 +50,21 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
         return `${day}.${month}.${year}`; // Umwandlung in dd.mm.yyyy
     };
 
+    const sortedBookings = [...bookings].sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('.');
+        const [dayB, monthB, yearB] = b.date.split('.');
+        const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+        const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+
+        if (dateA.getTime() === dateB.getTime()) {
+            return b.id - a.id; // Höhere ID zuerst bei gleichem Datum
+        }
+
+        return dateB - dateA; // Neueste zuerst
+    });
+
+
+
     return (
         <div className="modal-overlay">
             <div className="booking-modal">
@@ -65,7 +80,7 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                             </tr>
                         </thead>
                         <tbody>
-                            {bookings.map((booking) => (
+                            {sortedBookings.map((booking) => (
                                 <tr key={booking.id}>
                                     <td>
                                         {editingBookingId === booking.id ? (
