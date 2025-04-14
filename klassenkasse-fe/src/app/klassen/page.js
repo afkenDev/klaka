@@ -132,7 +132,7 @@ export default function KlassenPage() {
   };
 
   return (
-    <>
+    <div className="page-wrapper">
       <Navbar />
       <div className="container">
         <h1 className="title">Klassenübersicht</h1>
@@ -227,6 +227,6 @@ export default function KlassenPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

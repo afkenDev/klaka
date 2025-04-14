@@ -871,7 +871,7 @@ export default function ClassDetail() {
     console.log("filtered, ", filteredSchueler)
     console.log(state.localSchueler)
     return (
-        <>
+        <div className="page-wrapper">
             <Navbar />
             <div className="container">
                 <h1 className='title'>Klasse {klassenname}</h1>
@@ -1029,6 +1029,6 @@ export default function ClassDetail() {
 
             </div>
             <Footer />
-        </>
+</div>
     );
 }

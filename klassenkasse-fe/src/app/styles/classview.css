@@ -1,10 +1,12 @@
 /* Base container styles */
 .container {
-    padding: 32px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #f9fafb;
-  }
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  display: block;
+}
+
   
   /* Page title */
   .title {
@@ -56,10 +58,12 @@
   
   /* Card grid */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 1.5rem !important;
   }
+  
+  
   
   /* Class cards */
   .card {
@@ -286,7 +290,7 @@
   }
   
   /* Responsive adjustments */
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     .container {
       padding: 20px;
     }
