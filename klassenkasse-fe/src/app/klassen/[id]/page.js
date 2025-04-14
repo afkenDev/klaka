@@ -682,13 +682,27 @@ export default function ClassDetail() {
             doc.setFont("helvetica", "bold");
             doc.text("Detail-Postenauszug:", 10, totalTextStartY + 30);
 
+            const sortedBalance = [...student.balance].sort((a, b) => {
+                const [dayA, monthA, yearA] = a.date.split('.');
+                const [dayB, monthB, yearB] = b.date.split('.');
+                const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+                const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+
+                if (dateA.getTime() === dateB.getTime()) {
+                    return a.id - b.id; // kleinere ID oben, höhere ID unten
+                }
+
+                return dateA - dateB; // älteste zuerst, neueste unten
+            });
+
+
             // Tabelle mit begrenzter Spaltenbreite und Zeilenumbruch
             const tableStartY = totalTextStartY + 40;
             autoTable(doc, {
                 startY: tableStartY,
                 head: [['Datum', 'Text', 'Belastung', 'Gutschrift']],
                 headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
-                body: student.balance.map(entry => [
+                body: sortedBalance.map(entry => [
                     entry.date,
                     entry.name,
                     entry.operator === '-' ? `${entry.amount.toFixed(2)} Fr.` : '',
@@ -713,7 +727,7 @@ export default function ClassDetail() {
             doc.text(`${finalBalance.toFixed(2)} Fr. Saldo`, pageWidth - 27 - doc.getTextWidth(`${finalBalance.toFixed(2)} Fr.`), finalY + 10);
 
             // PDF speichern
-            doc.save(`Buchungen_${student.name}_${student.surname}.pdf`);
+            doc.save(`Postenauszug_${student.name}_${student.surname}_${new Date().toLocaleDateString()}.pdf`);
         });
 
         state.selectedStudents = [];

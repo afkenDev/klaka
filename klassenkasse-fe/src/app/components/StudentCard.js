@@ -18,7 +18,19 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // Entfernen-Funktion für Transaktionen
+    const sortedBalance = [...studentBalance].sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('.');
+        const [dayB, monthB, yearB] = b.date.split('.');
+        const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+        const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+
+        if (dateA.getTime() === dateB.getTime()) {
+            return b.id - a.id; // Höhere ID zuerst bei gleichem Datum
+        }
+
+        return dateB - dateA; // Neueste zuerst
+    });
+
 
 
     return (
@@ -50,7 +62,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                         </thead>
                         <tbody>
                             {studentBalance.length > 0 ? (
-                                studentBalance.map((b, index) => (
+                                sortedBalance.map((b, index) => (
                                     <tr key={index}>
                                         <td>{b.name}</td>
                                         <td>
