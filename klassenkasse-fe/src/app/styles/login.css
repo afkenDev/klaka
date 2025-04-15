@@ -5,21 +5,21 @@
     --orange-color: #FF9800;
     --blue-color: #009EE0;
     --font-color: #000000;
-}
-
-/* Login-Container */
-.login-container {
+  }
+  
+  /* Login-Container */
+  .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('/pic/bg-kbw.jpg') center/cover no-repeat;
+                url('/pic/bg-kbw.jpg') center/cover no-repeat;
     color: white;
-}
-
-/* Login-Formular Box */
-.login-form {
+  }
+  
+  /* Login-Formular Box */
+  .login-form {
     background-color: rgba(0, 0, 0, 0.6);
     padding: 2rem;
     border-radius: 10px;
@@ -27,29 +27,28 @@
     width: 100%;
     max-width: 400px;
     text-align: center;
-}
-
-/* Formular Titel */
-.login-title {
+  }
+  
+  /* Formular Titel */
+  .login-title {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
-}
-
-/* Eingabefelder */
-.input-group {
+  }
+  
+  /* Eingabefelder */
+  .input-group {
     margin-bottom: 1.5rem;
     text-align: left;
-}
-
-/* Eingabefelder - Label & Input */
-.input-group label {
+  }
+  
+  .input-group label {
     font-size: 1rem;
     margin-bottom: 0.5rem;
     display: block;
-}
-
-.input-group input {
+  }
+  
+  .input-group input {
     width: 100%;
     padding: 0.8rem;
     font-size: 1rem;
@@ -57,10 +56,10 @@
     border-radius: 5px;
     background-color: #fff;
     color: #333;
-}
-
-/* Login Button */
-.login-submit-button {
+  }
+  
+  /* Login Button */
+  .login-submit-button {
     background-color: var(--button-color);
     color: white;
     padding: 1rem 1.5rem;
@@ -71,15 +70,14 @@
     width: 100%;
     margin-top: 1rem;
     transition: background-color 0.2s ease-in-out;
-}
-
-/* Button Hover */
-.login-submit-button:hover {
+  }
+  
+  .login-submit-button:hover {
     background-color: #444;
-}
-
-/* Stil für den Zurück-Pfeil */
-.back-arrow {
+  }
+  
+  /* Zurück-Pfeil */
+  .back-arrow {
     font-size: 3rem;
     position: absolute;
     top: 2rem;
@@ -87,13 +85,42 @@
     cursor: pointer;
     color: var(--blue-color);
     font-weight: bold;
-}
-
-.back-arrow:hover {
+  }
+  
+  .back-arrow:hover {
     color: var(--orange-color);
-}
-html, body {
+  }
+  
+  html, body {
     height: 100%;
     position: relative;
   }
   
+
+  /* Back Button */
+.back-arrow {
+    font-size: 1.8rem;
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .back-arrow:hover {
+    color: white;
+  }
+  
+/* Feedback */
+.error-message {
+    color: red;
+    margin-top: 1rem;
+  }
+  
+  .success-message {
+    color: green;
+    margin-top: 1rem;
+  }

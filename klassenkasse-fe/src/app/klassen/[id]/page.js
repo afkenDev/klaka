@@ -195,6 +195,7 @@ export default function ClassDetail() {
 
         const formData = new FormData();
         formData.append('file', state.importFile);
+        formData.append('classId', classId);
 
         try {
             const response = await fetch('/api/schueler', {
@@ -635,6 +636,7 @@ export default function ClassDetail() {
 
             if (!student || !student.balance || !Array.isArray(student.balance) || student.balance.length === 0) {
                 console.warn(`Keine Buchungen für ${student?.name} ${student?.surname}`);
+                alert(`${student?.name} ${student?.surname} hat keine Buchung`)
                 return;
             }
 
@@ -679,13 +681,27 @@ export default function ClassDetail() {
             doc.setFont("helvetica", "bold");
             doc.text("Detail-Postenauszug:", 10, totalTextStartY + 30);
 
+            const sortedBalance = [...student.balance].sort((a, b) => {
+                const [dayA, monthA, yearA] = a.date.split('.');
+                const [dayB, monthB, yearB] = b.date.split('.');
+                const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+                const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+
+                if (dateA.getTime() === dateB.getTime()) {
+                    return a.id - b.id; // kleinere ID oben, höhere ID unten
+                }
+
+                return dateA - dateB; // älteste zuerst, neueste unten
+            });
+
+
             // Tabelle mit begrenzter Spaltenbreite und Zeilenumbruch
             const tableStartY = totalTextStartY + 40;
             autoTable(doc, {
                 startY: tableStartY,
                 head: [['Datum', 'Text', 'Belastung', 'Gutschrift']],
                 headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
-                body: student.balance.map(entry => [
+                body: sortedBalance.map(entry => [
                     entry.date,
                     entry.name,
                     entry.operator === '-' ? `${entry.amount.toFixed(2)} Fr.` : '',
@@ -710,11 +726,46 @@ export default function ClassDetail() {
             doc.text(`${finalBalance.toFixed(2)} Fr. Saldo`, pageWidth - 27 - doc.getTextWidth(`${finalBalance.toFixed(2)} Fr.`), finalY + 10);
 
             // PDF speichern
-            doc.save(`Buchungen_${student.name}_${student.surname}.pdf`);
+            doc.save(`Postenauszug_${student.name}_${student.surname}_${new Date().toLocaleDateString()}.pdf`);
         });
 
         state.selectedStudents = [];
     };
+
+    console.log("localschueler: ", state.localSchueler)
+    const refreshSchueler = async () => {
+        if (!user) {
+            alert("User nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const response = await fetch('/api/getSchuelerMitBalance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${session.access_token}`,
+            },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Fehler beim Laden der Schülerdaten');
+        }
+
+        return result;
+    };
+
 
     //Löschen
     const handleDeleteAllSchueler = async () => {
@@ -750,11 +801,12 @@ export default function ClassDetail() {
                 throw new Error(error || 'Fehler beim Löschen');
             }
 
+            const refreshedSchueler = await refreshSchueler(session.access_token);
+
             setState(prevState => ({
                 ...prevState,
-                localSchueler: [],
+                localSchueler: refreshedSchueler || [],
                 bookings: [],
-                // Alle Schüler und ihre Buchungen entfernen
             }));
 
             alert("Alle Schüler und Buchungen wurden gelöscht.");
@@ -870,7 +922,7 @@ export default function ClassDetail() {
     console.log("filtered, ", filteredSchueler)
     console.log(state.localSchueler)
     return (
-        <>
+        <div className="page-wrapper">
             <Navbar />
             <div className="container">
                 <h1 className='title'>Klasse {klassenname}</h1>
@@ -1028,6 +1080,6 @@ export default function ClassDetail() {
 
             </div>
             <Footer />
-        </>
+</div>
     );
 }

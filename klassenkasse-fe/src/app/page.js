@@ -1,15 +1,18 @@
-'use client'
+'use client';
 
+import Link from 'next/link';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+<<<<<<< HEAD
 import Link from 'next/link';
+=======
+import './styles/global.css';
+>>>>>>> f356a8b4def3d8f37081963f8df5b1b30ef42440
 
 export default function Home() {
   return (
-    <div className="home-container">
-
+    <div className="page-wrapper">
       <Navbar />
-
 
       <main className="home-main">
         <h1 className="home-title">Klassenkasse</h1>
@@ -22,7 +25,6 @@ export default function Home() {
       </main>
 
       <Footer />
-
     </div>
   );
 }

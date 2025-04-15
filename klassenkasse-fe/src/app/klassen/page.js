@@ -80,6 +80,13 @@ export default function KlassenPage() {
       return;
     }
 
+    const isValidClassname = /^[0-9]{1}[a-zA-Z]{0,4}$/.test(newClass.klassenname);
+    if (!isValidClassname) {
+      alert("Der Klassenname muss der Klassenkürzel sein.");
+      return;
+    }
+
+
     try {
       const response = await fetch('/api/klassen', {
         method: 'POST',
@@ -131,7 +138,7 @@ export default function KlassenPage() {
   };
 
   return (
-    <>
+    <div className="page-wrapper">
       <Navbar />
       <div className="container">
         <h1 className="title">Klassenübersicht</h1>
@@ -226,6 +233,6 @@ export default function KlassenPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

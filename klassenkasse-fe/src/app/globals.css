@@ -1,16 +1,9 @@
 :root {
-  --background: #ffffff;
-  /* Weiß als Hintergrundfarbe */
-  --foreground: #171717;
-  /* Dunkles Grau/Schwarz für den Text */
-  --button-bg: #3b82f6;
-  /* Blau für die Buttons */
-  --button-hover-bg: #1d5f9b;
-  /* Dunkleres Blau für Hover-Effekt */
-  --button-shadow: rgba(0, 0, 0, 0.2);
-  /* Leichter Schatten für Buttons */
-  --button-shadow-hover: rgba(0, 0, 0, 0.3);
-  /* Intensiverer Schatten beim Hover */
+  --primary: #3c9fa1ff;         /* Verdigris */
+  --secondary: #c8e4e4ff;       /* Light Cyan */
+  --text: #2d2d2aff;            /* Jet */
+  --muted: #8a8a8aff;           /* Battleship Gray */
+  --accent: #f06c1aff;          /* Spanish Orange */
 }
 
 html,
@@ -19,53 +12,45 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-}
-
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background-color: white;
 }
 
 button {
-  box-shadow: 2px 2px 5px var(--button-shadow);
-  transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  background-color: var(--button-bg);
-  /* Standardfarbe für Buttons */
+  background-color: var(--primary);
   color: white;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
 }
 
-/* Schatten und Farbe verstärken beim Hover */
 button:hover {
-  box-shadow: 4px 4px 8px var(--button-shadow-hover);
-  background-color: var(--button-hover-bg);
+  background-color: var(--accent);
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Spezifischer Button für den Login-Button */
-.home-login-button,
-.login-button {
-  box-shadow: 2px 2px 5px var(--button-shadow);
+input,
+select,
+textarea {
+  padding: 0.5rem;
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  background-color: white;
+  color: var(--text);
+  font-size: 1rem;
 }
 
-.home-login-button:hover,
-.login-button:hover {
-  box-shadow: 4px 4px 8px var(--button-shadow-hover);
-  background-color: var(--button-hover-bg);
+a {
+  color: var(--primary);
+  text-decoration: none;
 }
 
-/* Responsive Anpassungen für kleinere Bildschirme */
-@media (max-width: 768px) {
-  button {
-    padding: 0.5rem 1rem;
-    /* Button-Größe auf kleineren Bildschirmen anpassen */
-    font-size: 0.9rem;
-    /* Schriftgröße verkleinern */
-  }
+a:hover {
+  text-decoration: underline;
 }
