@@ -53,9 +53,9 @@ export default function EinstellungenPage() {
   };
 
   return (
-    <>
+    <div className='page-wrapper'>
       <Navbar />
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: '600px', margin: '5rem auto' }}>
       <h1>Einstellungen</h1>
 
       <div style={{ marginBottom: '1rem' }}>
@@ -96,7 +96,6 @@ export default function EinstellungenPage() {
 
       {message && <p style={{ marginTop: '1rem' }}>{message}</p>}
     </div>
-      <Footer />
-    </>
-  );
+      </div>  
+      );
 }

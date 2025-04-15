@@ -937,23 +937,32 @@ export default function ClassDetail() {
                         className="search-bar"
                     />
                 </div>
-                <div className="student-list">
-                    {filteredSchueler.length > 0 ? (
-                        filteredSchueler.map(student => (
-                            <StudentCard
-                                key={student.id}
-                                student={student}
-                                onToggleDropdown={toggleDropdown}
-                                isOpen={state.openStudent === student.id}
-                                onOpenSettings={openSettings}
-                                onDeleteTransaction={handleDeleteTransaction}
-                            />
-                        ))
-                    ) : (
-                        <p>Keine Schüler in dieser Klasse.</p>
-                    )}
+                <div className="student-list-container" style={{ 
+                    maxHeight: '400px',  
+                    overflowY: 'auto',
+                    border: '1px solid #eaeaea',
+                    borderRadius: '5px',
+                    padding: '5px',
+                    marginBottom: '20px'
+                }}>
+                    <div className="student-list">
+                        {filteredSchueler.length > 0 ? (
+                            filteredSchueler.map(student => (
+                                <StudentCard
+                                    key={student.id}
+                                    student={student}
+                                    onToggleDropdown={toggleDropdown}
+                                    isOpen={state.openStudent === student.id}
+                                    onOpenSettings={openSettings}
+                                    onDeleteTransaction={handleDeleteTransaction}
+                                />
+                            ))
+                        ) : (
+                            <p>Keine Schüler in dieser Klasse.</p>
+                        )}
+                    </div>
                 </div>
-
+    
                 <div className="actions">
                     <button className="btn-orange" onClick={() => handleModalState('isBookingModalOpen', true)}>Buchung hinzufügen</button>
                     <button className="btn-black" onClick={() => handleModalState('isModalOpen', true)}>Schüler:in hinzufügen</button>
@@ -963,7 +972,7 @@ export default function ClassDetail() {
                     <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Delete funktionen</button>
                     <button className='btn-orange' onClick={() => router.push(`/klassen/${id}/statistik`)}>Statistik</button>
                 </div>
-
+    
                 {state.isModalOpen && (
                     <div className="modal-overlay">
                         <div className="modal">
@@ -996,7 +1005,7 @@ export default function ClassDetail() {
                         </div>
                     </div>
                 )}
-
+    
                 {state.isImportModalOpen && (
                     <ImportModal
                         isOpen={state.isImportModalOpen}
@@ -1053,16 +1062,16 @@ export default function ClassDetail() {
                     </div>
                 )}
                 <BookingListModal
-                    isOpen={state.isBookingListModalOpen} // Direkt aus state
+                    isOpen={state.isBookingListModalOpen}
                     onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
-                    bookings={state.bookings} // Buchungen aus state holen
+                    bookings={state.bookings}
                     onEdit={handleEditBooking}
                     onDelete={handleDeleteBooking}
                 />
                 {isExportModalOpen && (
                     <ExportModal
                         isOpen={isExportModalOpen}
-                        onClose={() => handleExportModalState(false)} // Beim Schließen zurücksetzen
+                        onClose={() => handleExportModalState(false)}
                         students={filteredSchueler}
                         selectedStudents={state.selectedStudents}
                         onSelectStudent={handleSelectStudent}
@@ -1077,10 +1086,7 @@ export default function ClassDetail() {
                     onDeleteAllBookings={handleDeleteAllBookings}
                     onDeleteAll={handleDeleteAll}
                 />
-
-
             </div>
             <Footer />
-</div>
-    );
-}
+        </div>
+    )};
