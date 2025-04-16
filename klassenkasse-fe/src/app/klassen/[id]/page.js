@@ -114,6 +114,11 @@ export default function ClassDetail() {
     if (loading) return <div className="container">Lade Daten...</div>;
     if (error) return <div className="container">Fehler: {error}</div>;
 
+    if (!klasse) {
+        return <div className="container">❌ Diese Klasse existiert nicht oder wurde gelöscht.</div>;
+    }
+
+
     const allSchueler = [...state.localSchueler];
 
 
