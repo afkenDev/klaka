@@ -9,7 +9,7 @@ export default function ExportModal({ isOpen, onClose, students, selectedStudent
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-overlaytwo">
             <div className="export-modal">
                 <h3>Schüler auswählen</h3>
                 <button className="btn-select-all" onClick={onSelectAll}>

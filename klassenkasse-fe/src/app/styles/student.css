@@ -57,7 +57,7 @@ html, body {
 
 .container {
   flex: 1;
-  max-width: 90%;
+  max-width: 66.6%;
   margin: 2rem auto;
   padding: 0;
 }
@@ -1282,3 +1282,420 @@ tbody tr:hover td {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* ===== MODAL OVERLAY & CONTAINER ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px; /* Maximale Breite anpassbar */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Überschriften und Text */
+.modal h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modal p {
+  margin-bottom: 2rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ===== BUTTONS & BUTTON CONTAINER ===== */
+.modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Allgemeine Button-Grundstile */
+.modal-buttons button {
+  flex: 1 1 100%; /* Buttons nehmen ganze Zeile ein – anpassbar, falls mehrere nebeneinander */
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: #fff; /* Standardtextfarbe, sofern nicht anders definiert */
+  box-sizing: border-box;
+}
+
+/* --- Button-Typen --- */
+
+/* Löschen-Button */
+.btn-delete {
+  background-color: var(--danger);
+}
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+}
+
+/* Warn-Button (zum Beispiel: "Nur Buchungen löschen") */
+.btn-warning {
+  background-color: var(--warning);
+  color: var(--text); /* Damit der Text gut lesbar ist */
+}
+.btn-warning:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(255, 193, 7, 0.2);
+}
+
+/* Abbrechen-Button */
+.btn-cancel {
+  background-color: var(--bg-muted);
+  color: var(--text);
+}
+.btn-cancel:hover {
+  background-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+.booking-modalone {
+  padding: 2rem;
+  width: 100%;
+  max-width: 40%;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+  box-sizing: border-box; /* Wichtig: Damit Padding in der Breite enthalten ist */
+}
+
+/* --- Booking Modal Container --- */
+.booking-modalone {
+  background: var(--bg-white, #fff);
+  border-radius: var(--border-radius-lg, 8px);
+  padding: 2rem;
+  width: 50%;
+  max-width: 500px; /* Maximale Breite; anpassbar */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+/* --- Überschrift --- */
+.booking-modalone h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  color: var(--text, #333);
+  text-align: center;
+}
+
+/* --- Formularelemente --- */
+.booking-modalone input[type="text"],
+.booking-modalone input[type="number"],
+.booking-modalone input[type="date"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  font-size: 1rem;
+  transition: var(--transition, all 0.3s ease);
+  box-sizing: border-box;
+}
+
+.booking-modalone input[type="text"]:focus,
+.booking-modalone input[type="number"]:focus,
+.booking-modalone input[type="date"]:focus {
+  border-color: var(--primary, #3c9fa1);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+  outline: none;
+}
+
+/* --- Radiobuttons --- */
+.booking-modalone div > label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: var(--text, #333);
+}
+
+.booking-modalone input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+/* --- Section Überschriften --- */
+.booking-modalone h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.25rem;
+  color: var(--text, #333);
+  text-align: left;
+}
+
+/* --- Button: Select All --- */
+.btn-select-all {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-muted, #f3f4f6);
+  color: var(--text, #333);
+  border: none;
+  border-radius: var(--border-radius, 4px);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition, all 0.3s ease);
+}
+
+.btn-select-all:hover {
+  background-color: var(--border-color, #ccc);
+}
+
+/* --- Liste der Schüler (Checkbox-Liste) --- */
+.booking-student-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  background: var(--bg-light, #f9fafb);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.booking-student-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--border-color, #ccc);
+}
+
+.booking-student-checkbox:last-child {
+  border-bottom: none;
+}
+
+/* --- Modal Buttons Container --- */
+.booking-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* --- Button Styles --- */
+.btn-save,
+.btn-cancel {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: var(--border-radius, 4px);
+  cursor: pointer;
+  transition: var(--transition, all 0.3s ease);
+}
+
+.btn-save {
+  background-color: var(--success, #28a745);
+  color: #fff;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background-color: var(--bg-muted, #f3f4f6);
+  color: var(--text, #333);
+}
+
+.btn-cancel:hover {
+  background-color: var(--border-color, #ccc);
+  transform: translateY(-2px);
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.booking-student-list {
+  display: flex;
+  flex-direction: column; /* erzwingt, dass jedes Kindelement (jedes Label) eine eigene Zeile bekommt */
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  background: var(--bg-light, #f9fafb);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.booking-student-list label {
+  /* Falls du die Checkbox ganz rechts willst: */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+
+  /* Trennlinie und Abstände */
+  border-bottom: 1px solid var(--border-color, #ccc);
+  padding: 0.5rem;
+  margin: 0;   /* kein Extra-Abstand zwischen Labels */
+}
+
+.booking-student-list label:last-child {
+  border-bottom: none;
+}
+
+
+/* Modal Overlay */
+.modal-overlaytwo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal Window */
+.export-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Headline */
+.export-modal h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Select All Button */
+.btn-select-all {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:  0.3s;
+}
+.btn-select-all:hover {
+  background-color: #ddd;
+}
+
+/* Student List */
+.booking-student-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.booking-student-checkbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background: #fafafa;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:  0.2s;
+}
+.booking-student-checkbox:hover {
+  background: #f1f1f1;
+}
+.booking-student-checkbox input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+/* Button Row */
+.export-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Export Button */
+.btn-export {
+  flex: 1;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-export:hover {
+  background-color: #45a049;
+}
+
+/* Cancel Button */
+.btn-cancel {
+  flex: 1;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-cancel:hover {
+  background-color: #c0392b;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

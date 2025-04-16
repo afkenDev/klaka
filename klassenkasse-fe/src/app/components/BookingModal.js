@@ -43,7 +43,7 @@ export default function BookingModal({
 
     return (
         <div className="modal-overlay">
-            <div className="booking-modal">
+            <div className="booking-modalone">
                 <h2>Buchung hinzufügen</h2>
 
                 <input

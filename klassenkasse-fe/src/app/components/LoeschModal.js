@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import '../styles/student.css';
+
 
 export default function LoeschModal({ isOpen, onClose, onDeleteAllSchueler, onDeleteAllBookings, onDeleteAll }) {
     if (!isOpen) return null;

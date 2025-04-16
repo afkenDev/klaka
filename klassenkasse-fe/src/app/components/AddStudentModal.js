@@ -1,3 +1,4 @@
+import '../styles/student.css';
 
 export default function AddStudentModal({ isOpen, handleClose, newStudent, handleInputChange, handleAddStudent }) {
     if (!isOpen) return null;
