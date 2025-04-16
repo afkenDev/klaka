@@ -1731,3 +1731,220 @@ tbody tr:hover td {
     transform: translateY(0);
   }
 }
+
+
+/* ========== EXTENDED RESPONSIVENESS ========== */
+
+/* Smartphones bis ca. 480px */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .student-header,
+  .controls,
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls > button,
+  .actions > button,
+  .search-bar {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .student-balance {
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablets bis ca. 768px */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 92%;
+  }
+
+  .booking-modal,
+  .modal {
+    width: 100%;
+    max-width: 95%;
+  }
+}
+
+/* Kleine Laptops bis ca. 1024px */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+
+  .student-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .student-balance {
+    text-align: left;
+  }
+}
+
+/* Große Bildschirme über 1920px */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1400px;
+  }
+
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Ultrawide: 2560px+ */
+@media (min-width: 2560px) {
+  html {
+    font-size: 18px;
+  }
+
+  .container {
+    max-width: 1600px;
+  }
+}
+
+/* ========== RESPONSIVE BOOKING MODAL ========== */
+
+/* Für Mobilgeräte und kleine Tablets */
+@media (max-width: 768px) {
+  .booking-modal,
+  .booking-modalone {
+    width: 100% !important;
+    max-width: 95% !important;
+    padding: 1.25rem !important;
+    border-radius: var(--border-radius) !important;
+    box-sizing: border-box;
+  }
+
+  .booking-modal h2,
+  .booking-modalone h2 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .booking-modal h3,
+  .booking-modalone h3 {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
+  .booking-student-list {
+    max-height: 200px;
+    font-size: 0.95rem;
+  }
+
+  .booking-student-list label {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .booking-modal-buttons,
+  .modal-buttons {
+    flex-direction: column;
+  }
+
+  .booking-modal-buttons button,
+  .modal-buttons button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .booking-modal input,
+  .booking-modal select,
+  .booking-modalone input,
+  .booking-modalone select {
+    font-size: 1rem;
+  }
+
+  .btn-select-all {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Für sehr kleine Displays */
+@media (max-width: 480px) {
+  .booking-modal,
+  .booking-modalone {
+    padding: 1rem !important;
+  }
+
+  .booking-modal h2,
+  .booking-modalone h2 {
+    font-size: 1.125rem;
+  }
+
+  .booking-modal-buttons button,
+  .modal-buttons button {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-modal table,
+  .booking-modalone table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .booking-modal thead,
+  .booking-modalone thead {
+    display: none;
+  }
+
+  .booking-modal tr,
+  .booking-modalone tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    background: var(--bg-white);
+  }
+
+  .booking-modal td,
+  .booking-modalone td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    border: none;
+  }
+
+  .booking-modal td::before,
+  .booking-modalone td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+    flex: 1;
+    padding-right: 1rem;
+  }
+
+  .booking-modal td > * {
+    flex: 1;
+    text-align: right;
+  }
+}

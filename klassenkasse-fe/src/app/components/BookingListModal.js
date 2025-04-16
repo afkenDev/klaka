@@ -113,91 +113,91 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedBookings.map((booking) => (
-                                <tr key={booking.id}>
-                                    <td>
-                                        {editingBookingId === booking.id ? (
-                                            <input
-                                                type="text"
-                                                value={tempBooking.name}
-                                                onChange={(e) => handleInputChange(e, "name")}
-                                            />
-                                        ) : (
-                                            booking.name
-                                        )}
-                                    </td>
+  {sortedBookings.map((booking) => (
+    <tr key={booking.id}>
+      <td data-label="Name">
+        {editingBookingId === booking.id ? (
+          <input
+            type="text"
+            value={tempBooking.name}
+            onChange={(e) => handleInputChange(e, "name")}
+          />
+        ) : (
+          booking.name
+        )}
+      </td>
 
-                                    <td>
-                                        {editingBookingId === booking.id ? (
-                                            <>
-                                                <select
-                                                    value={tempBooking.operator}
-                                                    onChange={(e) => handleInputChange(e, "operator")}
-                                                >
-                                                    <option value="+">+</option>
-                                                    <option value="-">-</option>
-                                                </select>
-                                                <input
-                                                    type="number"
-                                                    value={tempBooking.amount}
-                                                    onChange={(e) => handleInputChange(e, "amount")}
-                                                />
-                                            </>
-                                        ) : (
-                                            `${booking.operator === '-' ? '-' : '+'}${parseFloat(booking.amount).toFixed(2)} Fr.`
-                                        )}
-                                    </td>
+      <td data-label="Betrag">
+        {editingBookingId === booking.id ? (
+          <>
+            <select
+              value={tempBooking.operator}
+              onChange={(e) => handleInputChange(e, "operator")}
+            >
+              <option value="+">+</option>
+              <option value="-">-</option>
+            </select>
+            <input
+              type="number"
+              value={tempBooking.amount}
+              onChange={(e) => handleInputChange(e, "amount")}
+            />
+          </>
+        ) : (
+          `${booking.operator === '-' ? '-' : '+'}${parseFloat(booking.amount).toFixed(2)} Fr.`
+        )}
+      </td>
 
-                                    <td>
-                                        {editingBookingId === booking.id ? (
-                                            <input
-                                                type="date"
-                                                value={tempBooking.date || ''}
-                                                onChange={(e) => handleInputChange(e, "date")}
-                                            />
-                                        ) : (
-                                            booking.date
-                                        )}
-                                    </td>
+      <td data-label="Datum">
+        {editingBookingId === booking.id ? (
+          <input
+            type="date"
+            value={tempBooking.date || ''}
+            onChange={(e) => handleInputChange(e, "date")}
+          />
+        ) : (
+          booking.date
+        )}
+      </td>
 
-                                    <td>
-                                        {editingBookingId === booking.id ? (
-                                            <>
-                                                <input
-                                                    type="text"
-                                                    value={tempBooking.fach || ''}
-                                                    onChange={(e) => handleInputChange(e, "fach")}
-                                                    list="subjects-list"
-                                                    readOnly={tempBooking.operator === '+'} // Wenn der Operator "+" ist, wird das Fach nicht änderbar
-                                                />
-                                                <datalist id="subjects-list">
-                                                    {filteredSubjects.map(subject => (
-                                                        <option key={subject} value={subject} />
-                                                    ))}
-                                                </datalist>
-                                            </>
-                                        ) : (
-                                            booking.fach || "-"
-                                        )}
-                                    </td>
+      <td data-label="Fach">
+        {editingBookingId === booking.id ? (
+          <>
+            <input
+              type="text"
+              value={tempBooking.fach || ''}
+              onChange={(e) => handleInputChange(e, "fach")}
+              list="subjects-list"
+              readOnly={tempBooking.operator === '+'}
+            />
+            <datalist id="subjects-list">
+              {filteredSubjects.map(subject => (
+                <option key={subject} value={subject} />
+              ))}
+            </datalist>
+          </>
+        ) : (
+          booking.fach || "-"
+        )}
+      </td>
 
-                                    <td>
-                                        {editingBookingId === booking.id ? (
-                                            <>
-                                                <button className="table-action-btn btn-save" onClick={handleSaveClick}>Speichern</button>
-                                                <button className="table-action-btn btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button className="table-action-btn btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
-                                                <button className="table-action-btn btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
-                                            </>
-                                        )}
-                                    </td>
+      <td data-label="Bearbeitung">
+        {editingBookingId === booking.id ? (
+          <>
+            <button className="table-action-btn btn-save" onClick={handleSaveClick}>Speichern</button>
+            <button className="table-action-btn btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
+          </>
+        ) : (
+          <>
+            <button className="table-action-btn btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
+            <button className="table-action-btn btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
+          </>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
 
-                                </tr>
-                            ))}
-                        </tbody>
 
                     </table>
                 </div>

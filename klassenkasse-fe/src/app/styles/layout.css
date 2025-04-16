@@ -395,7 +395,7 @@ main {
 }
 
 /* -------- 24-Zoll Monitore (ca. 1920px - 2559px) -------- */
-@media (min-width: 1920px) and (max-width: 2559px) {
+@media (min-width: 1920px) {
   html, body {
     font-size: 1.2rem;
   }
@@ -427,35 +427,3 @@ main {
   }
 }
 
-/* -------- 27-Zoll Monitore (2560px und mehr) -------- */
-@media (min-width: 2560px) {
-  html, body {
-    font-size: 1.3rem;
-  }
-  main {
-    padding: 0 3rem;
-    max-width: 140rem;
-  }
-  .navbar {
-    padding: 2rem 4rem;
-    min-height: 100px;
-  }
-  .navbar-logo img {
-    height: 75px;
-  }
-  .navbar-right {
-    gap: 2rem;
-  }
-  .navbar-semester, .navbar-klass {
-    font-size: 1.3rem;
-  }
-  .login-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.2rem;
-  }
-  .footer {
-    grid-template-columns: 1fr auto 1fr;
-    padding: 2rem 4rem;
-    font-size: 1.2rem;
-  }
-}

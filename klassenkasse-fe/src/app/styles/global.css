@@ -207,7 +207,7 @@ html, body {
   }
   
   /* -------- Laptops (ca. 1024px - 1439px) -------- */
-  @media (min-width: 1024px) and (max-width: 1439px) {
+  @media (min-width: 1024px) {
     .home-main {
       padding: 2.5rem;
     }
@@ -231,62 +231,6 @@ html, body {
     }
     .home-cta {
       padding: 2.5rem;
-    }
-  }
-  
-  /* -------- 24‑Zoll Monitore (ca. 1920px - 2559px) -------- */
-  @media (min-width: 1920px) and (max-width: 2559px) {
-    .home-main {
-      padding: 3rem;
-    }
-    .home-title {
-      font-size: 3.5rem;
-    }
-    .home-description {
-      font-size: 1.3rem;
-      max-width: 700px;
-    }
-    .home-login-button {
-      font-size: 1.1rem;
-      padding: 0.85rem 1.8rem;
-    }
-    .home-features {
-      gap: 3rem;
-    }
-    .feature-card {
-      max-width: 350px;
-      padding: 2rem;
-    }
-    .home-cta {
-      padding: 3rem;
-    }
-  }
-  
-  /* -------- 27‑Zoll Monitore (2560px und mehr) -------- */
-  @media (min-width: 2560px) {
-    .home-main {
-      padding: 3.5rem;
-    }
-    .home-title {
-      font-size: 4rem;
-    }
-    .home-description {
-      font-size: 1.4rem;
-      max-width: 750px;
-    }
-    .home-login-button {
-      font-size: 1.2rem;
-      padding: 1rem 2rem;
-    }
-    .home-features {
-      gap: 3.5rem;
-    }
-    .feature-card {
-      max-width: 380px;
-      padding: 2.25rem;
-    }
-    .home-cta {
-      padding: 3.5rem;
     }
   }
   

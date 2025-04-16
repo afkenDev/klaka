@@ -29,7 +29,8 @@ import {
     PlusCircle,
     List,
     Import,
-    Settings
+    Settings,
+    Edit2
 } from 'lucide-react';
 
 
@@ -1044,7 +1045,7 @@ export default function ClassDetail() {
                     </div>
 
                     <div className="title">
-                        Klasse {state.classData.klassenname} <Settings size={20} onClick={() => openClassSettings(state.classData)} />
+                        Klasse {state.classData.klassenname} <Edit2 size={20} onClick={() => openClassSettings(state.classData)} />
                     </div>
 
                     <div className="header-placeholder"></div>
