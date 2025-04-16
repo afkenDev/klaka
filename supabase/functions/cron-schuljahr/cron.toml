@@ -1,0 +1,4 @@
+[[cron]]
+name = "cron-schuljahr"
+schedule = "0 0 31 7 *"
+entrypoint = "functions/cron-schuljahr/index.js"

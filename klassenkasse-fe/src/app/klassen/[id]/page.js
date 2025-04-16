@@ -95,8 +95,6 @@ export default function ClassDetail() {
         checkUser();
     }, [router]);
 
-
-
     useEffect(() => {
         if (state.localSchueler.length === 0) {
             setState(prevState => ({
