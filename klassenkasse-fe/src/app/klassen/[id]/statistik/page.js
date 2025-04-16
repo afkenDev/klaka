@@ -119,27 +119,46 @@ export default function StatistikPage() {
                     ) : (
                         <>
                             <div className="chart-container">
-                                <PieChart width={400} height={400}>
-                                    <Pie
-                                        data={data}
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={150}
-                                        dataKey="value"
-                                        nameKey="name"
-                                        label
-                                    >
-                                        {data.map((entry, index) => {
-                                            const fixedColor = FIXED_COLORS[entry.name];
-                                            const dynamicColor = COLORS[index % COLORS.length];
-                                            return (
-                                                <Cell
-                                                    key={`cell-${index}`}
-                                                    fill={fixedColor || dynamicColor}
-                                                />
-                                            );
-                                        })}
-                                    </Pie>
+                            <PieChart width={500} height={500}>
+                            <Pie
+  data={data}
+  cx="50%"
+  cy="50%"
+  outerRadius={150}
+  dataKey="value"
+  nameKey="name"
+  labelLine
+  label={({ cx, cy, midAngle, outerRadius, index }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius + 20;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const value = data[index].value;
+    const name = data[index].name;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#333"
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {`${name} (${value})`}
+      </text>
+    );
+  }}
+>
+  {data.map((entry, index) => {
+    const fixedColor = FIXED_COLORS[entry.name];
+    const dynamicColor = COLORS[index % COLORS.length];
+    return (
+      <Cell key={`cell-${index}`} fill={fixedColor || dynamicColor} />
+    );
+  })}
+</Pie>
+
                                     <Tooltip />
                                     <Legend />
                                 </PieChart>

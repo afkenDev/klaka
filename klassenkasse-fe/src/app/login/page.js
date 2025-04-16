@@ -15,14 +15,16 @@ export default function LoginPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      console.log("test", user.data?.user?.id)
-      if (user && !error) {
+      const { data, error } = await supabase.auth.getUser();
+      console.log("test", data?.user?.id);
+  
+      if (data?.user && !error) {
         router.push("/klassen");
       }
     };
     checkSession();
   }, [router]);
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -122,6 +124,10 @@ export default function LoginPage() {
               required
             />
           </div>
+          <div className="forgot-password-link">
+  <Link href="/login/reset-password">Passwort vergessen?</Link>
+</div>
+
 
           <button type="submit" className="login-submit-button">
             Login

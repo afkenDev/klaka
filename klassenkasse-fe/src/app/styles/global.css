@@ -92,3 +92,25 @@ html, body {
     position: relative;
   }
   
+
+  .home-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background-color: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    max-width: 300px;
+    text-align: left;
+  }
+  
+  .home-cta {
+    background-color: var(--bg-muted);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+  }
