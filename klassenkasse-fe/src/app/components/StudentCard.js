@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js'; // Falls du eine Datei hast, die den Supabase-Client exportiert
 import '../styles/student.css';
+import { Settings } from 'lucide-react';
+
 
 export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenSettings, onDeleteTransaction }) {
     const studentBalance = student.balance || [];
@@ -45,9 +47,11 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                     {formattedBalance} Fr.-
                 </span>
                 <button className="btn-abbuchung" onClick={(event) => {
-                    event.stopPropagation();
-                    onOpenSettings(student);
-                }}>Einstellung ✈</button>
+    event.stopPropagation();
+    onOpenSettings(student);
+}}>
+    <Settings size={20} />
+</button>
             </div>
             {isOpen && (
                 <div className="transaction-list">

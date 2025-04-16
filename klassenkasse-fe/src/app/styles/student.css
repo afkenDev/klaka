@@ -708,3 +708,75 @@ tbody tr:hover td {
 .student-balance.positive {
   color: var(--success);
 }
+
+
+.icon {
+  padding-left: auto;
+  margin-left: 1.2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.icon button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.icon button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.student-list-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+}
+
+
+.zurueck {
+  background-color: rgba(86, 86, 86, 0.525)
+}
+
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.header-side {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.header-placeholder {
+  flex: 1;
+}
