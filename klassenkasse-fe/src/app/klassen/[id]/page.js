@@ -554,6 +554,13 @@ export default function ClassDetail() {
                 .delete()
                 .eq('id', bookingId);
 
+            const { error: updateError } = await supabase
+                .from('klasse')
+                .update({ lastActivity: new Date().toISOString() })
+                .eq('id', classId);
+
+            if (updateError) throw updateError;
+
             if (deleteBookingError) throw new Error("Fehler beim Löschen der Buchung");
 
             // 4️⃣ State aktualisieren

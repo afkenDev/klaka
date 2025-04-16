@@ -61,6 +61,13 @@ export async function DELETE(req) {
             .delete()
             .in('id', balanceIds);
 
+        const { error: updateError } = await supabase
+            .from('klasse')
+            .update({ lastActivity: new Date().toISOString() })
+            .eq('id', classId);
+
+        if (updateError) throw updateError;
+
         return NextResponse.json({ message: 'Alles wurde erfolgreich gelöscht' }, { status: 200 });
 
     } catch (error) {
