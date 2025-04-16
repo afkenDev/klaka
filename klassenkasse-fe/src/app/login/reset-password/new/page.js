@@ -2,17 +2,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabaseClient";
-import "../../../styles/login.css"
+import "../../../styles/login.css";
+import { Eye, EyeClosed } from "lucide-react";
 
 export default function NewPasswordPage() {
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    // Supabase verwendet magic link, prüft automatisch den Token
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
 
@@ -50,15 +51,25 @@ export default function NewPasswordPage() {
           <p>Lade Bestätigung...</p>
         ) : (
           <form onSubmit={handleUpdatePassword} className="login-form-fields">
-            <div className="input-group">
+            <div className="input-group passwort-container">
               <label htmlFor="password">Neues Passwort</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="passwort-input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="passwort-input"
+                  autoComplete="new-password"
+                />
+                <span
+                  className="passwort-toggle-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeClosed /> : <Eye />}
+                </span>
+              </div>
             </div>
 
             <button type="submit" className="login-submit-button">

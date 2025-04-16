@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
 import "../styles/login.css";
+import { Eye, EyeClosed } from "lucide-react"; // <-- hinzufügen
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,11 +14,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => {
     const checkSession = async () => {
       const { data, error } = await supabase.auth.getUser();
-      console.log("test", data?.user?.id);
   
       if (data?.user && !error) {
         router.push("/klassen");
@@ -45,8 +48,7 @@ export default function LoginPage() {
       setSuccess("");
       return;
     }
-    console.log("Benutzer existiert laut API:", userExists);
-    console.log("Login-Daten:", { email, password });
+
 
     // 2. Login mit Passwort versuchen
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -54,7 +56,6 @@ export default function LoginPage() {
       console.log("Fehler beim Passwort-Login:", error.message);
     }
     const session = await supabase.auth.getSession();
-    console.log("session: ", session.data.session?.access_token);
 
     if (error) {
       if (error.message.toLowerCase().includes("invalid login credentials")) {
@@ -114,16 +115,27 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">Passwort</label>
-            <input
-              type="password"
-              id="password"
-              value={password || ''}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <div className="input-group passwort-container">
+  <label htmlFor="password">Passwort</label>
+  <div className="passwort-input-wrapper">
+    <input
+      type={showPassword ? "text" : "password"}
+      id="password"
+      value={password || ""}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+      className="passwort-input"
+      autoComplete="current-password"
+    />
+    <span
+      className="passwort-toggle-icon"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeClosed /> : <Eye />}
+    </span>
+  </div>
+</div>
+
           <div className="forgot-password-link">
   <Link href="/login/reset-password">Passwort vergessen?</Link>
 </div>

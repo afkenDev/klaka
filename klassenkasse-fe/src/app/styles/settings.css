@@ -1,0 +1,38 @@
+.passwort-container {
+    margin-bottom: 1rem;
+  }
+  
+  .passwort-input-wrapper {
+    position: relative;
+  }
+  
+  .passwort-input {
+    width: 107%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .passwort-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .passwort-toggle-icon:hover {
+    color: #000;
+  }
+  
+  .passwort-toggle-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
