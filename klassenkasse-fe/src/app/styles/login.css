@@ -124,3 +124,16 @@
     color: green;
     margin-top: 1rem;
   }
+
+  .forgot-password-link {
+    margin-top: 4px;
+    text-align: center;
+  }
+  
+  .forgot-password-link a {
+    font-size: 0.9rem;
+    color: #0070f3 0.2;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
