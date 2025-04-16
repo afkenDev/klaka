@@ -1090,9 +1090,9 @@ export default function ClassDetail() {
 
                 {/* Aktionen unten */}
                 <div className="actions">
-                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import</button>
-                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export</button>
-                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschen</button>
+                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import Schülerliste</button>
+                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export PDF</button>
+                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschfunktionen</button>
                 </div>
 
                 {/* Modale */}

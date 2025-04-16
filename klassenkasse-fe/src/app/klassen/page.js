@@ -233,7 +233,7 @@ export default function KlassenPage() {
             <select name="color" value={newClass.color} onChange={handleInputChange}>
               <option value="blue">Blau</option>
               <option value="teal">Türkis</option>
-              <option value="teal-dark">Dunkel-Türkis</option>
+              <option value="pink">Pink</option>
               <option value="orange">Orange</option>
             </select>
             <div className="modal-buttons">

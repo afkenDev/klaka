@@ -7,321 +7,341 @@
   display: block;
 }
 
-  
-  /* Page title */
-  .title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 32px;
-    color: #1f2937;
-    position: relative;
-  }
-  
-  .title:after {
-    content: "";
-    display: block;
-    width: 80px;
-    height: 3px;
-    background-color: #3b82f6;
-    margin: 8px auto 0;
-    border-radius: 2px;
-  }
-  
-  /* Controls section */
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  
-  /* Search bar */
-  .search-bar {
-    width: 100%;
-    max-width: 400px;
-    padding: 12px 16px;
-    margin: 0 auto 24px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 16px;
-    display: block;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    background-color: white;
-  }
-  
-  .search-bar:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-  }
-  
-  /* Card grid */
-  .grid {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-    gap: 1.5rem !important;
-  }
-  
-  
-  
-  /* Class cards */
-  .card {
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
-    color: white;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Card hover effect */
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-  }
-  
-  /* Card active effect */
-  .card:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Card color variants */
-  .card.blue, .card[style*="background-color: blue"] {
-    background-color: #3b82f6;
-    background-image: linear-gradient(135deg, #3b82f6, #2563eb);
-  }
-  
-  .card.teal, .card[style*="background-color: teal"] {
-    background-color: #14b8a6;
-    background-image: linear-gradient(135deg, #14b8a6, #0d9488);
-  }
-  
-  .card.teal-dark, .card[style*="background-color: teal-dark"] {
-    background-color: #0f766e;
-    background-image: linear-gradient(135deg, #0f766e, #0f5259);
-  }
-  
-  .card.orange, .card[style*="background-color: orange"] {
-    background-color: #f59e0b;
-    background-image: linear-gradient(135deg, #f59e0b, #d97706);
-  }
-  
-  /* Card header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .bold {
-    font-weight: 700;
-    font-size: 18px;
-  }
-  
-  /* Card info section */
-  .info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 16px 0;
-  }
-  
-  .students {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-  }
-  
-  .icon {
-    font-size: 18px;
-  }
-  
-  .volume {
-    font-weight: 600;
-    font-size: 15px;
-  }
-  
-  /* Card activity */
-  .activity {
-    font-size: 14px;
-    margin-top: 12px;
-    opacity: 0.85;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    padding-top: 12px;
-    margin-top: auto;
-  }
-  
-  /* Add button */
-  .add-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
-    cursor: pointer;
-    z-index: 1002;
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .add-button:hover {
-    transform: scale(1.05);
-    background-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.5);
-  }
-  
-  .add-button:active {
-    transform: scale(0.95);
-  }
-  
-  /* Modal overlay */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1001;
-    animation: fadeIn 0.2s ease;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  /* Modal window */
-  .modal {
-    background: white;
-    padding: 28px;
-    border-radius: 12px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    animation: slideIn 0.3s ease;
-  }
-  
-  @keyframes slideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  
-  .modal h2 {
-    margin-bottom: 20px;
-    color: #1f2937;
-    font-weight: 600;
-    font-size: 20px;
-  }
-  
-  .modal input, .modal select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 16px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .modal input:focus, .modal select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-  }
-  
-  /* Modal buttons */
-  .modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 24px;
-  }
-  
-  .modal-buttons button {
-    flex: 1;
-    margin: 0 8px;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-  }
-  
-  .modal-buttons button:first-child {
-    background-color: #3b82f6;
-    color: white;
-  }
-  
-  .modal-buttons button:first-child:hover {
-    background-color: #2563eb;
-  }
-  
-  .modal-buttons button:last-child {
-    background-color: #f3f4f6;
-    color: #4b5563;
-  }
-  
-  .modal-buttons button:last-child:hover {
-    background-color: #e5e7eb;
-  }
-  
-  .modal-buttons button:active {
-    transform: scale(0.98);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .container {
-      padding: 20px;
-    }
-    
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .modal {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-    }
-  }
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  
-  #__next {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  .container {
-    flex: 1;
+
+/* Page title */
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  color: #1f2937;
+  position: relative;
+}
+
+.title:after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #3b82f6;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* Controls section */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* Search bar */
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px;
+  margin: 0 auto 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  display: block;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Card grid */
+.grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 1.5rem !important;
+}
+
+
+
+/* Class cards */
+.card {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card hover effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+/* Card active effect */
+.card:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Card color variants */
+.card.blue,
+.card[style*="background-color: blue"] {
+  background-color: #3b82f6;
+  background-image: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.card.teal,
+.card[style*="background-color: teal"] {
+  background-color: #14b8a6;
+  background-image: linear-gradient(135deg, #14b8a6, #0d9488);
+}
+
+.card.pink,
+.card[style*="background-color: pink"] {
+  background-color: #ec4899;
+  background-image: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+.card.orange,
+.card[style*="background-color: orange"] {
+  background-color: #f59e0b;
+  background-image: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* Card header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.bold {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Card info section */
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.students {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.volume {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Card activity */
+.activity {
+  font-size: 14px;
+  margin-top: 12px;
+  opacity: 0.85;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding-top: 12px;
+  margin-top: auto;
+}
+
+/* Add button */
+.add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+  cursor: pointer;
+  z-index: 1002;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-button:hover {
+  transform: scale(1.05);
+  background-color: #2563eb;
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.5);
+}
+
+.add-button:active {
+  transform: scale(0.95);
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
 
-  /* ===== Extra Responsive Adjustments for classview.css ===== */
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal window */
+.modal {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Modal buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  margin: 0 8px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-buttons button:first-child {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #2563eb;
+}
+
+.modal-buttons button:last-child {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #e5e7eb;
+}
+
+.modal-buttons button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+}
+
+/* ===== Extra Responsive Adjustments for classview.css ===== */
 
 /* -------- Extra kleine Geräte (320px - 480px) -------- */
 @media (max-width: 480px) {
@@ -329,39 +349,48 @@
     padding: 16px;
     max-width: 100%;
   }
+
   .title {
     font-size: 22px;
     margin-bottom: 24px;
   }
+
   .title:after {
     width: 60px;
     margin-top: 6px;
   }
+
   .controls {
     flex-direction: column;
     align-items: center;
     gap: 16px;
   }
+
   .search-bar {
     max-width: 100%;
     padding: 10px 14px;
     font-size: 14px;
   }
+
   .grid {
     gap: 1rem;
   }
+
   .card {
     padding: 16px;
   }
+
   .bold {
     font-size: 16px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 14px;
   }
+
   .add-button {
     width: 50px;
     height: 50px;
@@ -369,6 +398,7 @@
     bottom: 16px;
     right: 16px;
   }
+
   .modal {
     width: 90%;
     max-width: 400px;
@@ -381,38 +411,47 @@
   .container {
     padding: 24px;
   }
+
   .title {
     font-size: 24px;
     margin-bottom: 28px;
   }
+
   .title:after {
     width: 65px;
     margin-top: 7px;
   }
+
   .controls {
     flex-direction: row;
     justify-content: space-between;
   }
+
   .search-bar {
     max-width: 100%;
     padding: 11px 15px;
     font-size: 15px;
   }
+
   .grid {
     gap: 1.25rem;
   }
+
   .card {
     padding: 18px;
   }
+
   .bold {
     font-size: 17px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 15px;
   }
+
   .add-button {
     width: 55px;
     height: 55px;
@@ -420,6 +459,7 @@
     bottom: 20px;
     right: 20px;
   }
+
   .modal {
     width: 90%;
     max-width: 400px;
@@ -432,37 +472,46 @@
   .container {
     padding: 32px;
   }
+
   .title {
     font-size: 28px;
     margin-bottom: 32px;
   }
+
   .title:after {
     width: 80px;
     margin-top: 8px;
   }
+
   .controls {
     flex-direction: row;
   }
+
   .search-bar {
     max-width: 400px;
     padding: 12px 16px;
     font-size: 16px;
   }
+
   .grid {
     gap: 1.5rem;
   }
+
   .card {
     padding: 20px;
   }
+
   .bold {
     font-size: 18px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 16px;
   }
+
   .add-button {
     width: 60px;
     height: 60px;
@@ -470,6 +519,7 @@
     bottom: 32px;
     right: 32px;
   }
+
   .modal {
     width: 400px;
     padding: 28px;
@@ -482,37 +532,46 @@
     padding: 40px;
     max-width: 1200px;
   }
+
   .title {
     font-size: 30px;
     margin-bottom: 36px;
   }
+
   .title:after {
     width: 85px;
     margin-top: 10px;
   }
+
   .controls {
     gap: 24px;
   }
+
   .search-bar {
     max-width: 450px;
     padding: 14px 18px;
     font-size: 17px;
   }
+
   .grid {
     gap: 1.75rem;
   }
+
   .card {
     padding: 24px;
   }
+
   .bold {
     font-size: 20px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 17px;
   }
+
   .add-button {
     width: 65px;
     height: 65px;
@@ -520,6 +579,7 @@
     bottom: 36px;
     right: 36px;
   }
+
   .modal {
     width: 450px;
     padding: 32px;
@@ -532,37 +592,46 @@
     padding: 48px;
     max-width: 1400px;
   }
+
   .title {
     font-size: 32px;
     margin-bottom: 40px;
   }
+
   .title:after {
     width: 90px;
     margin-top: 10px;
   }
+
   .controls {
     gap: 32px;
   }
+
   .search-bar {
     max-width: 500px;
     padding: 16px 20px;
     font-size: 18px;
   }
+
   .grid {
     gap: 2rem;
   }
+
   .card {
     padding: 28px;
   }
+
   .bold {
     font-size: 22px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 18px;
   }
+
   .add-button {
     width: 70px;
     height: 70px;
@@ -570,6 +639,7 @@
     bottom: 40px;
     right: 40px;
   }
+
   .modal {
     width: 500px;
     padding: 36px;
@@ -582,37 +652,46 @@
     padding: 56px;
     max-width: 1600px;
   }
+
   .title {
     font-size: 36px;
     margin-bottom: 48px;
   }
+
   .title:after {
     width: 100px;
     margin-top: 12px;
   }
+
   .controls {
     gap: 40px;
   }
+
   .search-bar {
     max-width: 550px;
     padding: 18px 22px;
     font-size: 20px;
   }
+
   .grid {
     gap: 2.5rem;
   }
+
   .card {
     padding: 32px;
   }
+
   .bold {
     font-size: 24px;
   }
+
   .students,
   .icon,
   .volume,
   .activity {
     font-size: 20px;
   }
+
   .add-button {
     width: 80px;
     height: 80px;
@@ -620,6 +699,7 @@
     bottom: 48px;
     right: 48px;
   }
+
   .modal {
     width: 550px;
     padding: 40px;
@@ -668,10 +748,13 @@
 
 /* Beispiel: Für wirklich kleine Screens (max-width: 480px) */
 @media (max-width: 480px) {
+
   /* 1. Reduzierte Spaltenbreite in der Grid-Definition */
   .grid {
-    grid-template-columns: 1fr !important; /* Nur 1 Spalte bei sehr schmalen Screens */
-    gap: 0.75rem !important;              /* Weniger Abstand zwischen Cards */
+    grid-template-columns: 1fr !important;
+    /* Nur 1 Spalte bei sehr schmalen Screens */
+    gap: 0.75rem !important;
+    /* Weniger Abstand zwischen Cards */
   }
 
   /* 2. Cards kompakter gestalten */
@@ -688,14 +771,21 @@
     margin-bottom: 8px !important;
     padding-bottom: 8px !important;
   }
+
   .bold {
-    font-size: 16px !important; /* statt 18px */
+    font-size: 16px !important;
+    /* statt 18px */
   }
+
   .info {
     margin: 8px 0 !important;
   }
-  .students, .icon, .volume {
-    font-size: 14px !important; /* leicht verkleinern */
+
+  .students,
+  .icon,
+  .volume {
+    font-size: 14px !important;
+    /* leicht verkleinern */
   }
 
   /* 4. Aktivitäten & weitere Textbereiche enger halten */
@@ -711,7 +801,7 @@
     padding: 10px 14px !important;
     font-size: 14px !important;
   }
-  
+
   .add-button {
     width: 50px !important;
     height: 50px !important;
@@ -720,6 +810,6 @@
     right: 16px !important;
     position: absolute;
   }
-  
-  
+
+
 }
