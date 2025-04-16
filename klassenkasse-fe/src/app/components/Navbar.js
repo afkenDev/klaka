@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
 import '../styles/layout.css';
 
@@ -42,11 +41,10 @@ export default function Navbar() {
         setIsAdmin(true);
       }
 
-      // Initialen setzen (z. B. "AM" für "admin@kbw.ch")
       const email = user.email || '';
-      const name = email.split('@')[0]; // z. B. "admin"
+      const name = email.split('@')[0];
       const initials = name
-        .split(/[.\-_]/) // auf Punkt oder Unterstrich splitten
+        .split(/[.\-_]/)
         .map(n => n[0]?.toUpperCase())
         .join('')
         .slice(0, 2);
@@ -60,49 +58,45 @@ export default function Navbar() {
   // 🚪 Logout
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (
     <nav className="navbar">
       {/* Logo links */}
       <div className="navbar-logo">
-        <Link href="/">
+        <a href="/">
           <Image src="/pic/logo-small.png" alt="Logo" width={130} height={100} />
-        </Link>
+        </a>
       </div>
 
       {/* Rechts: Semester, Navigation & User */}
       <div className="navbar-right">
         <span className="navbar-semester">{currentSemester}</span>
-        <Link href="/klassen">
-          <span className="navbar-klass">Klassenübersicht</span>
-        </Link>
 
-        {/* Wenn User eingeloggt ist */}
+        <a href="/klassen" className="navbar-klass">Klassenübersicht</a>
+
         {user ? (
           <>
             {isAdmin && (
-              <Link href="/admin">
-                <span className="navbar-klass">Adminbereich</span>
-              </Link>
+              <a href="/admin" className="navbar-klass">Adminbereich</a>
             )}
             <div className="navbar-profile" onClick={() => setMenuOpen(!menuOpen)}>
               <span className="profile-initials">{initials}</span>
               {menuOpen && (
                 <div className="profile-menu">
-    <Link href="/settings">
-    <button className="profile-menu-item">Einstellungen</button>
-    </Link>
+                  <a href="/settings">
+                    <button className="profile-menu-item">Einstellungen</button>
+                  </a>
                   <button className="profile-menu-item" onClick={handleLogout}>Abmelden</button>
                 </div>
               )}
             </div>
           </>
         ) : (
-          <Link href="/login">
+          <a href="/login">
             <button className="login-button">Login</button>
-          </Link>
+          </a>
         )}
       </div>
     </nav>

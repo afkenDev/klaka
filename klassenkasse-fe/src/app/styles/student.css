@@ -1,90 +1,218 @@
 :root {
-  --navbar-color: #F8F9FA;
-  --footer-color: #3EA1A3;
-  --button-color: #222222;
-  --orange-color: #FF9800;
-  --blue-color: #009EE0;
-  --font-color: #000000;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
+  --primary: #3c9fa1;
+  /* Verdigris */
+  --secondary: #c8e4e4;
+  /* Light Cyan */
+  --text: #2d2d2a;
+  /* Jet */
+  --muted: #8a8a8a;
+  /* Battleship Gray */
+  --accent: #f06c1a;
+  /* Spanish Orange */
+
+  /* Additional derived variables for consistency */
+  --primary-light: #4eb5b7;
+  --primary-dark: #308d8f;
+  --accent-light: #ff7c2a;
+  --accent-dark: #e05c0a;
+
+  /* System states */
+  --success: #28a745;
+  --danger: #dc3545;
+  --warning: #ffc107;
+  --info: #17a2b8;
+
+  /* Component variables */
   --border-radius: 8px;
-  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  --transition: all 0.2s ease;
+  --border-radius-lg: 12px;
+  --border-radius-sm: 4px;
+  --border-radius-round: 50%;
+
+  /* Effects */
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Backgrounds */
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --bg-muted: #f3f4f6;
+
+  /* Borders */
+  --border-color: #e5e7eb;
 }
 
-.container {
-  padding: 28px;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #f9fafb;
+  background-color: var(--bg-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-/* Back button */
-.container>.controls>button {
-  background-color: #f3f4f6;
-  color: #1f2937;
+.container {
+  flex: 1;
+  max-width: 66.6%;
+  margin: 2rem auto;
+  padding: 0;
+}
+
+
+.search-bar {
+  display: block;
+  /* oder remove das flex, falls es nicht als flex container benötigt wird */
+  margin: 0 auto;
+}
+
+
+/* ===== CONTROLS & SEARCH ===== */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.controls>button {
+  background-color: var(--bg-muted);
+  color: var(--text);
   border: none;
   border-radius: var(--border-radius);
-  padding: 10px 16px;
-  font-size: 15px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  margin-bottom: 24px;
   cursor: pointer;
-  box-shadow: var(--box-shadow);
-  transition: var(--transition);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+  box-shadow: var(--box-shadow-sm);
+  transition: var(--transition);
 }
 
-.container>.controls>button:hover {
-  background-color: #e5e7eb;
+.controls>button:hover {
+  background-color: var(--border-color);
   transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
 }
 
-/* Page title */
+.search-bar {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background-color: var(--bg-white);
+  box-shadow: var(--box-shadow-sm);
+  transition: var(--transition);
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+}
+
+/* ===== PAGE TITLE ===== */
 .title {
   text-align: center;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 32px;
-  color: #1f2937;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  color: var(--text);
   position: relative;
+  padding-bottom: 0.75rem;
 }
 
 .title:after {
   content: "";
-  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background-color: #3b82f6;
-  margin: 8px auto 0;
+  background-color: var(--primary);
   border-radius: 2px;
 }
 
-/* Student list container */
-.student-list {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Title in header */
+.header-row .title {
+  flex: 1;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0;
 }
 
-/* Student card */
-.student-card {
-  background: white;
+/* ===== HEADER ROW ===== */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.header-side {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.header-placeholder {
+  flex: 1;
+}
+
+/* ===== STUDENT CARD ===== */
+.student-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.student-list-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.student-card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
   box-shadow: var(--box-shadow);
   transition: var(--transition);
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--primary);
+  padding: 0;
 }
 
 .student-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--box-shadow-hover);
+}
+
+.student-card.negative-balance {
+  border-left: 4px solid var(--danger);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
 
 /* Student header */
@@ -92,171 +220,185 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.25rem 1.5rem;
   cursor: pointer;
-  padding: 16px 20px;
-  background: white;
+  background: var(--bg-white);
   transition: var(--transition);
 }
 
-.student-header span:first-child {
+.student-name {
+  flex-grow: 1;
   font-weight: 600;
-  font-size: 16px;
-  color: #1f2937;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
 }
 
-.student-header span:nth-child(2) {
+.student-balance {
+  min-width: 100px;
+  text-align: right;
   font-weight: 700;
-  font-size: 17px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background-color: #f3f4f6;
+  font-size: 1.0625rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1.25rem;
+  background-color: var(--bg-muted);
+  color: var(--text);
+  margin-right: 1rem;
 }
 
-/* Abbuchung button */
-.btn-abbuchung {
-  background: var(--button-color);
-  color: white;
-  padding: 8px 16px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: var(--transition);
+.student-balance.negative {
+  color: var(--danger);
+  animation: pulse 1.5s infinite;
 }
 
-.btn-abbuchung:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #333333;
+.student-balance.positive {
+  color: var(--success);
 }
 
 /* Transaction list */
 .transaction-list {
-  background: #f8fafc;
-  padding: 16px 20px;
-  margin-top: 2px;
-  border-top: 1px solid #e5e7eb;
+  background: var(--bg-light);
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-color);
   animation: slideDown 0.3s ease forwards;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ===== BUTTONS ===== */
+/* Common button styles */
+.btn {
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-/* Table styles */
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 8px;
+/* Booking button */
+.btn-abbuchung {
+  background: var(--accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  transition: var(--transition);
+  flex-shrink: 0;
 }
 
-th,
-td {
-  border: 1px solid #e5e7eb;
-  padding: 12px 16px;
-  text-align: left;
-}
-
-th {
-  background: #f3f4f6;
-  font-weight: 600;
-  color: #4b5563;
-  position: sticky;
-  top: 0;
-}
-
-td {
-  background: white;
-}
-
-tbody tr:hover td {
-  background-color: #f9fafb;
+.btn-abbuchung:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(240, 108, 26, 0.25);
 }
 
 /* Delete button in table */
 .btn-delete {
-  background-color: var(--danger-color);
+  background-color: var(--danger);
   color: white;
   border: none;
   border-radius: var(--border-radius);
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: var(--transition);
+  font-weight: 500;
 }
 
 .btn-delete:hover {
   background-color: #c82333;
   transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
 }
 
 /* Action buttons */
 .actions {
   display: flex;
-  gap: 12px;
-  margin-top: 32px;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .btn-orange,
 .btn-black {
-  padding: 12px 20px;
+  padding: 0.75rem 1.25rem;
   border: none;
   border-radius: var(--border-radius);
   font-weight: 500;
-  font-size: 15px;
+  font-size: 0.9375rem;
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--box-shadow);
 }
 
 .btn-orange {
-  background: var(--orange-color);
+  background: var(--accent);
   color: white;
 }
 
 .btn-orange:hover {
-  background-color: #e67e00;
+  background-color: var(--accent-light);
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(240, 108, 26, 0.2);
 }
 
 .btn-black {
-  background: var(--button-color);
+  background: var(--text);
   color: white;
 }
 
 .btn-black:hover {
-  background-color: #333333;
+  background-color: #3d3d3a;
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(45, 45, 42, 0.2);
 }
 
-/* Add button */
+/* Back button */
+.zurueck {
+  background-color: rgba(86, 86, 86, 0.525);
+}
+
+/* Select all button */
+.btn-select-all {
+  background-color: var(--bg-muted);
+  color: var(--text);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-select-all:hover {
+  background-color: var(--border-color);
+}
+
+/* ===== FLOAT ACTION BUTTON ===== */
 .add-button {
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 32px;
-  right: 32px;
-  background-color: #3b82f6;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--primary);
   color: white;
   border: none;
-  width: 60px;
-  height: 60px;
-  font-size: 28px;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+  width: 3.75rem;
+  height: 3.75rem;
+  font-size: 1.75rem;
+  border-radius: var(--border-radius-round);
+  box-shadow: 0 4px 12px rgba(60, 159, 161, 0.4);
   cursor: pointer;
   z-index: 1002;
   transition: var(--transition);
@@ -264,22 +406,83 @@ tbody tr:hover td {
 
 .add-button:hover {
   transform: scale(1.05);
-  background-color: #2563eb;
-  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.5);
+  background-color: var(--primary-light);
+  box-shadow: 0 6px 16px rgba(60, 159, 161, 0.5);
 }
 
 .add-button:active {
   transform: scale(0.95);
 }
 
-/* Modal overlay */
+/* ===== ICONS ===== */
+.icon {
+  padding-left: auto;
+  margin-left: 1.2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.icon button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.icon button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ===== TABLE STYLES ===== */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 0.5rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 0.875rem 1rem;
+  text-align: left;
+}
+
+th {
+  background: var(--bg-muted);
+  font-weight: 600;
+  color: var(--text);
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+td {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover td {
+  background-color: rgba(200, 228, 228, 0.2);
+}
+
+/* ===== MODALS ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
@@ -288,6 +491,195 @@ tbody tr:hover td {
   animation: fadeIn 0.2s ease;
 }
 
+/* Modal window base styles */
+.modal,
+.booking-modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  max-width: 90%;
+  text-align: center;
+}
+
+.modal {
+  padding: 2rem;
+  width: 400px;
+}
+
+.booking-modal {
+  padding: 2rem;
+  width: 550px;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.modal h2,
+.booking-modal h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1.375rem;
+}
+
+.booking-modal h2 {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.booking-modal h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.125rem;
+  color: var(--muted);
+}
+
+/* Modal inputs */
+.modal input,
+.modal select,
+.booking-modal input,
+.booking-modal select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--bg-white);
+}
+
+.modal input[type="file"] {
+  padding: 0.5rem;
+  background-color: var(--bg-light);
+}
+
+.modal input:focus,
+.modal select:focus,
+.booking-modal input:focus,
+.booking-modal select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+}
+
+/* Radio button container */
+.booking-modal>div:nth-of-type(1) {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.booking-modal label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.booking-modal input[type="radio"] {
+  width: auto;
+  margin: 0;
+}
+
+/* Student checkbox list */
+.booking-student-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-light);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.booking-student-list label {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.625rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.booking-student-list label:hover {
+  background: var(--bg-muted);
+}
+
+.booking-student-list input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  height: 1.125rem;
+  width: 1.125rem;
+}
+
+/* Modal buttons */
+.modal-buttons,
+.booking-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 0.5rem;
+}
+
+.modal-buttons button,
+.booking-modal-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.modal-buttons button:first-child {
+  background-color: var(--primary);
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: var(--primary-light);
+}
+
+.modal-buttons button:last-child {
+  background-color: var(--bg-muted);
+  color: var(--text);
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: var(--border-color);
+}
+
+.btn-save {
+  background-color: var(--success);
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+.btn-cancel {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.modal-buttons button:active,
+.booking-modal-buttons button:active {
+  transform: scale(0.98);
+}
+
+/* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -296,17 +688,6 @@ tbody tr:hover td {
   to {
     opacity: 1;
   }
-}
-
-/* Modal window */
-.modal {
-  background: white;
-  padding: 28px;
-  border-radius: 12px;
-  width: 400px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.3s ease;
 }
 
 @keyframes slideIn {
@@ -321,340 +702,1249 @@ tbody tr:hover td {
   }
 }
 
-.modal h2 {
-  margin-bottom: 20px;
-  color: #1f2937;
-  font-weight: 600;
-  font-size: 20px;
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.modal input,
-.modal select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
-.modal input[type="file"] {
-  padding: 8px;
-  background-color: #f9fafb;
-}
-
-.modal input:focus,
-.modal select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-/* Modal buttons */
-.modal-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-}
-
-.modal-buttons button {
-  flex: 1;
-  margin: 0 8px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.modal-buttons button:first-child {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.modal-buttons button:first-child:hover {
-  background-color: #2563eb;
-}
-
-.modal-buttons button:last-child {
-  background-color: #f3f4f6;
-  color: #4b5563;
-}
-
-.modal-buttons button:last-child:hover {
-  background-color: #e5e7eb;
-}
-
-.modal-buttons button:active {
-  transform: scale(0.98);
-}
-
-/* Booking modal */
-.booking-modal {
-  background: white;
-  padding: 28px;
-  border-radius: 12px;
-  width: 550px;
-  max-height: 85vh;
-  overflow-y: auto;
-  text-align: left;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.3s ease;
-}
-
-.booking-modal h2 {
-  margin-bottom: 24px;
-  color: #1f2937;
-  font-weight: 600;
-  font-size: 22px;
-  text-align: center;
-}
-
-.booking-modal h3 {
-  margin: 24px 0 12px;
-  font-size: 18px;
-  color: #4b5563;
-}
-
-.booking-modal input,
-.booking-modal select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.booking-modal input:focus,
-.booking-modal select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-/* Radio button container */
-.booking-modal>div:nth-of-type(1) {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 16px;
-}
-
-.booking-modal label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.booking-modal input[type="radio"] {
-  width: auto;
-  margin: 0;
-}
-
-/* Select all button */
-.btn-select-all {
-  background-color: #f3f4f6;
-  color: #4b5563;
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.btn-select-all:hover {
-  background-color: #e5e7eb;
-}
-
-/* Student checkbox list */
-.booking-student-list {
-  max-height: 250px;
-  overflow-y: auto;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #f9fafb;
-  margin-bottom: 24px;
-  padding: 8px 0;
-}
-
-.booking-student-list label {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 15px;
-  color: #1f2937;
-}
-
-.booking-student-list label:hover {
-  background: #f3f4f6;
-}
-
-.booking-student-list input[type="checkbox"] {
-  width: auto;
-  margin: 0;
-  cursor: pointer;
-  height: 18px;
-  width: 18px;
-}
-
-/* Booking modal buttons */
-.booking-modal-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-}
-
-.booking-modal-buttons button {
-  flex: 1;
-  margin: 0 8px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.btn-save {
-  background-color: var(--success-color);
-  color: white;
-}
-
-.btn-save:hover {
-  background-color: #218838;
-}
-
-.btn-cancel {
-  background-color: var(--danger-color);
-  color: white;
-}
-
-.btn-cancel:hover {
-  background-color: #c82333;
-}
-
-.booking-modal-buttons button:active {
-  transform: scale(0.98);
-}
-
-/* Responsive adjustments */
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 768px) {
   .container {
-    padding: 20px;
+    padding: 1.25rem;
   }
 
   .actions {
     flex-direction: column;
   }
 
+  .actions button {
+    width: 100%;
+  }
+
   .modal,
   .booking-modal {
     width: 90%;
     max-width: 400px;
-    padding: 20px;
+    padding: 1.25rem;
   }
 
   .student-header {
     flex-direction: column;
-    gap: 12px;
+    gap: 0.75rem;
     align-items: flex-start;
   }
 
-  .student-header span:nth-child(2) {
+  .student-balance {
+    align-self: flex-start;
+    margin-right: 0;
+  }
+
+  .btn-abbuchung {
     align-self: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    max-width: 100%;
   }
 }
 
-.student-card {
-  padding: 10px;
-  border-radius: 5px;
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-.student-card.negative-balance {
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-  /* Roter Schimmer */
-}
-
-.student-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.student-balance {
-  min-width: 80px;
-  /* Fixe Breite für Betrag */
-  text-align: right;
-  font-weight: bold;
-  color: var(--balance-color);
-  /* Wird über JS gesetzt */
-}
-
-.student-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  /* Sorgt für Abstand zwischen den Elementen */
-}
-
-.student-name {
-  flex-grow: 1;
-  /* Füllt den verfügbaren Platz */
-  white-space: nowrap;
-  /* Verhindert Zeilenumbrüche */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.student-balance {
-  min-width: 100px;
-  /* Fixe Breite für Betrag, damit er nicht verrutscht */
-  text-align: right;
-  font-weight: bold;
-}
-
-.btn-abbuchung {
-  flex-shrink: 0;
-  /* Verhindert, dass sich der Button in der Größe verändert */
-}
-
-/* Controls section */
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-/* Search bar */
-.search-bar {
+/* ===== IMPROVED MODALS ===== */
+/* Base modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 400px;
-  padding: 12px 16px;
-  margin: 0 auto 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  display: block;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  background-color: white;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.25s ease;
 }
 
-.search-bar:focus {
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  width: 480px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Modal header */
+.modal h2 {
+  margin: 0 0 1.75rem 0;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.modal h2:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 2px;
+}
+
+/* Form inputs and labels */
+.modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--bg-white);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+}
+
+.modal input[type="file"] {
+  padding: 0.75rem;
+  background-color: var(--bg-light);
+  border: 2px dashed var(--border-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal input[type="file"]:hover {
+  border-color: var(--primary-light);
+  background-color: rgba(200, 228, 228, 0.2);
+}
+
+.modal p {
+  margin-bottom: 1.25rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.modal p strong {
+  color: var(--primary-dark);
+}
+
+/* Modal buttons container */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Modal buttons */
+.modal-buttons button {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.modal-buttons button:first-child {
+  background-color: var(--primary);
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(60, 159, 161, 0.3);
+}
+
+.modal-buttons button:last-child {
+  background-color: var(--bg-muted);
+  color: var(--text);
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: var(--border-color);
+  transform: translateY(-2px);
+}
+
+/* Three-button layout for edit modal */
+.modal-buttons button.btn-delete {
+  background-color: var(--danger);
+  color: white;
+  flex: 0.8;
+}
+
+.modal-buttons button.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.25);
+}
+
+/* Booking Modal - Special Styles */
+.booking-modal {
+  width: 580px;
+  max-width: 95%;
+  padding: 2.5rem;
+}
+
+.booking-modal h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.125rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Radio buttons in booking modal */
+.booking-modal .radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.booking-modal .radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 0;
+  font-weight: normal;
+  color: var(--text);
+}
+
+.booking-modal input[type="radio"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+/* Student checkbox list */
+.booking-student-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-light);
+  margin-bottom: 1.5rem;
+  padding: 0.25rem 0;
+  box-shadow: var(--box-shadow-sm) inset;
+}
+
+.select-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.btn-select-all {
+  background-color: var(--bg-muted);
+  color: var(--text);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-select-all:hover {
+  background-color: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.booking-student-list label {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9375rem;
+  color: var(--text);
+  margin: 0;
+  font-weight: normal;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.booking-student-list label:hover {
+  background: var(--bg-muted);
+}
+
+.booking-student-list label:last-child {
+  border-bottom: none;
+}
+
+.booking-student-list input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  height: 1.125rem;
+  width: 1.125rem;
+  accent-color: var(--primary);
+}
+
+/* Booking modal buttons */
+.booking-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.booking-modal-buttons button {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.btn-save {
+  background-color: var(--success);
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+.btn-cancel {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.booking-modal-buttons button:active {
+  transform: scale(0.98);
+}
+
+/* Import/Export Modal Styles */
+.file-input-container {
+  border: 2px dashed var(--border-color);
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+  background: var(--bg-light);
+}
+
+.file-input-container:hover {
+  border-color: var(--primary);
+  background: rgba(200, 228, 228, 0.2);
+}
+
+.file-input-container p {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+}
+
+.file-input-container input[type="file"] {
+  margin-bottom: 0;
+}
+
+/* Responsive adjustments for modals */
+@media (max-width: 768px) {
+
+  .modal,
+  .booking-modal {
+    padding: 1.5rem;
+  }
+
+  .modal-buttons,
+  .booking-modal-buttons {
+    flex-direction: column;
+  }
+
+  .modal-buttons button,
+  .booking-modal-buttons button {
+    margin-bottom: 0.5rem;
+  }
+
+  .booking-modal .radio-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .select-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.page-wrapper.loading {
+  visibility: hidden;
+}
+
+
+
+
+/* Global sicherstellen: */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ===== MODALS ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Modal window base styles */
+.modal,
+.booking-modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  max-width: 90%;
+  text-align: center;
+  overflow-x: hidden;
+  /* Verhindert horizontales Scrollen */
+}
+
+.modal {
+  padding: 1rem;
+  width: 100%;
+  max-width: 90%;
+}
+
+.booking-modal {
+  padding: 1rem;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.modal h2,
+.booking-modal h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1.375rem;
+}
+
+.booking-modal h2 {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.booking-modal h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.125rem;
+  color: var(--muted);
+}
+
+/* Modal inputs */
+.modal input,
+.modal select,
+.booking-modal input,
+.booking-modal select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--bg-white);
+}
+
+.modal input[type="file"] {
+  padding: 0.5rem;
+  background-color: var(--bg-light);
+}
+
+.modal input:focus,
+.modal select:focus,
+.booking-modal input:focus,
+.booking-modal select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+}
+
+
+/* --- Falls du noch kein einheitliches Button-Basissetup hast --- */
+.table-action-btn {
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Kleiner Abstand zwischen Buttons, ohne den letzten zu beeinflussen: */
+  margin-right: 0.5rem;
+}
+
+.table-action-btn:last-of-type {
+  margin-right: 0;
+}
+
+/* --- Konkrete Button-Farben und Hover-Effekte --- */
+.btn-edit {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(60, 159, 161, 0.2);
+}
+
+.btn-delete {
+  background-color: var(--danger);
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+}
+
+.btn-save {
+  background-color: var(--success);
+  color: #fff;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(40, 167, 69, 0.2);
+}
+
+.btn-cancel {
+  background-color: var(--bg-muted);
+  color: var(--text);
+}
+
+.btn-cancel:hover {
+  background-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== MODAL OVERLAY & CONTAINER ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px; /* Maximale Breite anpassbar */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Überschriften und Text */
+.modal h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modal p {
+  margin-bottom: 2rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ===== BUTTONS & BUTTON CONTAINER ===== */
+.modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Allgemeine Button-Grundstile */
+.modal-buttons button {
+  flex: 1 1 100%; /* Buttons nehmen ganze Zeile ein – anpassbar, falls mehrere nebeneinander */
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: #fff; /* Standardtextfarbe, sofern nicht anders definiert */
+  box-sizing: border-box;
+}
+
+/* --- Button-Typen --- */
+
+/* Löschen-Button */
+.btn-delete {
+  background-color: var(--danger);
+}
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+}
+
+/* Warn-Button (zum Beispiel: "Nur Buchungen löschen") */
+.btn-warning {
+  background-color: var(--warning);
+  color: var(--text); /* Damit der Text gut lesbar ist */
+}
+.btn-warning:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(255, 193, 7, 0.2);
+}
+
+/* Abbrechen-Button */
+.btn-cancel {
+  background-color: var(--bg-muted);
+  color: var(--text);
+}
+.btn-cancel:hover {
+  background-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+.booking-modalone {
+  padding: 2rem;
+  width: 100%;
+  max-width: 40%;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+  box-sizing: border-box; /* Wichtig: Damit Padding in der Breite enthalten ist */
+}
+
+/* --- Booking Modal Container --- */
+.booking-modalone {
+  background: var(--bg-white, #fff);
+  border-radius: var(--border-radius-lg, 8px);
+  padding: 2rem;
+  width: 50%;
+  max-width: 500px; /* Maximale Breite; anpassbar */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+/* --- Überschrift --- */
+.booking-modalone h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  color: var(--text, #333);
+  text-align: center;
+}
+
+/* --- Formularelemente --- */
+.booking-modalone input[type="text"],
+.booking-modalone input[type="number"],
+.booking-modalone input[type="date"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  font-size: 1rem;
+  transition: var(--transition, all 0.3s ease);
+  box-sizing: border-box;
+}
+
+.booking-modalone input[type="text"]:focus,
+.booking-modalone input[type="number"]:focus,
+.booking-modalone input[type="date"]:focus {
+  border-color: var(--primary, #3c9fa1);
+  box-shadow: 0 0 0 3px rgba(60, 159, 161, 0.2);
+  outline: none;
+}
+
+/* --- Radiobuttons --- */
+.booking-modalone div > label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: var(--text, #333);
+}
+
+.booking-modalone input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+/* --- Section Überschriften --- */
+.booking-modalone h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.25rem;
+  color: var(--text, #333);
+  text-align: left;
+}
+
+/* --- Button: Select All --- */
+.btn-select-all {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-muted, #f3f4f6);
+  color: var(--text, #333);
+  border: none;
+  border-radius: var(--border-radius, 4px);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition, all 0.3s ease);
+}
+
+.btn-select-all:hover {
+  background-color: var(--border-color, #ccc);
+}
+
+/* --- Liste der Schüler (Checkbox-Liste) --- */
+.booking-student-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  background: var(--bg-light, #f9fafb);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.booking-student-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--border-color, #ccc);
+}
+
+.booking-student-checkbox:last-child {
+  border-bottom: none;
+}
+
+/* --- Modal Buttons Container --- */
+.booking-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* --- Button Styles --- */
+.btn-save,
+.btn-cancel {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: var(--border-radius, 4px);
+  cursor: pointer;
+  transition: var(--transition, all 0.3s ease);
+}
+
+.btn-save {
+  background-color: var(--success, #28a745);
+  color: #fff;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background-color: var(--bg-muted, #f3f4f6);
+  color: var(--text, #333);
+}
+
+.btn-cancel:hover {
+  background-color: var(--border-color, #ccc);
+  transform: translateY(-2px);
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.booking-student-list {
+  display: flex;
+  flex-direction: column; /* erzwingt, dass jedes Kindelement (jedes Label) eine eigene Zeile bekommt */
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius, 4px);
+  background: var(--bg-light, #f9fafb);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+}
+
+.booking-student-list label {
+  /* Falls du die Checkbox ganz rechts willst: */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+
+  /* Trennlinie und Abstände */
+  border-bottom: 1px solid var(--border-color, #ccc);
+  padding: 0.5rem;
+  margin: 0;   /* kein Extra-Abstand zwischen Labels */
+}
+
+.booking-student-list label:last-child {
+  border-bottom: none;
+}
+
+
+/* Modal Overlay */
+.modal-overlaytwo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal Window */
+.export-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Headline */
+.export-modal h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Select All Button */
+.btn-select-all {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:  0.3s;
+}
+.btn-select-all:hover {
+  background-color: #ddd;
+}
+
+/* Student List */
+.booking-student-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.booking-student-checkbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background: #fafafa;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:  0.2s;
+}
+.booking-student-checkbox:hover {
+  background: #f1f1f1;
+}
+.booking-student-checkbox input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+/* Button Row */
+.export-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Export Button */
+.btn-export {
+  flex: 1;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-export:hover {
+  background-color: #45a049;
+}
+
+/* Cancel Button */
+.btn-cancel {
+  flex: 1;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-cancel:hover {
+  background-color: #c0392b;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ========== EXTENDED RESPONSIVENESS ========== */
+
+/* Smartphones bis ca. 480px */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .student-header,
+  .controls,
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls > button,
+  .actions > button,
+  .search-bar {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .student-balance {
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablets bis ca. 768px */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 92%;
+  }
+
+  .booking-modal,
+  .modal {
+    width: 100%;
+    max-width: 95%;
+  }
+}
+
+/* Kleine Laptops bis ca. 1024px */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+
+  .student-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .student-balance {
+    text-align: left;
+  }
+}
+
+/* Große Bildschirme über 1920px */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1400px;
+  }
+
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Ultrawide: 2560px+ */
+@media (min-width: 2560px) {
+  html {
+    font-size: 18px;
+  }
+
+  .container {
+    max-width: 1600px;
+  }
+}
+
+/* ========== RESPONSIVE BOOKING MODAL ========== */
+
+/* Für Mobilgeräte und kleine Tablets */
+@media (max-width: 768px) {
+  .booking-modal,
+  .booking-modalone {
+    width: 100% !important;
+    max-width: 95% !important;
+    padding: 1.25rem !important;
+    border-radius: var(--border-radius) !important;
+    box-sizing: border-box;
+  }
+
+  .booking-modal h2,
+  .booking-modalone h2 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .booking-modal h3,
+  .booking-modalone h3 {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
+  .booking-student-list {
+    max-height: 200px;
+    font-size: 0.95rem;
+  }
+
+  .booking-student-list label {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .booking-modal-buttons,
+  .modal-buttons {
+    flex-direction: column;
+  }
+
+  .booking-modal-buttons button,
+  .modal-buttons button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .booking-modal input,
+  .booking-modal select,
+  .booking-modalone input,
+  .booking-modalone select {
+    font-size: 1rem;
+  }
+
+  .btn-select-all {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Für sehr kleine Displays */
+@media (max-width: 480px) {
+  .booking-modal,
+  .booking-modalone {
+    padding: 1rem !important;
+  }
+
+  .booking-modal h2,
+  .booking-modalone h2 {
+    font-size: 1.125rem;
+  }
+
+  .booking-modal-buttons button,
+  .modal-buttons button {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-modal table,
+  .booking-modalone table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .booking-modal thead,
+  .booking-modalone thead {
+    display: none;
+  }
+
+  .booking-modal tr,
+  .booking-modalone tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    background: var(--bg-white);
+  }
+
+  .booking-modal td,
+  .booking-modalone td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    border: none;
+  }
+
+  .booking-modal td::before,
+  .booking-modalone td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+    flex: 1;
+    padding-right: 1rem;
+  }
+
+  .booking-modal td > * {
+    flex: 1;
+    text-align: right;
+  }
 }

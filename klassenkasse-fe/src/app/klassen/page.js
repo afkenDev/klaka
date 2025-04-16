@@ -1,18 +1,17 @@
-'use client'; // Enable client-side execution
-
+'use client';
 import { useState, useEffect } from 'react';
 import '../styles/classview.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/navigation';
 import { useKlassen } from '../hooks/useKlassen';
-import { useSchuelerMitBalance } from '../hooks/useSchuelerMitBalance'; // Für Schülerdaten mit Balance
+import { useSchuelerMitBalance } from '../hooks/useSchuelerMitBalance';
 import { supabase } from '../lib/supabaseClient';
 
 export default function KlassenPage() {
   const router = useRouter();
-  const { klassen: fetchedKlassen, loading, error } = useKlassen();
-  const { schueler: fetchedSchueler, loading: loadingSchueler, error: errorSchueler } = useSchuelerMitBalance();
+
+  const [user, setUser] = useState(null); // ✅ User wird im State gespeichert
   const [localKlassen, setLocalKlassen] = useState([]);
   const [klassenUpdated, setKlassenUpdated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,86 +22,118 @@ export default function KlassenPage() {
     nachname: '',
     color: 'blue'
   });
+  const [selectedClassId, setSelectedClassId] = useState(null);
 
+  const { klassen: fetchedKlassen, loading, error } = useKlassen();
+  const { schueler: fetchedSchueler, loading: loadingSchueler, error: errorSchueler } = useSchuelerMitBalance();
 
-  const [selectedClassId, setSelectedClassId] = useState(null); // Neuer Zustand für die ausgewählte Klasse
+  // ✅ User beim Laden holen und speichern
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-  const allKlassen = [...fetchedKlassen, ...localKlassen];
+      if (userError || !user) {
+        router.push('/login');
+        return;
+      }
+
+      setUser(user); // ✅ im State speichern
+    };
+
+    checkUser();
+  }, [router]);
 
   if (loading || loadingSchueler) return <div className="container">Lade Daten...</div>;
   if (error || errorSchueler) return <div className="container">Fehler: {error || errorSchueler}</div>;
+
+  const allKlassen = [...fetchedKlassen, ...localKlassen];
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
 
   const handleOpenModal = () => setIsModalOpen(true);
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setNewClass({ id: '', lehrer: '', color: 'blue' });
+    setNewClass({ klassenname: '', vorname: '', nachname: '', color: 'blue' });
   };
 
-  // handleInputChange-Handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewClass((prev) => ({ ...prev, [name]: value }));
   };
 
-  
-  //Klasse hinzufügen
+  // ✅ Klasse hinzufügen mit userId aus State
   const handleAddClass = async () => {
+    if (!user) {
+      alert("User nicht gefunden. Bitte erneut einloggen.");
+      return;
+    }
+
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      alert("Session nicht gefunden. Bitte erneut einloggen.");
+      return;
+    }
+
+    const { klassenname, vorname, nachname } = newClass;
+
+    // 🔒 Prüfung auf leere Felder
+    if (!klassenname || !vorname || !nachname) {
+      alert("Bitte alle Felder ausfüllen.");
+      return;
+    }
+
+    const isValidClassname = /^[0-9]{1}[a-zA-Z]{0,4}$/.test(newClass.klassenname);
+    if (!isValidClassname) {
+      alert("Der Klassenname muss der Klassenkürzel sein.");
+      return;
+    }
+
+
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-  
-      if (!user) {
-        alert("Nicht eingeloggt!");
-        return;
-      }
-  
       const response = await fetch('/api/klassen', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newClass,
-          userId: user.id, // 💡 DAS ist der Trick!
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(newClass),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.message);
       }
-  
+
       console.log("Erstellt:", result.data);
-      setLocalKlassen(prev => [...prev, result.data]);
+      setLocalKlassen((prev) => [...prev, result.data]);
       handleCloseModal();
     } catch (err) {
       console.error("Fehler:", err.message);
       alert("Fehler: " + err.message);
     }
   };
-  
 
 
-
-
-  // Filtere Klassen basierend auf der Suchanfrage (id oder lehrer)
   const filteredClasses = allKlassen.filter(klasse =>
     String(klasse.klassenname).toLowerCase().includes(searchQuery) ||
     String(klasse.vorname).toLowerCase().includes(searchQuery) ||
     String(klasse.nachname).toLowerCase().includes(searchQuery)
   );
 
-  // Filtern der Schüler basierend auf der ausgewählten Klasse
   const filteredClassesWithStudents = selectedClassId
     ? filteredClasses.filter(klasse => klasse.id === selectedClassId)
     : filteredClasses;
 
-  // Berechnung der Anzahl an Schülern und Gesamtvolumen
   const getClassStudentCount = (klasseId) => {
-    const anzahlSchueler = fetchedSchueler.filter(student => student.class === klasseId).length;
-    return anzahlSchueler;
+    return fetchedSchueler.filter(student => String(student.class) === String(klasseId)).length;
   };
 
   const getClassVolume = (klasseId) => {
@@ -115,8 +146,10 @@ export default function KlassenPage() {
     }, 0);
   };
 
+
+
   return (
-    <>
+    <div className="page-wrapper">
       <Navbar />
       <div className="container">
         <h1 className="title">Klassenübersicht</h1>
@@ -136,10 +169,10 @@ export default function KlassenPage() {
             <div
               key={klasse.id}
               className="card"
-              style={{ backgroundColor: klasse.color }} // Dynamische Hintergrundfarbe basierend auf dem `color`-Feld
+              style={{ backgroundColor: klasse.color }}
               onClick={() => {
-                setSelectedClassId(klasse.klassenname); // Speichern der ausgewählten Klasse
-                router.push(`/klassen/${klasse.klassenname}`);
+                setSelectedClassId(klasse.klassenname);
+                router.push(`/klassen/${klasse.id}`);
               }}
             >
               <div className="header">
@@ -149,10 +182,10 @@ export default function KlassenPage() {
               <div className="info">
                 <div className="students">
                   <span className="icon">👥</span>
-                  <span>{getClassStudentCount(klasse.klassenname)}</span> {/* Anzeige der Schüleranzahl */}
+                  <span>{getClassStudentCount(klasse.id)}</span>
                 </div>
                 <div className="volume">
-                  Volumen: {new Intl.NumberFormat('de-CH').format(getClassVolume(klasse.klassenname))} CHF {/* Gesamtvolumen */}
+                  Volumen: {new Intl.NumberFormat('de-CH').format(getClassVolume(klasse.id))} CHF
                 </div>
               </div>
               <p className="activity">
@@ -168,7 +201,6 @@ export default function KlassenPage() {
             </div>
           ))}
         </div>
-
       </div>
       <Footer />
 
@@ -182,21 +214,21 @@ export default function KlassenPage() {
               type="text"
               name="klassenname"
               placeholder="Klassenname"
-              value={newClass.klassenname}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="nachname"
-              placeholder="Nachname Klassenlehrer"
-              value={newClass.nachname}
+              value={newClass.klassenname || ''}
               onChange={handleInputChange}
             />
             <input
               type="text"
               name="vorname"
               placeholder="Vorname Klassenlehrer"
-              value={newClass.vorname}
+              value={newClass.vorname || ''}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="nachname"
+              placeholder="Nachname Klassenlehrer"
+              value={newClass.nachname || ''}
               onChange={handleInputChange}
             />
             <select name="color" value={newClass.color} onChange={handleInputChange}>
@@ -206,12 +238,12 @@ export default function KlassenPage() {
               <option value="orange">Orange</option>
             </select>
             <div className="modal-buttons">
-              <button onClick={handleAddClass}>Hinzufügen</button>
+              <button onClick={handleAddClass} disabled={!user}>Hinzufügen</button>
               <button onClick={handleCloseModal}>Abbrechen</button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

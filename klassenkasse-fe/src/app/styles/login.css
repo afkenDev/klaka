@@ -5,21 +5,21 @@
     --orange-color: #FF9800;
     --blue-color: #009EE0;
     --font-color: #000000;
-}
-
-/* Login-Container */
-.login-container {
+  }
+  
+  /* Login-Container */
+  .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('/pic/bg-kbw.jpg') center/cover no-repeat;
+                url('/pic/bg-kbw.jpg') center/cover no-repeat;
     color: white;
-}
-
-/* Login-Formular Box */
-.login-form {
+  }
+  
+  /* Login-Formular Box */
+  .login-form {
     background-color: rgba(0, 0, 0, 0.6);
     padding: 2rem;
     border-radius: 10px;
@@ -27,29 +27,28 @@
     width: 100%;
     max-width: 400px;
     text-align: center;
-}
-
-/* Formular Titel */
-.login-title {
+  }
+  
+  /* Formular Titel */
+  .login-title {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
-}
-
-/* Eingabefelder */
-.input-group {
+  }
+  
+  /* Eingabefelder */
+  .input-group {
     margin-bottom: 1.5rem;
     text-align: left;
-}
-
-/* Eingabefelder - Label & Input */
-.input-group label {
+  }
+  
+  .input-group label {
     font-size: 1rem;
     margin-bottom: 0.5rem;
     display: block;
-}
-
-.input-group input {
+  }
+  
+  .input-group input {
     width: 100%;
     padding: 0.8rem;
     font-size: 1rem;
@@ -57,10 +56,10 @@
     border-radius: 5px;
     background-color: #fff;
     color: #333;
-}
-
-/* Login Button */
-.login-submit-button {
+  }
+  
+  /* Login Button */
+  .login-submit-button {
     background-color: var(--button-color);
     color: white;
     padding: 1rem 1.5rem;
@@ -71,15 +70,14 @@
     width: 100%;
     margin-top: 1rem;
     transition: background-color 0.2s ease-in-out;
-}
-
-/* Button Hover */
-.login-submit-button:hover {
+  }
+  
+  .login-submit-button:hover {
     background-color: #444;
-}
-
-/* Stil für den Zurück-Pfeil */
-.back-arrow {
+  }
+  
+  /* Zurück-Pfeil */
+  .back-arrow {
     font-size: 3rem;
     position: absolute;
     top: 2rem;
@@ -87,8 +85,249 @@
     cursor: pointer;
     color: var(--blue-color);
     font-weight: bold;
+  }
+  
+  .back-arrow:hover {
+    color: var(--orange-color);
+  }
+  
+  html, body {
+    height: 100%;
+    position: relative;
+  }
+  
+
+  /* Back Button */
+.back-arrow {
+    font-size: 1.8rem;
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .back-arrow:hover {
+    color: white;
+  }
+  
+/* Feedback */
+.error-message {
+    color: red;
+    margin-top: 1rem;
+  }
+  
+  .success-message {
+    color: green;
+    margin-top: 1rem;
+  }
+
+  .forgot-password-link {
+    margin-top: 4px;
+    text-align: center;
+  }
+  
+  .forgot-password-link a {
+    font-size: 0.9rem;
+    color: #0070f3 0.2;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+
+  /* ===== Responsive Adjustments for Login Page ===== */
+
+/* -------- Extra kleine Geräte (320px - 480px) -------- */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+  }
+  .login-form {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+  .login-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .input-group label {
+    font-size: 0.9rem;
+  }
+  .input-group input {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+  .login-submit-button {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .back-arrow {
+    font-size: 1.5rem;
+    top: 1rem;
+    left: 1rem;
+  }
+  .forgot-password-link a {
+    font-size: 0.8rem;
+  }
 }
 
-.back-arrow:hover {
-    color: var(--orange-color);
+/* -------- Kleine Geräte (481px - 640px) -------- */
+@media (min-width: 481px) and (max-width: 640px) {
+  .login-container {
+    padding: 1rem;
+  }
+  .login-form {
+    padding: 1.75rem;
+    max-width: 95%;
+  }
+  .login-title {
+    font-size: 2.2rem;
+    margin-bottom: 1.25rem;
+  }
+  .input-group label {
+    font-size: 0.95rem;
+  }
+  .input-group input {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+  .login-submit-button {
+    padding: 0.9rem 1.3rem;
+    font-size: 0.95rem;
+  }
+  .back-arrow {
+    font-size: 1.6rem;
+    top: 1.25rem;
+    left: 1.25rem;
+  }
+  .forgot-password-link a {
+    font-size: 0.85rem;
+  }
+}
+
+/* -------- Tablets & kleine Laptops (641px - 1023px) -------- */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .login-form {
+    padding: 2rem;
+    max-width: 400px;
+  }
+  .login-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .input-group label {
+    font-size: 1rem;
+  }
+  .input-group input {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+  .login-submit-button {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+  .back-arrow {
+    font-size: 1.8rem;
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+  .forgot-password-link a {
+    font-size: 0.9rem;
+  }
+}
+
+/* -------- Laptops (1024px - 1439px) -------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .login-form {
+    padding: 2.25rem;
+    max-width: 400px;
+  }
+  .login-title {
+    font-size: 2.6rem;
+    margin-bottom: 1.6rem;
+  }
+  .input-group label {
+    font-size: 1.05rem;
+  }
+  .input-group input {
+    padding: 0.85rem;
+    font-size: 1.05rem;
+  }
+  .login-submit-button {
+    padding: 1.1rem 1.6rem;
+    font-size: 1.05rem;
+  }
+  .back-arrow {
+    font-size: 1.9rem;
+    top: 1.6rem;
+    left: 1.6rem;
+  }
+  .forgot-password-link a {
+    font-size: 0.95rem;
+  }
+}
+
+/* -------- 24‑Zoll Monitore (1920px - 2559px) -------- */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .login-form {
+    padding: 2.5rem;
+    max-width: 400px;
+  }
+  .login-title {
+    font-size: 2.8rem;
+    margin-bottom: 1.75rem;
+  }
+  .input-group label {
+    font-size: 1.1rem;
+  }
+  .input-group input {
+    padding: 0.9rem;
+    font-size: 1.1rem;
+  }
+  .login-submit-button {
+    padding: 1.2rem 1.7rem;
+    font-size: 1.1rem;
+  }
+  .back-arrow {
+    font-size: 2rem;
+    top: 1.75rem;
+    left: 1.75rem;
+  }
+  .forgot-password-link a {
+    font-size: 1rem;
+  }
+}
+
+/* -------- 27‑Zoll Monitore (2560px und mehr) -------- */
+@media (min-width: 2560px) {
+  .login-form {
+    padding: 2.75rem;
+    max-width: 400px;
+  }
+  .login-title {
+    font-size: 3rem;
+    margin-bottom: 1.8rem;
+  }
+  .input-group label {
+    font-size: 1.15rem;
+  }
+  .input-group input {
+    padding: 1rem;
+    font-size: 1.15rem;
+  }
+  .login-submit-button {
+    padding: 1.3rem 1.8rem;
+    font-size: 1.15rem;
+  }
+  .back-arrow {
+    font-size: 2.2rem;
+    top: 1.8rem;
+    left: 1.8rem;
+  }
+  .forgot-password-link a {
+    font-size: 1.05rem;
+  }
 }

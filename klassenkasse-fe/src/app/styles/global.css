@@ -7,11 +7,7 @@
     --font-color: #000000;
 }
 
-.home-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+
 
 /* Hintergrundbild mit Verdunklung */
 .home-main {
@@ -91,3 +87,150 @@
     background-color: #444;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
 }
+html, body {
+    height: 100%;
+    position: relative;
+  }
+  
+
+  .home-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background-color: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    max-width: 300px;
+    text-align: left;
+  }
+  
+  .home-cta {
+    background-color: var(--bg-muted);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+  }
+
+  /* ===== Extra Responsive Anpassungen für classview.css ===== */
+
+/* -------- Extra kleine Geräte (ca. 320px - 480px) -------- */
+@media (max-width: 480px) {
+    .home-main {
+      padding: 1rem;
+      background-attachment: scroll; /* Auf mobilen Geräten oft performanter */
+    }
+    .home-title {
+      font-size: 2rem;
+    }
+    .home-description {
+      font-size: 1rem;
+      max-width: 90%;
+      margin-bottom: 1.5rem;
+    }
+    .home-login-button {
+      font-size: 0.9rem;
+      padding: 0.6rem 1.2rem;
+    }
+    .home-features {
+      gap: 1rem;
+    }
+    .feature-card {
+      max-width: 100%;
+      padding: 1rem;
+    }
+    .home-cta {
+      padding: 1rem;
+    }
+  }
+  
+  /* -------- Kleine Geräte (ca. 481px - 640px) -------- */
+  @media (min-width: 481px) and (max-width: 640px) {
+    .home-main {
+      padding: 1.5rem;
+      background-attachment: scroll;
+    }
+    .home-title {
+      font-size: 2.2rem;
+    }
+    .home-description {
+      font-size: 1.05rem;
+      max-width: 95%;
+      margin-bottom: 1.5rem;
+    }
+    .home-login-button {
+      font-size: 0.95rem;
+      padding: 0.65rem 1.3rem;
+    }
+    .home-features {
+      gap: 1.25rem;
+    }
+    .feature-card {
+      max-width: 95%;
+      padding: 1.25rem;
+    }
+    .home-cta {
+      padding: 1.25rem;
+    }
+  }
+  
+  /* -------- Tablets & kleine Laptops (ca. 641px - 1023px) -------- */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .home-main {
+      padding: 2rem;
+      background-attachment: fixed;
+    }
+    .home-title {
+      font-size: 3rem;
+    }
+    .home-description {
+      font-size: 1.2rem;
+      max-width: 600px;
+    }
+    .home-login-button {
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+    }
+    .home-features {
+      gap: 2rem;
+    }
+    .feature-card {
+      max-width: 300px;
+      padding: 1.5rem;
+    }
+    .home-cta {
+      padding: 2rem;
+    }
+  }
+  
+  /* -------- Laptops (ca. 1024px - 1439px) -------- */
+  @media (min-width: 1024px) {
+    .home-main {
+      padding: 2.5rem;
+    }
+    .home-title {
+      font-size: 3.2rem;
+    }
+    .home-description {
+      font-size: 1.25rem;
+      max-width: 650px;
+    }
+    .home-login-button {
+      font-size: 1.05rem;
+      padding: 0.8rem 1.6rem;
+    }
+    .home-features {
+      gap: 2.5rem;
+    }
+    .feature-card {
+      max-width: 320px;
+      padding: 1.75rem;
+    }
+    .home-cta {
+      padding: 2.5rem;
+    }
+  }
+  
