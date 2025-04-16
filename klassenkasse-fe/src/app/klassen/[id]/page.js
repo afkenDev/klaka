@@ -39,14 +39,10 @@ export default function ClassDetail() {
     const { id } = useParams();
     const router = useRouter();
     const classId = id;
-    console.log("classid, ", classId)
 
     const [user, setUser] = useState(null);
-    console.log("test, ", id)
     const { klassenname, KlassenLoading, KlassenError } = useKlassenName(id);
-    console.log("Klassenname, ", klassenname);
     const { klasse, KlasseLoading, KlasseError } = useKlasseById(id);
-    console.log("Klasse, ", klasse);
     const { schueler: fetchedSchueler, loading, error } = useSchuelerMitBalance();
     //Settings
     const [selectedStudentSettings, setSelectedStudentSettings] = useState(null);
@@ -120,9 +116,6 @@ export default function ClassDetail() {
 
     const allSchueler = [...state.localSchueler];
 
-
-    console.log("Alle ", allSchueler)
-    console.log("Fetch: ", fetchedSchueler)
 
     const toggleDropdown = (studentId) => {
         setState(prevState => ({
@@ -405,8 +398,6 @@ export default function ClassDetail() {
 
             if (!response.ok) throw new Error('Fehler beim Speichern der Änderungen');
 
-            console.log(data.data); // Überprüfe, ob die Daten korrekt zurückgegeben werden
-
             // Aktualisiere den Schüler direkt im Zustand mit den neuen Daten
             setState(prevState => ({
                 ...prevState,
@@ -482,7 +473,6 @@ export default function ClassDetail() {
             return;
         }
 
-        console.log("Lösche Buchung:", { schuelerId, balanceId });
 
         if (!schuelerId || !balanceId) {
             alert("Fehler: Ungültige IDs!");
@@ -638,7 +628,6 @@ export default function ClassDetail() {
     };
 
     //Edit Klasse
-    console.log("state.classData: ", state.classData)
     const openClassSettings = (klasse) => {
         setSelectedClassSettings(klasse);
         setEditClassData({
@@ -709,7 +698,7 @@ export default function ClassDetail() {
                     ...data.data, // aktualisierte Felder reinschreiben
                 },
             }));
-            console.log("newClass: ", state.classData)
+
 
             setSelectedClassSettings(null); // Schließt das Modal
         } catch (error) {
@@ -842,7 +831,6 @@ export default function ClassDetail() {
         state.selectedStudents = [];
     };
 
-    console.log("localschueler: ", state.localSchueler)
     const refreshSchueler = async () => {
         if (!user) {
             alert("User nicht gefunden. Bitte erneut einloggen.");
@@ -1029,8 +1017,7 @@ export default function ClassDetail() {
             `${schueler.name} ${schueler.surname}`.toLowerCase().includes(state.searchQuery.toLowerCase())
         )
         .sort((a, b) => a.surname.toLowerCase().localeCompare(b.surname.toLowerCase()));
-    console.log("filtered, ", filteredSchueler)
-    console.log(state.localSchueler)
+
     return (
         <div className="a">
             <Navbar />
@@ -1103,9 +1090,9 @@ export default function ClassDetail() {
 
                 {/* Aktionen unten */}
                 <div className="actions">
-                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import</button>
-                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export</button>
-                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschen</button>
+                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import Schülerliste</button>
+                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export PDF</button>
+                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschfunktionen</button>
                 </div>
 
                 {/* Modale */}

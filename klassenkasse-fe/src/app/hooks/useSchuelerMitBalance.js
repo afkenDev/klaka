@@ -23,7 +23,6 @@ export function useSchuelerMitBalance() {
         });
 
         const result = await response.json();
-        console.log("useSchuelerMitBalance: ", result)
         if (!response.ok) {
           throw new Error(result.error || "Fehler beim Laden der Daten");
         }

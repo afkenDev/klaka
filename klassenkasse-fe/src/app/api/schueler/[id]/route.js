@@ -9,7 +9,7 @@ export async function GET(req, { params }) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token)
+
 
     const { id } = params;
     const { data, error } = await supabase
@@ -31,7 +31,7 @@ export async function PUT(req, { params }) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token)
+
 
     const { id } = await params;
     const updatedStudent = await req.json();
@@ -83,7 +83,7 @@ export async function DELETE(req, { params }) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token);
+
 
     const { id } = await params;
 

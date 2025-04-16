@@ -21,7 +21,7 @@ export async function POST(req) {
     }
 
     const klassen = data.map((entry) => entry.klasse);
-    console.log("Zurückgegebene Klassen:", klassen);
+
 
     return NextResponse.json(klassen, { status: 200 });
   } catch (err) {

@@ -81,7 +81,6 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                                 className="btn-delete"
                                                 onClick={(event) => {
                                                     event.stopPropagation();
-                                                    console.log("Lösche Buchung mit", { schuelerId: student.id, balanceId: b.id });
                                                     onDeleteTransaction(student.id, b.id);
                                                 }}
                                                 disabled={loading}

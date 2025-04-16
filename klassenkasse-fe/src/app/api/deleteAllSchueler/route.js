@@ -9,7 +9,7 @@ export async function DELETE(req) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token)
+
 
     try {
         const { classId } = await req.json();

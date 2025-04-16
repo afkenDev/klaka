@@ -13,7 +13,7 @@ export async function POST(req) {
         }
 
         const supabase = createSupabaseServerClient(token);
-        console.log("token: ", token)
+
 
         if (contentType.includes('application/json')) {
             // Wenn es sich um eine normale JSON-Anfrage handelt (Schüler hinzufügen)

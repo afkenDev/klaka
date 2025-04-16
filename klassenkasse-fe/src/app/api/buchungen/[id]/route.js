@@ -9,7 +9,7 @@ export async function DELETE(req, { params }) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token);
+
 
     const { id } = params; // balance_id
 
@@ -25,7 +25,7 @@ export async function DELETE(req, { params }) {
     }
 
     const class_id = balanceData.class_id; // Extrahiere class_id aus den Balance-Daten
-    console.log("unique_class_id: ", class_id);
+
     // Zuerst alle Einträge aus der schueler_balance-Tabelle löschen
     const { error: schuelerBalanceError } = await supabase
         .from('schueler_balance')
@@ -66,7 +66,7 @@ export async function PUT(req, { params }) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token);
+
 
     const { id } = await params;
     const { name, amount, date, operator, fach } = await req.json();
