@@ -14,6 +14,22 @@ export default function NewPasswordPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      if (!user || error) {
+        console.log("Nicht eingeloggt – redirect zu /login");
+        router.push("/login");
+        return;
+      }
+
+      setLoading(false);
+    };
+
+    checkUser();
+  }, [router]);
+  
+  useEffect(() => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
 

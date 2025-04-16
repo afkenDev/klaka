@@ -23,7 +23,7 @@ export async function POST(request) {
     // 1. Sende die Einladung an den Benutzer
 const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
   redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login/set-password`,
-});
+});l
 
     if (error) {
       return new Response(
