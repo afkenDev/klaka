@@ -320,4 +320,406 @@
   .container {
     flex: 1;
   }
+
+  /* ===== Extra Responsive Adjustments for classview.css ===== */
+
+/* -------- Extra kleine Geräte (320px - 480px) -------- */
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+    max-width: 100%;
+  }
+  .title {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+  .title:after {
+    width: 60px;
+    margin-top: 6px;
+  }
+  .controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .search-bar {
+    max-width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .grid {
+    gap: 1rem;
+  }
+  .card {
+    padding: 16px;
+  }
+  .bold {
+    font-size: 16px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 14px;
+  }
+  .add-button {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    bottom: 16px;
+    right: 16px;
+  }
+  .modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 16px;
+  }
+}
+
+/* -------- Kleine Geräte (481px - 640px) -------- */
+@media (min-width: 481px) and (max-width: 640px) {
+  .container {
+    padding: 24px;
+  }
+  .title {
+    font-size: 24px;
+    margin-bottom: 28px;
+  }
+  .title:after {
+    width: 65px;
+    margin-top: 7px;
+  }
+  .controls {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .search-bar {
+    max-width: 100%;
+    padding: 11px 15px;
+    font-size: 15px;
+  }
+  .grid {
+    gap: 1.25rem;
+  }
+  .card {
+    padding: 18px;
+  }
+  .bold {
+    font-size: 17px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 15px;
+  }
+  .add-button {
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+    bottom: 20px;
+    right: 20px;
+  }
+  .modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 18px;
+  }
+}
+
+/* -------- Tablets & kleine Laptops (641px - 1023px) -------- */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .container {
+    padding: 32px;
+  }
+  .title {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+  .title:after {
+    width: 80px;
+    margin-top: 8px;
+  }
+  .controls {
+    flex-direction: row;
+  }
+  .search-bar {
+    max-width: 400px;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+  .grid {
+    gap: 1.5rem;
+  }
+  .card {
+    padding: 20px;
+  }
+  .bold {
+    font-size: 18px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 16px;
+  }
+  .add-button {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    bottom: 32px;
+    right: 32px;
+  }
+  .modal {
+    width: 400px;
+    padding: 28px;
+  }
+}
+
+/* -------- Laptops (1024px - 1439px) -------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .container {
+    padding: 40px;
+    max-width: 1200px;
+  }
+  .title {
+    font-size: 30px;
+    margin-bottom: 36px;
+  }
+  .title:after {
+    width: 85px;
+    margin-top: 10px;
+  }
+  .controls {
+    gap: 24px;
+  }
+  .search-bar {
+    max-width: 450px;
+    padding: 14px 18px;
+    font-size: 17px;
+  }
+  .grid {
+    gap: 1.75rem;
+  }
+  .card {
+    padding: 24px;
+  }
+  .bold {
+    font-size: 20px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 17px;
+  }
+  .add-button {
+    width: 65px;
+    height: 65px;
+    font-size: 30px;
+    bottom: 36px;
+    right: 36px;
+  }
+  .modal {
+    width: 450px;
+    padding: 32px;
+  }
+}
+
+/* -------- 24‑Zoll Monitore (1920px - 2559px) -------- */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .container {
+    padding: 48px;
+    max-width: 1400px;
+  }
+  .title {
+    font-size: 32px;
+    margin-bottom: 40px;
+  }
+  .title:after {
+    width: 90px;
+    margin-top: 10px;
+  }
+  .controls {
+    gap: 32px;
+  }
+  .search-bar {
+    max-width: 500px;
+    padding: 16px 20px;
+    font-size: 18px;
+  }
+  .grid {
+    gap: 2rem;
+  }
+  .card {
+    padding: 28px;
+  }
+  .bold {
+    font-size: 22px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 18px;
+  }
+  .add-button {
+    width: 70px;
+    height: 70px;
+    font-size: 32px;
+    bottom: 40px;
+    right: 40px;
+  }
+  .modal {
+    width: 500px;
+    padding: 36px;
+  }
+}
+
+/* -------- 27‑Zoll Monitore (2560px und mehr) -------- */
+@media (min-width: 2560px) {
+  .container {
+    padding: 56px;
+    max-width: 1600px;
+  }
+  .title {
+    font-size: 36px;
+    margin-bottom: 48px;
+  }
+  .title:after {
+    width: 100px;
+    margin-top: 12px;
+  }
+  .controls {
+    gap: 40px;
+  }
+  .search-bar {
+    max-width: 550px;
+    padding: 18px 22px;
+    font-size: 20px;
+  }
+  .grid {
+    gap: 2.5rem;
+  }
+  .card {
+    padding: 32px;
+  }
+  .bold {
+    font-size: 24px;
+  }
+  .students,
+  .icon,
+  .volume,
+  .activity {
+    font-size: 20px;
+  }
+  .add-button {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+    bottom: 48px;
+    right: 48px;
+  }
+  .modal {
+    width: 550px;
+    padding: 40px;
+  }
+}
+
+/* ===== Reduzierte Card-Größen ===== */
+
+/* -------- Extra kleine Geräte (320px - 480px) -------- */
+
+
+/* -------- Kleine Geräte (481px - 640px) -------- */
+@media (min-width: 481px) and (max-width: 640px) {
+  .card {
+    padding: 14px;
+  }
+}
+
+/* -------- Tablets & kleine Laptops (641px - 1023px) -------- */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .card {
+    padding: 16px;
+  }
+}
+
+/* -------- Laptops (1024px - 1439px) -------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .card {
+    padding: 18px;
+  }
+}
+
+/* -------- 24‑Zoll Monitore (1920px - 2559px) -------- */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .card {
+    padding: 20px;
+  }
+}
+
+/* -------- 27‑Zoll Monitore (2560px und mehr) -------- */
+@media (min-width: 2560px) {
+  .card {
+    padding: 22px;
+  }
+}
+
+/* Beispiel: Für wirklich kleine Screens (max-width: 480px) */
+@media (max-width: 480px) {
+  /* 1. Reduzierte Spaltenbreite in der Grid-Definition */
+  .grid {
+    grid-template-columns: 1fr !important; /* Nur 1 Spalte bei sehr schmalen Screens */
+    gap: 0.75rem !important;              /* Weniger Abstand zwischen Cards */
+  }
+
+  /* 2. Cards kompakter gestalten */
+  .card {
+    /* Weniger Padding und ggf. kleineren Radius */
+    padding: 12px !important;
+    border-radius: 8px !important;
+    max-width: 85%;
+    /* Falls du noch weniger Höhe willst, kannst du auch margin o.Ä. anpassen */
+  }
+
+  /* 3. Überschriften und Abstände im Card-Inhalt verkleinern */
+  .header {
+    margin-bottom: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  .bold {
+    font-size: 16px !important; /* statt 18px */
+  }
+  .info {
+    margin: 8px 0 !important;
+  }
+  .students, .icon, .volume {
+    font-size: 14px !important; /* leicht verkleinern */
+  }
+
+  /* 4. Aktivitäten & weitere Textbereiche enger halten */
+  .activity {
+    margin-top: 6px !important;
+    padding-top: 6px !important;
+    font-size: 13px !important;
+  }
+
+  /* 5. (Optional) Suchfeld & Buttons schmaler machen */
+  .search-bar {
+    max-width: 70% !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+  }
   
+  .add-button {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 24px !important;
+    top: 150px !important;
+    right: 16px !important;
+    position: absolute;
+  }
+  
+  
+}

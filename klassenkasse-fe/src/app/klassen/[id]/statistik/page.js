@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { supabase } from '../../../lib/supabaseClient';
 import { useKlassenName } from '../../../hooks/useKlassenName';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import '../../../styles/statistik.css';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AA66CC', '#FF4444'];
 
+// Sample data (replace with your actual data)
+const COLORS = ['#00C49F', '#0088FE', '#FF8042', '#FF0000', '#FFBB28', '#8884d8', '#999999'];
+
+// Fixed color mapping for subjects
 const FIXED_COLORS = {
     'Mathematik': '#0088FE',      // Blau
     'Deutsch': '#00C49F',         // Grün
@@ -119,52 +122,71 @@ export default function StatistikPage() {
                     ) : (
                         <>
                             <div className="chart-container">
-                            <PieChart width={500} height={500}>
-                            <Pie
-  data={data}
-  cx="50%"
-  cy="50%"
-  outerRadius={150}
-  dataKey="value"
-  nameKey="name"
-  labelLine
-  label={({ cx, cy, midAngle, outerRadius, index }) => {
-    const RADIAN = Math.PI / 180;
-    const radius = outerRadius + 20;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    const value = data[index].value;
-    const name = data[index].name;
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#333"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        fontSize={12}
-      >
-        {`${name} (${value})`}
-      </text>
-    );
-  }}
->
-  {data.map((entry, index) => {
-    const fixedColor = FIXED_COLORS[entry.name];
-    const dynamicColor = COLORS[index % COLORS.length];
-    return (
-      <Cell key={`cell-${index}`} fill={fixedColor || dynamicColor} />
-    );
-  })}
-</Pie>
-
-                                    <Tooltip />
-                                    <Legend />
-                                </PieChart>
+                                <ResponsiveContainer width="100%" height={400}>
+                                    <PieChart>
+                                        <Pie
+                                            data={data}
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={120}
+                                            innerRadius={0}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            labelLine={false}
+                                            label={({ cx, cy, midAngle, outerRadius, percent, index }) => {
+                                                const RADIAN = Math.PI / 180;
+                                                const radius = outerRadius * 1.1;
+                                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                                
+                                                // Only show label for segments that are large enough
+                                                if (percent < 0.05) return null;
+                                                
+                                                return (
+                                                    <text 
+                                                        x={x} 
+                                                        y={y} 
+                                                        fill="#333"
+                                                        textAnchor={x > cx ? 'start' : 'end'}
+                                                        dominantBaseline="central"
+                                                        className="recharts-pie-label-text"
+                                                    >
+                                                        {`${data[index].name} (${data[index].value} CHF)`}
+                                                    </text>
+                                                );
+                                            }}
+                                        >
+                                            {data.map((entry, index) => {
+                                                const color = FIXED_COLORS[entry.name] || COLORS[index % COLORS.length];
+                                                return <Cell key={`cell-${index}`} fill={color} />;
+                                            })}
+                                        </Pie>
+                                        <Tooltip 
+                                            formatter={(value) => [`${value} CHF`, 'Betrag']}
+                                            contentStyle={{
+                                                borderRadius: '8px',
+                                                padding: '10px',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                                            }}
+                                        />
+                                        <Legend 
+                                            layout="horizontal" 
+                                            verticalAlign="bottom" 
+                                            align="center"
+                                            wrapperStyle={{
+                                                paddingTop: '20px'
+                                            }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
                             </div>
                             <div className="total-amount">
-                                <h2>Gesamtbetrag: {totalAmount} CHF</h2>
+                                <h2>Gesamtbetrag</h2>
+                                <div className="amount">
+                                    <span>{totalAmount}</span>
+                                    <span className="currency">CHF</span>
+                                </div>
                             </div>
                         </>
                     )}

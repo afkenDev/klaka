@@ -310,3 +310,171 @@
 .manual {
   margin-bottom: 1rem;
 }
+
+
+/* ===== Extra Responsive Anpassungen ===== */
+
+/* -------- Mobile Geräte (klein, ca. 320px - 480px) -------- */
+@media (max-width: 480px) {
+  /* Reduziere Container-Padding, um den knappen Platz optimal zu nutzen */
+  .container {
+    padding: 1rem;
+  }
+  
+  /* Kleinere Karten, optimierte Schriftgrößen und Buttons */
+  .admin-card {
+    padding: 1rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 1.1rem;
+  }
+  
+  .admin-card p {
+    font-size: 0.8rem;
+  }
+  
+  .admin-card button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+  
+  .admin-section {
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+/* -------- Mobile Geräte (Standard, ca. 481px - 640px) -------- */
+@media (min-width: 481px) and (max-width: 640px) {
+  .container {
+    padding: 1.5rem;
+  }
+  
+  .admin-card {
+    padding: 1.25rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 1.2rem;
+  }
+  
+  .admin-card p {
+    font-size: 0.85rem;
+  }
+  
+  .admin-card button {
+    font-size: 1rem;
+    padding: 0.65rem 1.2rem;
+  }
+  
+  .admin-section {
+    gap: 1.25rem;
+  }
+}
+
+/* -------- Tablets und kleine Laptops (ca. 641px - 1023px) -------- */
+/* Hier kannst du bereits vorhandene Anpassungen (z.B. @media (min-width: 768px)) beibehalten oder erweitern */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .container {
+    padding: 2rem;
+  }
+  
+  .admin-card {
+    padding: 1.5rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 1.3rem;
+  }
+  
+  .admin-section {
+    gap: 1.5rem;
+  }
+}
+
+/* -------- Laptops (ca. 1024px - 1439px) -------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .container {
+    padding: 3rem;
+  }
+  
+  .admin-section {
+    gap: 2rem;
+  }
+  
+  .admin-card {
+    padding: 2rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 1.5rem;
+  }
+  
+  .admin-card p {
+    font-size: 1rem;
+  }
+  
+  .admin-card button {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* -------- 24-Zoll Monitore (ca. 1920px - 2559px) -------- */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .container {
+    max-width: 120rem; /* Erweitertes Layout */
+    padding: 4rem;
+  }
+  
+  .admin-section {
+    gap: 2.5rem;
+  }
+  
+  .admin-card {
+    padding: 2.5rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 1.75rem;
+  }
+  
+  .admin-card p {
+    font-size: 1.1rem;
+  }
+  
+  .admin-card button {
+    font-size: 1.2rem;
+    padding: 0.85rem 1.75rem;
+  }
+}
+
+/* -------- 27-Zoll Monitore (2560px und mehr) -------- */
+@media (min-width: 2560px) {
+  .container {
+    max-width: 140rem;
+    padding: 5rem;
+  }
+  
+  .admin-section {
+    gap: 3rem;
+  }
+  
+  .admin-card {
+    padding: 3rem;
+  }
+  
+  .admin-card h2 {
+    font-size: 2rem;
+  }
+  
+  .admin-card p {
+    font-size: 1.2rem;
+  }
+  
+  .admin-card button {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+  }
+}

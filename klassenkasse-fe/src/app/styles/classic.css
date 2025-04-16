@@ -112,3 +112,178 @@ body {
     position: relative;
   }
   
+
+  /* ===== Classic Responsive Adjustments ===== */
+
+/* -------- Extra kleine Geräte (ca. 320px - 480px) -------- */
+@media (max-width: 480px) {
+  /* Globaler Schriftskalierungseffekt */
+  html, body {
+    font-size: 0.9rem;
+  }
+  
+  /* Main-Bereich */
+  main {
+    max-width: 90%;
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  /* Überschriften und Texte */
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-top: 1.25rem;
+  }
+  
+  p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  
+  /* Navigation bzw. Listen, falls nötig */
+  .index {
+    padding-left: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* -------- Kleine Geräte (ca. 481px - 640px) -------- */
+@media (min-width: 481px) and (max-width: 640px) {
+  html, body {
+    font-size: 1rem;
+  }
+  
+  main {
+    max-width: 95%;
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+    margin-top: 1.5rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* -------- Tablets & kleine Laptops (ca. 641px - 1023px) -------- */
+@media (min-width: 641px) and (max-width: 1023px) {
+  html, body {
+    font-size: 1.05rem;
+  }
+  
+  main {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+}
+
+/* -------- Laptops (ca. 1024px - 1439px) -------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  html, body {
+    font-size: 1.1rem;
+  }
+  
+  main {
+    max-width: 750px;
+    margin: 2rem auto;
+    padding: 1.75rem;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.55rem;
+    margin-top: 2rem;
+  }
+  
+  p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+}
+
+/* -------- 24‑Zoll Monitore (ca. 1920px - 2559px) -------- */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  html, body {
+    font-size: 1.2rem;
+  }
+  
+  main {
+    max-width: 800px;
+    margin: 2.5rem auto;
+    padding: 2rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+}
+
+/* -------- 27‑Zoll Monitore (2560px und mehr) -------- */
+@media (min-width: 2560px) {
+  html, body {
+    font-size: 1.3rem;
+  }
+  
+  main {
+    max-width: 850px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.9rem;
+    margin-top: 2.5rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    line-height: 2;
+  }
+}

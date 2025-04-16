@@ -6,13 +6,6 @@
   --muted: #8a8a8a;           /* Battleship Gray */
   --accent: #f06c1a;          /* Spanish Orange */
   
-  /* Subject colors - matching FIXED_COLORS in the component */
-  --math-color: #0088FE;      /* Blue for Mathematics */
-  --german-color: #00C49F;    /* Green for German */
-  --english-color: #FF0000;   /* Red for English */
-  --sport-color: #FF8042;     /* Dark Red for Sport */
-  --other-color: #888888;     /* Gray for Others */
-  
   /* Additional derived variables */
   --primary-light: #4eb5b7;
   --primary-dark: #308d8f;
@@ -34,17 +27,18 @@
   --border-color: #e5e7eb;
 }
 
+/* Basis-Stile */
 .container {
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   max-width: 1200px;
   margin: 0 auto;
   background-color: var(--bg-light);
-  min-height: 100vh;
+  min-height: 80vh;
   color: var(--text);
 }
 
-/* ===== CONTROLS ===== */
+/* CONTROLS */
 .controls {
   display: flex;
   justify-content: space-between;
@@ -74,7 +68,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ===== PAGE TITLE ===== */
+/* PAGE TITLE */
 .title {
   text-align: center;
   font-size: 1.875rem;
@@ -97,13 +91,13 @@
   border-radius: 2px;
 }
 
-/* ===== CHART CONTENT ===== */
+/* CHART CONTENT */
 .content {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 2rem;
-  align-items: center;
+  align-items: stretch;
   margin-top: 2rem;
   background-color: var(--bg-white);
   border-radius: var(--border-radius-lg);
@@ -112,79 +106,44 @@
 }
 
 .chart-container {
-  flex: 1 1 600px;
-  min-width: 500px;
-  max-width: 700px;
-  height: 500px; /* falls gewünscht */
+  flex: 1 1 400px;
+  min-width: 320px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
   transition: transform 0.3s ease;
-  padding: 1.5rem;
 }
-
 
 .chart-container:hover {
   transform: scale(1.02);
 }
 
-/* ===== RECHARTS SPECIFIC STYLES ===== */
-/* Make sure all pie segments have a stroke/border */
-.recharts-pie-sector {
-  stroke: #fff;
-  stroke-width: 1px;
-}
-
-/* Force visibility of the Englisch segment */
-.recharts-pie-sector[name="Englisch"] {
-  fill: var(--english-color) !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Enhance tooltip appearance */
-.recharts-tooltip-wrapper {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-radius: var(--border-radius) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  border: none !important;
+/* Chart legend enhancement */
+.recharts-default-legend {
   padding: 0.5rem !important;
-  z-index: 100;
-}
-
-.recharts-default-tooltip {
-  background-color: transparent !important;
-  border: none !important;
-  padding: 0.25rem !important;
-}
-
-/* Style the label text for better visibility */
-.recharts-pie-label-text {
-  font-weight: 600 !important;
-  font-size: 0.85rem !important;
-  fill: #333 !important;
-}
-
-/* Enhance the legend appearance */
-.recharts-legend-wrapper {
-  padding-top: 1.5rem !important;
-  max-width: 100% !important;
-  display: flex !important;
-  justify-content: center !important;
+  border-radius: var(--border-radius) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: var(--box-shadow) !important;
 }
 
 .recharts-legend-item {
-  margin-right: 1rem !important;
+  padding: 0.25rem 0.5rem !important;
+  margin-right: 0.5rem !important;
+  border-radius: var(--border-radius-lg) !important;
+  transition: transform 0.2s ease !important;
 }
 
-.recharts-legend-item-text {
-  color: var(--text) !important;
-  font-size: 0.9rem !important;
+.recharts-legend-item:hover {
+  transform: translateX(5px) !important;
 }
 
-/* ===== TOTAL AMOUNT DISPLAY ===== */
+.recharts-tooltip-wrapper {
+  border-radius: var(--border-radius) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* TOTAL AMOUNT DISPLAY */
 .total-amount {
   flex: 0 1 300px;
   min-width: 280px;
@@ -216,13 +175,30 @@
 
 .total-amount h2 {
   font-size: 1.25rem;
-  font-weight: 600;
-  text-align: center;
+  margin-bottom: 1rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  margin: 0;
 }
 
-/* ===== LOADING STATE ===== */
+.total-amount .amount {
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.total-amount .currency {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* LOADING STATE */
 .loading {
   display: flex;
   justify-content: center;
@@ -244,7 +220,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* ===== DATA BREAKDOWN TABLE ===== */
+/* DATA BREAKDOWN TABLE */
 .data-breakdown {
   flex: 1 1 100%;
   margin-top: 2rem;
@@ -305,44 +281,34 @@
   color: var(--muted);
 }
 
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
-@media (max-width: 992px) {
-  .content {
-    justify-content: center;
-  }
+/* Für den Gesamtbetrag-Text, wie in deinem Screenshot */
+.gesamtbetrag {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  color: white;
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 1.25rem;
-  }
-  
-  .content {
-    padding: 1.25rem;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .total-amount {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    max-width: 100%;
-  }
-  
-  .chart-container {
-    overflow-x: auto;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .data-table {
-    font-size: 0.875rem;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 0.75rem;
-  }
+/* Styling für Chart Legenden, wie in deinem Screenshot */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 0.75rem;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.25rem;
 }
 
 /* ===== UTILITY CLASSES ===== */
@@ -390,16 +356,203 @@
   }
 }
 
-.recharts-pie-label-text {
-  font-weight: 600 !important;
-  font-size: 0.85rem !important;
-  fill: #333 !important;
-  paint-order: stroke;
-  stroke: white;
-  stroke-width: 3px;
-  stroke-linejoin: round;
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+/* Extra kleine Geräte (bis 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .title:after {
+    width: 60px;
+    height: 2px;
+  }
+  .controls > button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .content {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .chart-container {
+    flex: 1 1 100%;
+    max-width: 100%;
+    height: 300px;
+    padding: 1rem;
+  }
+  .total-amount {
+    margin-top: 1rem;
+    padding: 1rem;
+    max-width: 100%;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
+/* Kleine Geräte (481px bis 640px) */
+@media (min-width: 481px) and (max-width: 640px) {
+  .container {
+    padding: 1.5rem;
+  }
+  .title {
+    font-size: 1.6rem;
+    margin-bottom: 1.75rem;
+  }
+  .title:after {
+    width: 65px;
+  }
+  .controls > button {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+  }
+  .content {
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+  .chart-container {
+    flex: 1 1 100%;
+    max-width: 100%;
+    height: 350px;
+    padding: 1rem;
+  }
+  .total-amount {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Mittlere Geräte (641px bis ca. 1023px)
+   – Hier lassen wir viele Basiswerte unverändert, da das Layout bereits gut passt.
+   Du kannst hier bei Bedarf nur minimale Anpassungen vornehmen. */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .container {
+    padding: 2rem;
+  }
+  .chart-container {
+    height: 450px;
+  }
+  .total-amount {
+    padding: 2rem;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 0.875rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Große Bildschirme – Laptops & Desktops (1440px bis 1919px) */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .container {
+    max-width: 1400px;
+    padding: 2.5rem;
+  }
+  .title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+  .title:after {
+    width: 85px;
+    height: 3px;
+  }
+  .controls > button {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  .content {
+    gap: 2.5rem;
+    padding: 2.5rem;
+  }
+  .chart-container {
+    flex: 1 1 650px;
+    min-width: 550px;
+    max-width: 750px;
+    height: 550px;
+    padding: 1.75rem;
+  }
+  .total-amount {
+    flex: 0 1 350px;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 2.5rem;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 1.25rem;
+  }
+}
+
+/* Super große Bildschirme (1920px und mehr) */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1600px;
+    padding: 3rem;
+  }
+  .title {
+    font-size: 2.25rem;
+    margin-bottom: 3.5rem;
+  }
+  .title:after {
+    width: 90px;
+    height: 3px;
+  }
+  .controls > button {
+    padding: 0.85rem 1.1rem;
+    font-size: 1rem;
+  }
+  .content {
+    gap: 3rem;
+    padding: 3rem;
+  }
+  .chart-container {
+    flex: 1 1 700px;
+    min-width: 600px;
+    max-width: 800px;
+    height: 600px;
+    padding: 2rem;
+  }
+  .total-amount {
+    flex: 0 1 400px;
+    min-width: 350px;
+    max-width: 450px;
+    padding: 3rem;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 1.5rem;
+  }
+}
+
+/* Optional: Wrapper, um das Diagramm zentriert zu halten */
+.chart-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .chart-wrapper {
+    max-width: 100%;
+  }
+}
+
+/* Zusätzliche Anpassung für Recharts-Pie-Labels */
 .recharts-pie-label-text {
   font-weight: 600 !important;
   font-size: 0.85rem !important;
@@ -408,3 +561,5 @@
   stroke: #fff;
   stroke-width: 3px;
 }
+
+
