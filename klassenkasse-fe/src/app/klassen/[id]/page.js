@@ -935,7 +935,7 @@ export default function ClassDetail() {
     console.log("filtered, ", filteredSchueler)
     console.log(state.localSchueler)
     return (
-        <div className="page-wrapper">
+        <div className="a">
             <Navbar />
             <div className="container">
 
@@ -1014,7 +1014,7 @@ export default function ClassDetail() {
                 {/* Modale */}
                 {state.isModalOpen && (
                     <div className="modal-overlay">
-                        <div className="modal">
+                        <div className="modal" id='hinzu'>
                             <h2>Neuen Schüler hinzufügen</h2>
                             <input
                                 type="text"
