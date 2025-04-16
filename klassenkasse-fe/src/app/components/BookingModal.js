@@ -90,7 +90,10 @@ export default function BookingModal({
                             name="operator"
                             value="+"
                             checked={bookingData.operator === "+"}
-                            onChange={onInputChange}
+                            onChange={(e) => {
+                                onInputChange(e);
+                                onInputChange({ target: { name: 'subject', value: '-' } });
+                            }}
                         /> Addieren (+)
                     </label>
                     <label>
@@ -99,7 +102,10 @@ export default function BookingModal({
                             name="operator"
                             value="-"
                             checked={bookingData.operator === "-"}
-                            onChange={onInputChange}
+                            onChange={(e) => {
+                                onInputChange(e);
+                                onInputChange({ target: { name: 'subject', value: '' } });
+                            }}
                         /> Subtrahieren (-)
                     </label>
                 </div>
@@ -108,10 +114,11 @@ export default function BookingModal({
                 <input
                     type="text"
                     name="subject"
-                    placeholder="Fach eingeben und sonst 'Sonstiges"
+                    placeholder="Fach eingeben oder bei Addieren automatisch '-'"
                     value={bookingData.subject || ''}
                     onChange={handleSubjectChange}
                     list="subjects-list"
+                    readOnly={bookingData.operator === '+'}
                 />
                 <datalist id="subjects-list">
                     {filteredSubjects.map(subject => (
@@ -141,7 +148,10 @@ export default function BookingModal({
                     <button
                         className="btn-save"
                         onClick={() => {
-                            if (!subjects.includes(bookingData.subject)) {
+                            if (
+                                bookingData.operator !== '+' &&
+                                !subjects.includes(bookingData.subject)
+                            ) {
                                 alert(`"${bookingData.subject}" ist kein gültiges Fach.`);
                                 return;
                             }
@@ -156,4 +166,3 @@ export default function BookingModal({
         </div>
     );
 }
-

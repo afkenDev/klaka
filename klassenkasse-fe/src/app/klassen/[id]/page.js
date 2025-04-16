@@ -29,8 +29,8 @@ import {
     List,
     Import,
     Settings
-  } from 'lucide-react';
-  
+} from 'lucide-react';
+
 
 
 export default function ClassDetail() {
@@ -936,209 +936,212 @@ export default function ClassDetail() {
     console.log(state.localSchueler)
     return (
         <div className="page-wrapper">
-          <Navbar />
-          <div className="container">
-            
-            {/* Titel & Zurück */}
-            <div className="header-row">
-  <div className="header-side">
-    <button className="zurueck" onClick={() => router.push('/klassen')} title="Zurück zur Übersicht">
-      <ArrowLeft size={20} />
-    </button>
-  </div>
-  
-  <div className="title">
-    Klasse {klassenname}
-  </div>
+            <Navbar />
+            <div className="container">
 
-  <div className="header-placeholder"></div>
-</div>
+                {/* Titel & Zurück */}
+                <div className="header-row">
+                    <div className="header-side">
+                        <button className="zurueck" onClick={() => router.push('/klassen')} title="Zurück zur Übersicht">
+                            <ArrowLeft size={20} />
+                        </button>
+                    </div>
 
-      
-            {/* Suchfeld */}
-            <div className="controls">
-              <input
-                type="text"
-                placeholder="Schüler suchen..."
-                value={state.searchQuery}
-                onChange={(e) =>
-                  setState((prevState) => ({ ...prevState, searchQuery: e.target.value }))
-                }
-                className="search-bar"
-              />
-            </div>
-      
-            {/* Icon-Toolbar */}
-            <div className="icon-toolbar">
-              <button className="icon" onClick={() => handleModalState('isBookingModalOpen', true)} title="Buchung hinzufügen">
-                <PlusCircle size={20} />
-              </button>
-              <button className="icon" onClick={() => handleModalState('isModalOpen', true)} title="Schüler:in hinzufügen">
-                <UserPlus size={20} />
-              </button>
-              <button className="icon" onClick={handleOpenBookingList} title="Alle Buchungen anzeigen">
-                <List size={20} />
-              </button>
-              <button className="icon" onClick={() => router.push(`/klassen/${id}/statistik`)} title="Statistik anzeigen">
-                <BarChart2 size={20} />
-              </button>
-            </div>
-      
-            {/* Schülerliste */}
-            <div className="student-list-container">
-              <div className="student-list">
-                {filteredSchueler.length > 0 ? (
-                  filteredSchueler.map((student) => (
-                    <StudentCard
-                      key={student.id}
-                      student={student}
-                      onToggleDropdown={toggleDropdown}
-                      isOpen={state.openStudent === student.id}
-                      onOpenSettings={openSettings}
-                      onDeleteTransaction={handleDeleteTransaction}
+                    <div className="title">
+                        Klasse {klassenname}
+                    </div>
+
+                    <div className="header-placeholder"></div>
+                </div>
+
+
+                {/* Suchfeld */}
+                <div className="controls">
+                    <input
+                        type="text"
+                        placeholder="Schüler suchen..."
+                        value={state.searchQuery}
+                        onChange={(e) =>
+                            setState((prevState) => ({ ...prevState, searchQuery: e.target.value }))
+                        }
+                        className="search-bar"
                     />
-                  ))
-                ) : (
-                  <p>Keine Schüler in dieser Klasse.</p>
+                </div>
+
+                {/* Icon-Toolbar */}
+                <div className="icon-toolbar">
+                    <button className="icon" onClick={() => handleModalState('isBookingModalOpen', true)} title="Buchung hinzufügen">
+                        <PlusCircle size={20} />
+                    </button>
+                    <button className="icon" onClick={() => handleModalState('isModalOpen', true)} title="Schüler:in hinzufügen">
+                        <UserPlus size={20} />
+                    </button>
+                    <button className="icon" onClick={handleOpenBookingList} title="Alle Buchungen anzeigen">
+                        <List size={20} />
+                    </button>
+                    <button className="icon" onClick={() => router.push(`/klassen/${id}/statistik`)} title="Statistik anzeigen">
+                        <BarChart2 size={20} />
+                    </button>
+                </div>
+
+                {/* Schülerliste */}
+                <div className="student-list-container">
+                    <div className="student-list">
+                        {filteredSchueler.length > 0 ? (
+                            filteredSchueler.map((student) => (
+                                <StudentCard
+                                    key={student.id}
+                                    student={student}
+                                    onToggleDropdown={toggleDropdown}
+                                    isOpen={state.openStudent === student.id}
+                                    onOpenSettings={openSettings}
+                                    onDeleteTransaction={handleDeleteTransaction}
+                                />
+                            ))
+                        ) : (
+                            <p>Keine Schüler in dieser Klasse.</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Aktionen unten */}
+                <div className="actions">
+                    <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import</button>
+                    <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export</button>
+                    <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschen</button>
+                </div>
+
+                {/* Modale */}
+                {state.isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Neuen Schüler hinzufügen</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Vorname"
+                                value={state.newStudent.name}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="surname"
+                                placeholder="Nachname"
+                                value={state.newStudent.surname}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="mobile"
+                                placeholder="Mobile (optional)"
+                                value={state.newStudent.mobile}
+                                onChange={handleInputChange}
+                            />
+                            <div className="modal-buttons">
+                                <button onClick={handleAddStudent}>Hinzufügen</button>
+                                <button onClick={() => handleModalState('isModalOpen', false)}>Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
                 )}
-              </div>
+
+                {state.isImportModalOpen && (
+                    <ImportModal
+                        isOpen={state.isImportModalOpen}
+                        onClose={() => handleModalState('isImportModalOpen', false)}
+                        onImportCSV={handleImportCSV}
+                        onFileChange={(e) =>
+                            setState((prevState) => ({
+                                ...prevState,
+                                importFile: e.target.files[0],
+                            }))
+                        }
+                    />
+                )}
+
+                {state.isBookingModalOpen && (
+                    <BookingModal
+                        isOpen={state.isBookingModalOpen}
+                        onClose={() => handleModalState('isBookingModalOpen', false)}
+                        onSave={handleSaveBooking}
+                        bookingData={state.bookingData}
+                        onInputChange={handleBookingInputChange}
+                        students={filteredSchueler}
+                        selectedStudents={state.selectedStudents}
+                        onSelectStudent={handleSelectStudent}
+                        onSelectAll={handleSelectAll}
+                    />
+                )}
+
+                {selectedStudentSettings && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Schüler bearbeiten</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Vorname"
+                                value={editData.name}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <input
+                                type="text"
+                                name="surname"
+                                placeholder="Nachname"
+                                value={editData.surname}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <input
+                                type="text"
+                                name="mobile"
+                                placeholder="Mobile (optional)"
+                                value={editData.mobile}
+                                onChange={handleInputSettingsChange}
+                            />
+                            <p>
+                                <strong>Email:</strong> {`${editData.name.toLowerCase()}.${editData.surname.toLowerCase()}@stud.kbw.ch`}
+                            </p>
+                            <div className="modal-buttons">
+                                <button onClick={handleSettingsSave}>Speichern</button>
+                                <button className="btn-delete" onClick={handleSettingsDelete}>Löschen</button>
+                                <button onClick={() => setSelectedStudentSettings(null)}>Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {state.isBookingListModalOpen && (
+
+                    <BookingListModal
+                        isOpen={state.isBookingListModalOpen}
+                        onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
+                        bookings={state.bookings}
+                        onEdit={handleEditBooking}
+                        onDelete={handleDeleteBooking}
+                    />
+                )}
+
+                {isExportModalOpen && (
+                    <ExportModal
+                        isOpen={isExportModalOpen}
+                        onClose={() => handleExportModalState(false)}
+                        students={filteredSchueler}
+                        selectedStudents={state.selectedStudents}
+                        onSelectStudent={handleSelectStudent}
+                        onSelectAll={handleSelectAll}
+                        onGeneratePDF={generatePDF}
+                    />
+                )}
+
+                <LoeschModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onDeleteAllSchueler={handleDeleteAllSchueler}
+                    onDeleteAllBookings={handleDeleteAllBookings}
+                    onDeleteAll={handleDeleteAll}
+                />
             </div>
-      
-            {/* Aktionen unten */}
-            <div className="actions">
-              <button className="btn-black" onClick={() => handleModalState('isImportModalOpen', true)}>Import</button>
-              <button className="btn-black" onClick={() => setIsExportModalOpen(true)}>Export</button>
-              <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Löschen</button>
-            </div>
-      
-            {/* Modale */}
-            {state.isModalOpen && (
-              <div className="modal-overlay">
-                <div className="modal">
-                  <h2>Neuen Schüler hinzufügen</h2>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Vorname"
-                    value={state.newStudent.name}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="text"
-                    name="surname"
-                    placeholder="Nachname"
-                    value={state.newStudent.surname}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="text"
-                    name="mobile"
-                    placeholder="Mobile (optional)"
-                    value={state.newStudent.mobile}
-                    onChange={handleInputChange}
-                  />
-                  <div className="modal-buttons">
-                    <button onClick={handleAddStudent}>Hinzufügen</button>
-                    <button onClick={() => handleModalState('isModalOpen', false)}>Abbrechen</button>
-                  </div>
-                </div>
-              </div>
-            )}
-      
-            {state.isImportModalOpen && (
-              <ImportModal
-                isOpen={state.isImportModalOpen}
-                onClose={() => handleModalState('isImportModalOpen', false)}
-                onImportCSV={handleImportCSV}
-                onFileChange={(e) =>
-                  setState((prevState) => ({
-                    ...prevState,
-                    importFile: e.target.files[0],
-                  }))
-                }
-              />
-            )}
-      
-            {state.isBookingModalOpen && (
-              <BookingModal
-                isOpen={state.isBookingModalOpen}
-                onClose={() => handleModalState('isBookingModalOpen', false)}
-                onSave={handleSaveBooking}
-                bookingData={state.bookingData}
-                onInputChange={handleBookingInputChange}
-                students={filteredSchueler}
-                selectedStudents={state.selectedStudents}
-                onSelectStudent={handleSelectStudent}
-                onSelectAll={handleSelectAll}
-              />
-            )}
-      
-            {selectedStudentSettings && (
-              <div className="modal-overlay">
-                <div className="modal">
-                  <h2>Schüler bearbeiten</h2>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Vorname"
-                    value={editData.name}
-                    onChange={handleInputSettingsChange}
-                  />
-                  <input
-                    type="text"
-                    name="surname"
-                    placeholder="Nachname"
-                    value={editData.surname}
-                    onChange={handleInputSettingsChange}
-                  />
-                  <input
-                    type="text"
-                    name="mobile"
-                    placeholder="Mobile (optional)"
-                    value={editData.mobile}
-                    onChange={handleInputSettingsChange}
-                  />
-                  <p>
-                    <strong>Email:</strong> {`${editData.name.toLowerCase()}.${editData.surname.toLowerCase()}@stud.kbw.ch`}
-                  </p>
-                  <div className="modal-buttons">
-                    <button onClick={handleSettingsSave}>Speichern</button>
-                    <button className="btn-delete" onClick={handleSettingsDelete}>Löschen</button>
-                    <button onClick={() => setSelectedStudentSettings(null)}>Abbrechen</button>
-                  </div>
-                </div>
-              </div>
-            )}
-      
-            <BookingListModal
-              isOpen={state.isBookingListModalOpen}
-              onClose={() => setState((prev) => ({ ...prev, isBookingListModalOpen: false }))}
-              bookings={state.bookings}
-              onEdit={handleEditBooking}
-              onDelete={handleDeleteBooking}
-            />
-      
-            {isExportModalOpen && (
-              <ExportModal
-                isOpen={isExportModalOpen}
-                onClose={() => handleExportModalState(false)}
-                students={filteredSchueler}
-                selectedStudents={state.selectedStudents}
-                onSelectStudent={handleSelectStudent}
-                onSelectAll={handleSelectAll}
-                onGeneratePDF={generatePDF}
-              />
-            )}
-      
-            <LoeschModal
-              isOpen={isDeleteModalOpen}
-              onClose={() => setIsDeleteModalOpen(false)}
-              onDeleteAllSchueler={handleDeleteAllSchueler}
-              onDeleteAllBookings={handleDeleteAllBookings}
-              onDeleteAll={handleDeleteAll}
-            />
-          </div>
-          <Footer />
+            <Footer />
         </div>
-      )};
-      
+    )
+};

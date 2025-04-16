@@ -47,11 +47,11 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                     {formattedBalance} Fr.-
                 </span>
                 <button className="btn-abbuchung" onClick={(event) => {
-    event.stopPropagation();
-    onOpenSettings(student);
-}}>
-    <Settings size={20} />
-</button>
+                    event.stopPropagation();
+                    onOpenSettings(student);
+                }}>
+                    <Settings size={20} />
+                </button>
             </div>
             {isOpen && (
                 <div className="transaction-list">
@@ -61,6 +61,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                 <th>Name</th>
                                 <th>Betrag</th>
                                 <th>Datum</th>
+                                <th>Fach</th>
                                 <th>Bearbeitung</th>
                             </tr>
                         </thead>
@@ -74,6 +75,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                             {isNaN(b.amount) ? '0.00' : parseFloat(b.amount).toFixed(2)} Fr.
                                         </td>
                                         <td>{b.date}</td>
+                                        <td>{b.fach || '-'}</td>
                                         <td>
                                             <button
                                                 className="btn-delete"

@@ -2,21 +2,45 @@ import { useState, useEffect } from 'react';
 import '../styles/student.css';
 
 export default function BookingListModal({ isOpen, onClose, bookings, onEdit, onDelete }) {
+    const subjects = ['Deutsch', 'Englisch', 'Französisch', 'Mathematik', 'Wirtschaft&Recht', 'Rechnungswesen', 'Chemie', 'Biologie', 'Physik', 'Naturwissenschaften', 'Sport', 'Informatik', 'Geschichte', 'Geographie', 'Bildnerisches Gestalten', 'Musik', 'Sonstiges'];
+
     const [editingBookingId, setEditingBookingId] = useState(null);
     const [tempBooking, setTempBooking] = useState({});
+    const [filteredSubjects, setFilteredSubjects] = useState(subjects);
 
-    // Reset the states when modal is closed
     useEffect(() => {
         if (!isOpen) {
             setEditingBookingId(null);
             setTempBooking({});
         }
-    }, [isOpen]); // useEffect will run every time `isOpen` changes
-
-    if (!isOpen) return null;
+    }, [isOpen]);
 
     const handleInputChange = (e, field) => {
-        setTempBooking(prev => ({ ...prev, [field]: e.target.value }));
+        const value = e.target.value;
+        setTempBooking(prev => {
+            const updatedBooking = { ...prev, [field]: value };
+
+            // Wenn der Operator auf "+" gesetzt wird, setze das Fach auf "-"
+            if (field === 'operator') {
+                if (value === "+") {
+                    updatedBooking.fach = '-'; // "+" → Fach auf "-" setzen
+                } else if (value === "-") {
+                    updatedBooking.fach = ''; // "-" → Fach leeren
+                }
+            }
+
+            return updatedBooking;
+        });
+
+        if (field === 'fach') {
+            if (value) {
+                setFilteredSubjects(subjects.filter(subject =>
+                    subject.toLowerCase().includes(value.toLowerCase())
+                ));
+            } else {
+                setFilteredSubjects(subjects);
+            }
+        }
     };
 
     const handleEditClick = (booking) => {
@@ -24,17 +48,25 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
         setTempBooking({
             ...booking,
             date: formatDateForStorage(booking.date), // Formatierung für das Date-Input (yyyy-MM-dd)
-            operator: booking.operator // Speichern des Operators für die Bearbeitung
+            operator: booking.operator, // Speichern des Operators für die Bearbeitung
+            fach: booking.fach || ''
         });
     };
 
     const handleSaveClick = () => {
+        // Nur gültige Fächer, außer wenn der Operator "+" ist und das Fach '-'
+        if (!(tempBooking.operator === "+" && tempBooking.fach === '-') && !subjects.includes(tempBooking.fach)) {
+            alert(`"${tempBooking.fach}" ist kein gültiges Fach.`);
+            return;
+        }
+
         onEdit({
             ...tempBooking,
-            date: formatDateForDisplay(tempBooking.date), // Speichern im Format dd.mm.yyyy
+            date: formatDateForDisplay(tempBooking.date),
         });
         setEditingBookingId(null);
     };
+
 
     // Konvertiert "dd.mm.yyyy" -> "yyyy-mm-dd" für das Date-Input
     const formatDateForStorage = (displayDate) => {
@@ -63,7 +95,7 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
         return dateB - dateA; // Neueste zuerst
     });
 
-
+    console.log("tempBooking: ", tempBooking);
 
     return (
         <div className="modal-overlay">
@@ -76,6 +108,7 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                 <th>Name</th>
                                 <th>Betrag</th>
                                 <th>Datum</th>
+                                <th>Fach</th>
                                 <th>Bearbeitung</th>
                             </tr>
                         </thead>
@@ -93,10 +126,10 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                             booking.name
                                         )}
                                     </td>
+
                                     <td>
                                         {editingBookingId === booking.id ? (
                                             <>
-                                                {/* Dropdown für den Operator */}
                                                 <select
                                                     value={tempBooking.operator}
                                                     onChange={(e) => handleInputChange(e, "operator")}
@@ -114,17 +147,40 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                             `${booking.operator === '-' ? '-' : '+'}${parseFloat(booking.amount).toFixed(2)} Fr.`
                                         )}
                                     </td>
+
                                     <td>
                                         {editingBookingId === booking.id ? (
                                             <input
                                                 type="date"
-                                                value={tempBooking.date || ''} // Sicherstellen, dass ein leerer Wert gesetzt wird, falls undefined
+                                                value={tempBooking.date || ''}
                                                 onChange={(e) => handleInputChange(e, "date")}
                                             />
                                         ) : (
-                                            booking.date // Anzeige im Format dd.mm.yyyy
+                                            booking.date
                                         )}
                                     </td>
+
+                                    <td>
+                                        {editingBookingId === booking.id ? (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    value={tempBooking.fach || ''}
+                                                    onChange={(e) => handleInputChange(e, "fach")}
+                                                    list="subjects-list"
+                                                    readOnly={tempBooking.operator === '+'} // Wenn der Operator "+" ist, wird das Fach nicht änderbar
+                                                />
+                                                <datalist id="subjects-list">
+                                                    {filteredSubjects.map(subject => (
+                                                        <option key={subject} value={subject} />
+                                                    ))}
+                                                </datalist>
+                                            </>
+                                        ) : (
+                                            booking.fach || "-"
+                                        )}
+                                    </td>
+
                                     <td>
                                         {editingBookingId === booking.id ? (
                                             <>
@@ -141,6 +197,7 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 </div>
                 <button className="btn-cancel" onClick={() => {
