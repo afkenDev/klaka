@@ -27,6 +27,13 @@ export async function POST(req) {
 
             if (error) throw error;
 
+            const { error: updateError } = await supabase
+                .from('klasse')
+                .update({ lastActivity: new Date().toISOString() })
+                .eq('id', studentClass);
+
+            if (updateError) throw updateError;
+
             return new Response(JSON.stringify({ message: 'Schüler hinzugefügt', data: data }), { status: 200 });
         }
 
@@ -77,6 +84,13 @@ export async function POST(req) {
                 .select('*');
 
             if (error) throw error;
+
+            const { error: updateError } = await supabase
+                .from('klasse')
+                .update({ lastActivity: new Date().toISOString() })
+                .eq('id', classId);
+
+            if (updateError) throw updateError;
 
             return new Response(JSON.stringify({ message: 'Schüler erfolgreich importiert', data: insertedData }), { status: 200 });
         }
