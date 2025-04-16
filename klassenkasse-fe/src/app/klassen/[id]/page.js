@@ -108,7 +108,7 @@ export default function ClassDetail() {
             }));
         }
     }, [fetchedSchueler, state.localSchueler.length, fetchedBalance, klasse]);
-
+    if (KlasseLoading) return <div>Lade Daten...</div>
     if (KlassenLoading) return <div>Lade Klassendaten...</div>;
     if (KlassenError) return <div>Fehler: {error}</div>;
     if (loading) return <div className="container">Lade Daten...</div>;
@@ -1031,9 +1031,15 @@ export default function ClassDetail() {
                         </button>
                     </div>
 
-                    <div className="title">
-                        Klasse {state.classData.klassenname} <Edit2 size={20} onClick={() => openClassSettings(state.classData)} />
-                    </div>
+                    {state.classData?.klassenname ? (
+                        <div className="title">
+                            Klasse {state.classData.klassenname}
+                            <Edit2 size={20} onClick={() => openClassSettings(state.classData)} />
+                        </div>
+                    ) : (
+                        <div className="title">Klasse wird geladen...</div>
+                    )}
+
 
                     <div className="header-placeholder"></div>
                 </div>
