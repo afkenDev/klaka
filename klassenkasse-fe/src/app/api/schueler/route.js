@@ -1,11 +1,19 @@
 import { createSupabaseServerClient } from '../../lib/supabaseClient';
 import * as XLSX from 'xlsx';
 
+// 🔧 Hilfsfunktion zum Ersetzen von Umlauten
+function replaceUmlauts(str) {
+    return str
+        .toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/ß/g, 'ss');
+}
+
 export async function POST(req) {
     try {
-        // Überprüfe den Inhalt der Anfrage, um zu entscheiden, ob es sich um einen Import oder eine Schülererstellung handelt
         const contentType = req.headers.get('Content-Type') || '';
-
         const token = req.headers.get('Authorization')?.split(' ')[1];
 
         if (!token) {
@@ -14,12 +22,12 @@ export async function POST(req) {
 
         const supabase = createSupabaseServerClient(token);
 
-
+        // 🔹 JSON-Request: einzelner Schüler hinzufügen
         if (contentType.includes('application/json')) {
-            // Wenn es sich um eine normale JSON-Anfrage handelt (Schüler hinzufügen)
             const { name, surname, mobile, class: studentClass } = await req.json();
 
-            const mail = `${name.toLowerCase()}.${surname.toLowerCase()}@stud.kbw.ch`;
+            const mail = `${replaceUmlauts(name)}.${replaceUmlauts(surname)}@stud.kbw.ch`;
+
             const { data, error } = await supabase
                 .from('schueler')
                 .insert([{ name, surname, mobile, mail, class: studentClass }])
@@ -34,50 +42,40 @@ export async function POST(req) {
 
             if (updateError) throw updateError;
 
-            return new Response(JSON.stringify({ message: 'Schüler hinzugefügt', data: data }), { status: 200 });
+            return new Response(
+                JSON.stringify({ message: 'Schüler hinzugefügt', data: data }),
+                { status: 200 }
+            );
         }
 
+        // 🔹 Excel-Import
         if (contentType.includes('multipart/form-data')) {
-            // Wenn es sich um einen Dateiupload handelt (Import)
             const formData = await req.formData();
             const file = formData.get('file');
             const classId = formData.get('classId');
 
             if (!file || !classId) throw new Error('Datei oder Klassen-ID fehlt');
 
-            const buffer = await file.arrayBuffer(); // Nutze arrayBuffer statt FileReader
+            const buffer = await file.arrayBuffer();
             const wb = XLSX.read(buffer, { type: 'array' });
 
             const sheet = wb.Sheets[wb.SheetNames[0]];
             const data = XLSX.utils.sheet_to_json(sheet);
 
-            // Spaltennamen umbenennen, um mit der Tabelle übereinzustimmen
             const renamedData = [];
 
             for (const item of data) {
-                // Schritt 1: Hole die Klassen-ID für item.Klasse
-                /* const { data: klasseData, error: klasseError } = await supabase
-                     .from('klasse')
-                     .select('id')
-                     .eq('klassenname', item.Klasse)
-                     .single();
- 
-                 if (klasseError || !klasseData) {
-                     console.warn(`Klasse '${item.Klasse}' nicht gefunden. Überspringe Eintrag.`, klasseError?.message);
-                     continue; // Überspringe diesen Schüler, wenn Klasse nicht gefunden wird
-                 }*/
-
-                // Schritt 2: Schülerobjekt mit Klassen-ID erstellen
                 renamedData.push({
                     name: item.Vorname,
                     surname: item.Nachname,
                     mobile: item.Mobile,
-                    mail: item.EMail,
-                    class: classId // 💡 ID statt Name speichern!
+                    mail:
+                        item.EMail ||
+                        `${replaceUmlauts(item.Vorname)}.${replaceUmlauts(item.Nachname)}@stud.kbw.ch`,
+                    class: classId,
                 });
             }
 
-            // Jetzt die umbenannten Daten in die Datenbank einfügen
             const { data: insertedData, error } = await supabase
                 .from('schueler')
                 .insert(renamedData)
@@ -92,11 +90,19 @@ export async function POST(req) {
 
             if (updateError) throw updateError;
 
-            return new Response(JSON.stringify({ message: 'Schüler erfolgreich importiert', data: insertedData }), { status: 200 });
+            return new Response(
+                JSON.stringify({
+                    message: 'Schüler erfolgreich importiert',
+                    data: insertedData,
+                }),
+                { status: 200 }
+            );
         }
 
-        throw new Error('Unbekannter Inhaltstyp'); // Wenn der Inhaltstyp nicht bekannt ist
+        throw new Error('Unbekannter Inhaltstyp');
     } catch (error) {
-        return new Response(JSON.stringify({ message: error.message }), { status: 400 });
+        return new Response(JSON.stringify({ message: error.message }), {
+            status: 400,
+        });
     }
 }

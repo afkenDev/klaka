@@ -1011,7 +1011,15 @@ export default function ClassDetail() {
     };
 
 
-
+    // 🔧 Umlaut-Ersatzfunktion
+    function replaceUmlauts(str) {
+        return str
+            .toLowerCase()
+            .replace(/ä/g, 'ae')
+            .replace(/ö/g, 'oe')
+            .replace(/ü/g, 'ue')
+            .replace(/ß/g, 'ss');
+    }
 
 
 
@@ -1193,9 +1201,11 @@ export default function ClassDetail() {
                                 value={editData.mobile}
                                 onChange={handleInputSettingsChange}
                             />
+
                             <p>
-                                <strong>Email:</strong> {`${editData.name.toLowerCase()}.${editData.surname.toLowerCase()}@stud.kbw.ch`}
+                                <strong>Email:</strong> {`${replaceUmlauts(editData.name)}.${replaceUmlauts(editData.surname)}@stud.kbw.ch`}
                             </p>
+
                             <div className="modal-buttons">
                                 <button onClick={handleSettingsSave}>Speichern</button>
                                 <button className="btn-delete" onClick={handleSettingsDelete}>Löschen</button>
@@ -1204,6 +1214,7 @@ export default function ClassDetail() {
                         </div>
                     </div>
                 )}
+
 
                 {state.isBookingListModalOpen && (
 
