@@ -1,0 +1,5 @@
+[functions.cron-schuljahr]
+enabled = true
+verify_jwt = false
+import_map = "./functions/cron-schuljahr/deno.json"
+entrypoint = "./functions/cron-schuljahr/index.js"

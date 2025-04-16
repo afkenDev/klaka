@@ -138,6 +138,8 @@ export default function KlassenPage() {
     }, 0);
   };
 
+
+
   return (
     <div className="page-wrapper">
       <Navbar />
