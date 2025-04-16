@@ -8,6 +8,7 @@ import Footer from '../../components/Footer';
 import { useSchuelerMitBalance } from '../../hooks/useSchuelerMitBalance';
 import { useBalance } from '../../hooks/useBalance';
 import { useKlassenName } from '../../hooks/useKlassenName'
+import { useKlasseById } from '../../hooks/useKlasseById';
 import BookingModal from '../../components/BookingModal';
 import ImportModal from '../../components/ImportModal';
 import StudentCard from '../../components/StudentCard';
@@ -43,11 +44,15 @@ export default function ClassDetail() {
     console.log("test, ", id)
     const { klassenname, KlassenLoading, KlassenError } = useKlassenName(id);
     console.log("Klassenname, ", klassenname);
-
+    const { klasse, KlasseLoading, KlasseError } = useKlasseById(id);
+    console.log("Klasse, ", klasse);
     const { schueler: fetchedSchueler, loading, error } = useSchuelerMitBalance();
     //Settings
     const [selectedStudentSettings, setSelectedStudentSettings] = useState(null);
     const [editData, setEditData] = useState({ name: '', surname: '', mobile: '' });
+    const [selectedClassSettings, setSelectedClassSettings] = useState(null);
+    const [editClassData, setEditClassData] = useState({ klassenname: '', lehrerVorname: '', lehrerNachname: '', });
+
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -79,6 +84,7 @@ export default function ClassDetail() {
         isImportModalOpen: false,
         bookings: [],
         isBookingListModalOpen: false,
+        classData: {},
     });
     useEffect(() => {
         const checkUser = async () => {
@@ -99,10 +105,12 @@ export default function ClassDetail() {
         if (state.localSchueler.length === 0) {
             setState(prevState => ({
                 ...prevState,
-                localSchueler: fetchedSchueler // Setze den neuen Array direkt
+                localSchueler: fetchedSchueler,
+                bookings: fetchedBalance,
+                classData: klasse,
             }));
         }
-    }, [fetchedSchueler, state.localSchueler.length]);
+    }, [fetchedSchueler, state.localSchueler.length, fetchedBalance, klasse]);
 
     if (KlassenLoading) return <div>Lade Klassendaten...</div>;
     if (KlassenError) return <div>Fehler: {error}</div>;
@@ -110,6 +118,7 @@ export default function ClassDetail() {
     if (error) return <div className="container">Fehler: {error}</div>;
 
     const allSchueler = [...state.localSchueler];
+
 
     console.log("Alle ", allSchueler)
     console.log("Fetch: ", fetchedSchueler)
@@ -519,7 +528,7 @@ export default function ClassDetail() {
 
         setState(prevState => ({
             ...prevState,
-            bookings: prevState.bookings.length === 0 ? allBookings : prevState.bookings,  // Nur wenn `bookings` leer ist, setze sie
+            bookings: prevState.bookings.length === 0 ? state.bookings : prevState.bookings,  // Nur wenn `bookings` leer ist, setze sie
             isBookingListModalOpen: true,
         }));
     };
@@ -627,7 +636,90 @@ export default function ClassDetail() {
         }
     };
 
-    //Export
+    //Edit Klasse
+    console.log("state.classData: ", state.classData)
+    const openClassSettings = (klasse) => {
+        setSelectedClassSettings(klasse);
+        setEditClassData({
+            klassenname: klasse.klassenname,
+            lehrerVorname: klasse.vorname || '',
+            lehrerNachname: klasse.nachname || '',
+        });
+    };
+
+    const handleInputClassChange = (e) => {
+        const { name, value } = e.target;
+        setEditClassData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleClassSettingsSave = async () => {
+        if (!selectedClassSettings) return;
+
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("Session nicht gefunden. Bitte erneut einloggen.");
+            return;
+        }
+
+        const { klassenname, lehrerVorname, lehrerNachname } = editClassData;
+
+        // 🔒 Prüfung auf leere Felder
+        if (!klassenname || !lehrerVorname || !lehrerNachname) {
+            alert("Bitte alle Felder ausfüllen.");
+            return;
+        }
+
+        // 🧪 Validierung des Klassennamens
+        const isValidClassname = /^[0-9]{1}[a-zA-Z]{0,4}$/.test(klassenname);
+        if (!isValidClassname) {
+            alert("Der Klassenname muss ein gültiger Kürzel sein.");
+            return;
+        }
+
+        const updatedClass = {
+            klassenname: editClassData.klassenname,
+            vorname: editClassData.lehrerVorname,
+            nachname: editClassData.lehrerNachname,
+        };
+
+        try {
+            const response = await fetch(`/api/klassen/${classId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify(updatedClass),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error('Fehler beim Speichern der Änderungen');
+
+            // Aktualisiere die Klasse im State
+            setState(prevState => ({
+                ...prevState,
+                classData: {
+                    ...prevState.classData,
+                    ...data.data, // aktualisierte Felder reinschreiben
+                },
+            }));
+            console.log("newClass: ", state.classData)
+
+            setSelectedClassSettings(null); // Schließt das Modal
+        } catch (error) {
+            console.error(error);
+            alert('Fehler beim Aktualisieren der Daten.');
+        }
+    };
+
+
+
+    //Export    
     const handleExportModalState = (isOpen) => {
         setState(prevState => ({
             ...prevState,
@@ -636,7 +728,6 @@ export default function ClassDetail() {
         }));
         setIsExportModalOpen(false);
     };
-
 
     const generatePDF = (students) => {
         if (!state.selectedStudents || state.selectedStudents.length === 0) {
@@ -953,7 +1044,7 @@ export default function ClassDetail() {
                     </div>
 
                     <div className="title">
-                        Klasse {klassenname}
+                        Klasse {state.classData.klassenname} <Settings size={20} onClick={() => openClassSettings(state.classData)} />
                     </div>
 
                     <div className="header-placeholder"></div>
@@ -1145,6 +1236,40 @@ export default function ClassDetail() {
                     onDeleteAllBookings={handleDeleteAllBookings}
                     onDeleteAll={handleDeleteAll}
                 />
+
+                {selectedClassSettings && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Klasse bearbeiten</h2>
+                            <input
+                                type="text"
+                                name="klassenname"
+                                placeholder="Klassenname"
+                                value={editClassData.klassenname}
+                                onChange={handleInputClassChange}
+                            />
+                            <input
+                                type="text"
+                                name="lehrerVorname"
+                                placeholder="Vorname Lehrer"
+                                value={editClassData.lehrerVorname}
+                                onChange={handleInputClassChange}
+                            />
+                            <input
+                                type="text"
+                                name="lehrerNachname"
+                                placeholder="Nachname Lehrer"
+                                value={editClassData.lehrerNachname}
+                                onChange={handleInputClassChange}
+                            />
+                            <div className="modal-buttons">
+                                <button onClick={handleClassSettingsSave}>Speichern</button>
+                                <button onClick={() => setSelectedClassSettings(null)}>Abbrechen</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
             <Footer />
         </div>

@@ -81,6 +81,14 @@ export default function KlassenPage() {
       return;
     }
 
+    const { klassenname, vorname, nachname } = newClass;
+
+    // 🔒 Prüfung auf leere Felder
+    if (!klassenname || !vorname || !nachname) {
+      alert("Bitte alle Felder ausfüllen.");
+      return;
+    }
+
     const isValidClassname = /^[0-9]{1}[a-zA-Z]{0,4}$/.test(newClass.klassenname);
     if (!isValidClassname) {
       alert("Der Klassenname muss der Klassenkürzel sein.");
@@ -211,16 +219,16 @@ export default function KlassenPage() {
             />
             <input
               type="text"
-              name="nachname"
-              placeholder="Nachname Klassenlehrer"
-              value={newClass.nachname || ''}
+              name="vorname"
+              placeholder="Vorname Klassenlehrer"
+              value={newClass.vorname || ''}
               onChange={handleInputChange}
             />
             <input
               type="text"
-              name="vorname"
-              placeholder="Vorname Klassenlehrer"
-              value={newClass.vorname || ''}
+              name="nachname"
+              placeholder="Nachname Klassenlehrer"
+              value={newClass.nachname || ''}
               onChange={handleInputChange}
             />
             <select name="color" value={newClass.color} onChange={handleInputChange}>
