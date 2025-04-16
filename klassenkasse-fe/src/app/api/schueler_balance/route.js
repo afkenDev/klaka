@@ -10,7 +10,7 @@ export async function DELETE(req) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token);
+
 
     try {
         const body = await req.json();

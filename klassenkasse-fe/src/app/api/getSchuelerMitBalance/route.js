@@ -19,7 +19,7 @@ export async function POST(req) {
         }
 
         const supabaseServer = createSupabaseServerClient(token);
-        console.log("Extrahierte user_id:", userId);
+
 
         // Abrufen aller Klassen-IDs für den Benutzer
         const { data: userKlasseData, error: userKlasseError } = await supabaseServer
@@ -27,7 +27,7 @@ export async function POST(req) {
             .select('klasse_id')
             .eq('user_id', userId);  // Alle Klassen-IDs des Benutzers abrufen
 
-        console.log("userKlasseData: ", userKlasseData);
+
         if (userKlasseError) {
             console.error('Fehler beim Abrufen der Klassen des Benutzers:', userKlasseError);
             throw userKlasseError;
@@ -36,7 +36,7 @@ export async function POST(req) {
 
         // Alle Klassen-IDs sammeln
         const klasseIds = userKlasseData.map(item => item.klasse_id);
-        console.log("Alle Klassen-IDs des Benutzers:", klasseIds);
+
 
         // Abrufen der Schüler-Daten für alle Klassen des Benutzers
         const { data: schueler, error: schuelerError } = await supabaseServer
@@ -44,7 +44,7 @@ export async function POST(req) {
             .select('*')
             .in('class', klasseIds);  // Filtere nach den Klassen-IDs
 
-        console.log("schueler: ", schueler);
+
         if (schuelerError) {
             console.error('Fehler beim Abrufen der Schüler:', schuelerError);
             throw schuelerError;
@@ -55,7 +55,7 @@ export async function POST(req) {
             .from('schueler_balance')
             .select('schueler_id, balance:balance_id(*)')
             .in('schueler_id', schueler.map(sch => sch.id));  // Filtere nach den Schülern
-        console.log("balances: ", balances);
+
         if (balanceError) {
             console.error('Fehler beim Abrufen der Balance-Daten:', balanceError);
             throw balanceError;

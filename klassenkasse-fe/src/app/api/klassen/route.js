@@ -10,17 +10,14 @@ export async function POST(req) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token)
     // Holen des aktuellen Benutzers aus dem Token
     const { data: user, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
       return NextResponse.json({ message: 'User nicht gefunden' }, { status: 401 });
     }
-    console.log("user, ", user);
-    console.log("user, ", user.user.id);
+
     const payload = await req.json();
     const { klassenname, vorname, nachname, color } = payload;
-    console.log("payload: ", payload);
 
     // ✅ 1. Klasse mit user_id = auth.uid() einfügen
     const { data: insertedClass, error: insertError } = await supabase
@@ -28,7 +25,7 @@ export async function POST(req) {
       .insert([{ klassenname, vorname, nachname, color, user_id: user.user.id }]) // Verwende user.id
       .select()
       .single();
-    console.log("insertedData: ", insertedClass)
+
     if (insertError) throw insertError;
 
     // 📎 2. user_klasse-Eintrag erstellen

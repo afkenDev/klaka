@@ -25,7 +25,6 @@ export function useKlassen() {
       });
 
       const result = await response.json();
-      console.log("Result vom Backend:", result);
       if (!response.ok) {
         setError(result.error || 'Fehler beim Laden');
       } else {

@@ -112,7 +112,6 @@ export default function KlassenPage() {
         throw new Error(result.message);
       }
 
-      console.log("Erstellt:", result.data);
       setLocalKlassen((prev) => [...prev, result.data]);
       handleCloseModal();
     } catch (err) {

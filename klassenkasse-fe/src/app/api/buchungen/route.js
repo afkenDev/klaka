@@ -10,7 +10,7 @@ export async function POST(req) {
         }
 
         const supabase = createSupabaseServerClient(token);
-        console.log("token: ", token)
+
 
         const { name, amount, date, students, operator, class_id, fach } = await req.json();
 
