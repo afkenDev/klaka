@@ -126,13 +126,13 @@
   }
 
   .forgot-password-link {
-    margin-top: 10px;
-    text-align: right;
+    margin-top: 4px;
+    text-align: center;
   }
   
   .forgot-password-link a {
     font-size: 0.9rem;
-    color: #0070f3;
+    color: #0070f3 0.2;
     text-decoration: underline;
     cursor: pointer;
   }
