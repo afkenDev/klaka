@@ -26,7 +26,7 @@ export async function POST(req) {
 
         const { data: balance, error } = await supabaseServer
             .from('balance')
-            .select('id, name, amount, date, updated_at, operator, class_id')
+            .select('id, name, amount, date, updated_at, operator, class_id, fach')
             .eq('class_id', classId);
 
         if (error) {

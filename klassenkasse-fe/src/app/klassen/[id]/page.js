@@ -509,10 +509,11 @@ export default function ClassDetail() {
 
         setState(prevState => ({
             ...prevState,
-            bookings: prevState.bookings.length === 0 ? allBookings : prevState.bookings,  // Nur wenn `bookings` leer ist, setze sie
+            bookings: prevState.bookings.length === 0 ? allBookings : prevState.bookings,  // Nur wenn bookings leer ist, setze sie
             isBookingListModalOpen: true,
         }));
     };
+
 
 
 
@@ -937,8 +938,8 @@ export default function ClassDetail() {
                         className="search-bar"
                     />
                 </div>
-                <div className="student-list-container" style={{ 
-                    maxHeight: '400px',  
+                <div className="student-list-container" style={{
+                    maxHeight: '400px',
                     overflowY: 'auto',
                     border: '1px solid #eaeaea',
                     borderRadius: '5px',
@@ -962,7 +963,7 @@ export default function ClassDetail() {
                         )}
                     </div>
                 </div>
-    
+
                 <div className="actions">
                     <button className="btn-orange" onClick={() => handleModalState('isBookingModalOpen', true)}>Buchung hinzufügen</button>
                     <button className="btn-black" onClick={() => handleModalState('isModalOpen', true)}>Schüler:in hinzufügen</button>
@@ -972,7 +973,7 @@ export default function ClassDetail() {
                     <button className="btn-delete" onClick={() => setIsDeleteModalOpen(true)}>Delete funktionen</button>
                     <button className='btn-orange' onClick={() => router.push(`/klassen/${id}/statistik`)}>Statistik</button>
                 </div>
-    
+
                 {state.isModalOpen && (
                     <div className="modal-overlay">
                         <div className="modal">
@@ -1005,7 +1006,7 @@ export default function ClassDetail() {
                         </div>
                     </div>
                 )}
-    
+
                 {state.isImportModalOpen && (
                     <ImportModal
                         isOpen={state.isImportModalOpen}
@@ -1061,13 +1062,16 @@ export default function ClassDetail() {
                         </div>
                     </div>
                 )}
-                <BookingListModal
-                    isOpen={state.isBookingListModalOpen}
-                    onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
-                    bookings={state.bookings}
-                    onEdit={handleEditBooking}
-                    onDelete={handleDeleteBooking}
-                />
+                {state.isBookingListModalOpen && (
+
+                    <BookingListModal
+                        isOpen={state.isBookingListModalOpen}
+                        onClose={() => setState(prev => ({ ...prev, isBookingListModalOpen: false }))}
+                        bookings={state.bookings}
+                        onEdit={handleEditBooking}
+                        onDelete={handleDeleteBooking}
+                    />
+                )}
                 {isExportModalOpen && (
                     <ExportModal
                         isOpen={isExportModalOpen}
@@ -1089,4 +1093,5 @@ export default function ClassDetail() {
             </div>
             <Footer />
         </div>
-    )};
+    )
+};

@@ -47,11 +47,11 @@ export async function PUT(req, { params }) {
     console.log("token: ", token)
 
     const { id } = await params;
-    const { name, amount, date, operator } = await req.json();
+    const { name, amount, date, operator, fach } = await req.json();
 
     const { error } = await supabase
         .from("balance")
-        .update({ name, amount, date, operator })
+        .update({ name, amount, date, operator, fach })
         .eq("id", id);
 
     if (error) {

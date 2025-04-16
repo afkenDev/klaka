@@ -32,7 +32,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
     });
 
 
-
+    console.log("sortedBalance: ", sortedBalance)
     return (
         <div
             key={student.id}
@@ -57,6 +57,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                 <th>Name</th>
                                 <th>Betrag</th>
                                 <th>Datum</th>
+                                <th>Fach</th>
                                 <th>Bearbeitung</th>
                             </tr>
                         </thead>
@@ -70,6 +71,7 @@ export default function StudentCard({ student, onToggleDropdown, isOpen, onOpenS
                                             {isNaN(b.amount) ? '0.00' : parseFloat(b.amount).toFixed(2)} Fr.
                                         </td>
                                         <td>{b.date}</td>
+                                        <td>{b.fach || '-'}</td>
                                         <td>
                                             <button
                                                 className="btn-delete"
