@@ -182,18 +182,19 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                     </td>
 
                                     <td>
-                                        {editingBookingId === booking.id ? (
-                                            <>
-                                                <button className="btn-save" onClick={handleSaveClick}>Speichern</button>
-                                                <button className="btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button className="btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
-                                                <button className="btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
-                                            </>
-                                        )}
-                                    </td>
+  {editingBookingId === booking.id ? (
+    <>
+      <button className="table-action-btn btn-save" onClick={handleSaveClick}>Speichern</button>
+      <button className="table-action-btn btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
+    </>
+  ) : (
+    <>
+      <button className="table-action-btn btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
+      <button className="table-action-btn btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
+    </>
+  )}
+</td>
+
                                 </tr>
                             ))}
                         </tbody>
