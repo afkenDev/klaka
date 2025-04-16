@@ -182,18 +182,18 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                                     </td>
 
                                     <td>
-  {editingBookingId === booking.id ? (
-    <>
-      <button className="table-action-btn btn-save" onClick={handleSaveClick}>Speichern</button>
-      <button className="table-action-btn btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
-    </>
-  ) : (
-    <>
-      <button className="table-action-btn btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
-      <button className="table-action-btn btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
-    </>
-  )}
-</td>
+                                        {editingBookingId === booking.id ? (
+                                            <>
+                                                <button className="table-action-btn btn-save" onClick={handleSaveClick}>Speichern</button>
+                                                <button className="table-action-btn btn-cancel" onClick={() => setEditingBookingId(null)}>Abbrechen</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className="table-action-btn btn-edit" onClick={() => handleEditClick(booking)}>Bearbeiten</button>
+                                                <button className="table-action-btn btn-delete" onClick={() => onDelete(booking.id)}>Löschen</button>
+                                            </>
+                                        )}
+                                    </td>
 
                                 </tr>
                             ))}
@@ -205,7 +205,7 @@ export default function BookingListModal({ isOpen, onClose, bookings, onEdit, on
                     onClose();
                     setEditingBookingId(null);
                     setTempBooking({}); // Zurücksetzen der States
-                }}>Schließen</button>
+                }}>Schliessen</button>
             </div>
         </div>
     );
