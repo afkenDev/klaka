@@ -1,44 +1,50 @@
 :root {
-  --primary: #3c9fa1;         /* Verdigris */
-  --secondary: #c8e4e4;       /* Light Cyan */
-  --text: #2d2d2a;            /* Jet */
-  --muted: #8a8a8a;           /* Battleship Gray */
-  --accent: #f06c1a;          /* Spanish Orange */
-  
+  --primary: #3c9fa1;
+  /* Verdigris */
+  --secondary: #c8e4e4;
+  /* Light Cyan */
+  --text: #2d2d2a;
+  /* Jet */
+  --muted: #8a8a8a;
+  /* Battleship Gray */
+  --accent: #f06c1a;
+  /* Spanish Orange */
+
   /* Additional derived variables for consistency */
   --primary-light: #4eb5b7;
   --primary-dark: #308d8f;
   --accent-light: #ff7c2a;
   --accent-dark: #e05c0a;
-  
+
   /* System states */
   --success: #28a745;
   --danger: #dc3545;
   --warning: #ffc107;
   --info: #17a2b8;
-  
+
   /* Component variables */
   --border-radius: 8px;
   --border-radius-lg: 12px;
   --border-radius-sm: 4px;
   --border-radius-round: 50%;
-  
+
   /* Effects */
   --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
   --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Backgrounds */
   --bg-light: #f9fafb;
   --bg-white: #ffffff;
   --bg-muted: #f3f4f6;
-  
+
   /* Borders */
   --border-color: #e5e7eb;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -64,7 +70,8 @@ html, body {
 
 
 .search-bar {
-  display: block; /* oder remove das flex, falls es nicht als flex container benötigt wird */
+  display: block;
+  /* oder remove das flex, falls es nicht als flex container benötigt wird */
   margin: 0 auto;
 }
 
@@ -79,7 +86,7 @@ html, body {
   gap: 1rem;
 }
 
-.controls > button {
+.controls>button {
   background-color: var(--bg-muted);
   color: var(--text);
   border: none;
@@ -95,7 +102,7 @@ html, body {
   transition: var(--transition);
 }
 
-.controls > button:hover {
+.controls>button:hover {
   background-color: var(--border-color);
   transform: translateY(-2px);
   box-shadow: var(--box-shadow);
@@ -440,7 +447,8 @@ table {
   overflow: hidden;
 }
 
-th, td {
+th,
+td {
   padding: 0.875rem 1rem;
   text-align: left;
 }
@@ -556,7 +564,7 @@ tbody tr:hover td {
 }
 
 /* Radio button container */
-.booking-modal > div:nth-of-type(1) {
+.booking-modal>div:nth-of-type(1) {
   display: flex;
   gap: 1.5rem;
   margin-bottom: 1rem;
@@ -673,8 +681,13 @@ tbody tr:hover td {
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -682,6 +695,7 @@ tbody tr:hover td {
     transform: translateY(-20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -693,6 +707,7 @@ tbody tr:hover td {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -700,9 +715,17 @@ tbody tr:hover td {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* ===== RESPONSIVE ADJUSTMENTS ===== */
@@ -710,43 +733,43 @@ tbody tr:hover td {
   .container {
     padding: 1.25rem;
   }
-  
+
   .actions {
     flex-direction: column;
   }
-  
+
   .actions button {
     width: 100%;
   }
-  
+
   .modal,
   .booking-modal {
     width: 90%;
     max-width: 400px;
     padding: 1.25rem;
   }
-  
+
   .student-header {
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
   }
-  
+
   .student-balance {
     align-self: flex-start;
     margin-right: 0;
   }
-  
+
   .btn-abbuchung {
     align-self: flex-end;
     margin-top: 0.5rem;
   }
-  
+
   .controls {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .search-bar {
     max-width: 100%;
   }
@@ -1093,26 +1116,27 @@ tbody tr:hover td {
 
 /* Responsive adjustments for modals */
 @media (max-width: 768px) {
+
   .modal,
   .booking-modal {
     padding: 1.5rem;
   }
-  
+
   .modal-buttons,
   .booking-modal-buttons {
     flex-direction: column;
   }
-  
+
   .modal-buttons button,
   .booking-modal-buttons button {
     margin-bottom: 0.5rem;
   }
-  
+
   .booking-modal .radio-group {
     flex-direction: column;
     gap: 0.75rem;
   }
-  
+
   .select-controls {
     flex-direction: column;
     gap: 0.5rem;
@@ -1127,7 +1151,9 @@ tbody tr:hover td {
 
 
 /* Global sicherstellen: */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -1156,7 +1182,8 @@ tbody tr:hover td {
   animation: slideIn 0.3s ease;
   max-width: 90%;
   text-align: center;
-  overflow-x: hidden;  /* Verhindert horizontales Scrollen */
+  overflow-x: hidden;
+  /* Verhindert horizontales Scrollen */
 }
 
 .modal {
@@ -1237,6 +1264,7 @@ tbody tr:hover td {
   /* Kleiner Abstand zwischen Buttons, ohne den letzten zu beeinflussen: */
   margin-right: 0.5rem;
 }
+
 .table-action-btn:last-of-type {
   margin-right: 0;
 }
@@ -1246,6 +1274,7 @@ tbody tr:hover td {
   background-color: var(--primary);
   color: #fff;
 }
+
 .btn-edit:hover {
   background-color: var(--primary-dark);
   transform: translateY(-2px);
@@ -1256,6 +1285,7 @@ tbody tr:hover td {
   background-color: var(--danger);
   color: #fff;
 }
+
 .btn-delete:hover {
   background-color: #c82333;
   transform: translateY(-2px);
@@ -1266,6 +1296,7 @@ tbody tr:hover td {
   background-color: var(--success);
   color: #fff;
 }
+
 .btn-save:hover {
   background-color: #218838;
   transform: translateY(-2px);
@@ -1276,6 +1307,7 @@ tbody tr:hover td {
   background-color: var(--bg-muted);
   color: var(--text);
 }
+
 .btn-cancel:hover {
   background-color: var(--border-color);
   transform: translateY(-2px);

@@ -10,7 +10,7 @@ export async function DELETE(req) {
     }
 
     const supabase = createSupabaseServerClient(token);
-    console.log("token: ", token)
+    console.log("token: ", token);
 
     try {
         const body = await req.json();
@@ -20,14 +20,38 @@ export async function DELETE(req) {
             return NextResponse.json({ error: "Fehlende Parameter" }, { status: 400 });
         }
 
+        // Hole die class_id aus der balance-Tabelle
+        const { data: balanceData, error: balanceFetchError } = await supabase
+            .from('balance')
+            .select('class_id') // Wir holen nur das "class_id"-Attribut
+            .eq('id', balance_id)
+            .single();
+
+        if (balanceFetchError) {
+            return NextResponse.json({ error: balanceFetchError.message }, { status: 400 });
+        }
+
+        const class_id = balanceData.class_id; // Extrahiere class_id aus den Balance-Daten
+
+        // Lösche den Eintrag aus der schueler_balance-Tabelle
         const { error } = await supabase
             .from("schueler_balance")
             .delete()
             .eq("schueler_id", schueler_id)
-            .eq("balance_id", balance_id); // ID der Balance prüfen!
+            .eq("balance_id", balance_id);
 
         if (error) {
             return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+
+        // Aktualisiere die `klasse`-Tabelle mit dem neuen Timestamp
+        const { error: updateError } = await supabase
+            .from('klasse')
+            .update({ lastActivity: new Date().toISOString() })
+            .eq('id', class_id);
+
+        if (updateError) {
+            return NextResponse.json({ error: updateError.message }, { status: 400 });
         }
 
         return NextResponse.json({ message: "Buchung erfolgreich gelöscht" }, { status: 200 });

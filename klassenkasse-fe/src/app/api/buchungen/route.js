@@ -47,6 +47,14 @@ export async function POST(req) {
             return NextResponse.json({ error: 'Fehler beim Speichern der Schüler-Zuordnung.' }, { status: 500 });
         }
 
+        const { error: updateError } = await supabase
+            .from('klasse')
+            .update({ lastActivity: new Date().toISOString() })
+            .eq('id', class_id);
+
+        if (updateError) throw updateError;
+
+
         return NextResponse.json({
             message: 'Buchung erfolgreich gespeichert!',
             data: [balanceEntry]
