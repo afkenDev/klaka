@@ -938,7 +938,7 @@ export default function ClassDetail() {
                     />
                 </div>
                 <div className="student-list-container" style={{ 
-                    maxHeight: '70%',  
+                    maxHeight: '400px',  
                     overflowY: 'auto',
                     border: '1px solid #eaeaea',
                     borderRadius: '5px',
